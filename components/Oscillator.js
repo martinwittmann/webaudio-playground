@@ -9,7 +9,8 @@ export default class Oscillator extends React.Component {
     this.state = {
       input: this.props.audioComponent.state.input,
       waveform: this.props.audioComponent.state.waveform,
-      frequency: this.props.audioComponent.state.frequency
+      frequency: this.props.audioComponent.state.frequency,
+      active: this.props.audioComponent.state.active
     };
   }
 
@@ -27,17 +28,18 @@ export default class Oscillator extends React.Component {
     });
   }
 
-  onFrequencyChanged(value) {
-    this.props.onChildEvent('frequencyChanged', value);
+  onFrequencyChanged(ev) {
+    let frequency = parseFloat(ev.target.value, 10);
+    this.props.onChildEvent('frequencyChanged', frequency);
     this.setState({
-      frequency: value
+      frequency: frequency
     });
   }
 
-  onActiveChanged(value) {
-    this.props.onChildEvent('activeChanged', value);
+  onActiveChanged(ev) {
+    this.props.onChildEvent('activeChanged', ev.target.checked);
     this.setState({
-      active: !!value
+      active: ev.target.checked
     });
   }
 

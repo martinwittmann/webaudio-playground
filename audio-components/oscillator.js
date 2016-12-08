@@ -1,7 +1,7 @@
 import AudioComponent from './audio-component.js';
 
 export default class OscillatorComponent extends AudioComponent {
-  constructor(audioContext, frequency = 440, waveform = 'sine', gain = 1) {
+  constructor(audioContext, frequency = 440, waveform = 'sine', gain = .2) {
     super(audioContext);
 
     this.type = 'oscillator';
@@ -71,6 +71,45 @@ export default class OscillatorComponent extends AudioComponent {
     this.stop();
   }
 
+  onFrequencyChanged(frequency) {
+    this.state.frequency = frequency;
+    if (this.state.active) {
+      this.audioNodes.fixed.osc.frequency.value = frequency;
+    }
+  }
+
+  onActiveChanged(active) {
+    this.state.active = active;
+
+    if (active) {
+      if (this.audioNodes.fixed) {
+        this.audioNodes.fixed.gain.gain.value = this.state.gain;
+        clearTimeout(this.audioNodes.fixed.clearNodesTimeout);
+        return;
+      }
+
+      let nodes = {
+        osc: this.createOscillatorNode(this.state.waveform, this.state.frequency),
+        gain: this.createGainNode(this.state.gain),
+      };
+
+      nodes.osc.connect(nodes.gain);
+      nodes.gain.connect(this.totalGain);
+      nodes.osc.start();
+
+      this.audioNodes.fixed = nodes;
+    }
+    else {
+      let nodes = this.audioNodes.fixed;
+      nodes.gain.gain.value = 0;
+      var that = this;
+      nodes.clearNodesTimeout = setTimeout(() => {
+        nodes.osc.stop();
+        delete that.audioNodes.fixed;
+      }, 100);
+    }
+  }
+
   stop() {
     // Stop all playing oscillators.
     Object.keys(this.audioNodes).map(key => {
@@ -103,13 +142,6 @@ export default class OscillatorComponent extends AudioComponent {
     nodes.osc.connect(nodes.gain);
     nodes.gain.connect(this.totalGain);
     nodes.osc.start();
-
-    /*
-    setTimeout(function() {
-
-      nodes.osc.
-    }, 1000);
-    */
 
     this.audioNodes[note] = nodes;
   }
