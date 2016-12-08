@@ -76,7 +76,7 @@ export default class Oscillator extends React.Component {
         <Select
           className="midi-input"
           onChange={this.onMidiInputChanged.bind(this)}
-          value={this.state.input}
+          value={this.state.midiInput}
           options={this.props.audioComponent.getMidiInputs()}
         />
       </li>));

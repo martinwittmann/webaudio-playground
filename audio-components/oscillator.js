@@ -115,7 +115,7 @@ export default class OscillatorComponent extends AudioComponent {
 
   handleNoteOff(note) {
     //console.log('note off ' + note);
-    if ('undefined' == this.audioNodes[note]) {
+    if (!this.audioNodes[note]) {
       // This note is not playing right now.
       return false;
     }

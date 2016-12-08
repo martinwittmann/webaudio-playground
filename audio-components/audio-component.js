@@ -86,6 +86,20 @@ export default class AudioComponent {
     navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
   }
 
+  onMidiInputChanged(id) {
+    this.stop();
+    if (this.state.midiInput) {
+      this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
+    }
+    this.state.midiInput = id;
+    this.midiAccess.inputs.get(id).onmidimessage = this.onMidiMessage.bind(this);
+  }
+
+  onMidiMessage(ev) {
+    let message = ev.data;
+    this.midiEvent(message);
+  }
+
   onMidiAvailable(midiAccess) {
     this.midiAccess = midiAccess;
     this.midiInputs = [];
