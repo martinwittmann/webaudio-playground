@@ -15,7 +15,6 @@ export default class ColumnLayout extends React.Component {
     return (
       <ul className="column-layout">
         <li className="column column-1">
-          <Settings midiInputs={this.props.settings.midiInputs} onMidiInputSelected={this.props.settings.onMidiInputSelected} />
           <InspectorColumn handleEvent={this.handleChildEvent.bind(this)} />
         </li>
         <li className="column column-2">

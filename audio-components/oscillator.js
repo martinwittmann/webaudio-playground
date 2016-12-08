@@ -12,6 +12,7 @@ export default class OscillatorComponent extends AudioComponent {
 
     this.state = {
       input: 'fixed',
+      active: false,
       frequency,
       waveform,
       gain

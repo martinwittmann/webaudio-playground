@@ -34,6 +34,13 @@ export default class Oscillator extends React.Component {
     });
   }
 
+  onActiveChanged(value) {
+    this.props.onChildEvent('activeChanged', value);
+    this.setState({
+      active: !!value
+    });
+  }
+
   onMidiInputChanged(value) {
     this.props.onChildEvent('midiInputChanged', value);
     this.setState({
@@ -44,7 +51,7 @@ export default class Oscillator extends React.Component {
   render() {
     let options = [
       (<li key="input">
-        <label>Input:</label>
+        <label className="option-label">Input:</label>
         <Select
           className="input-select"
           defaultValue={this.state.input}
@@ -53,7 +60,7 @@ export default class Oscillator extends React.Component {
         />
       </li>),
      (<li key="waveform">
-        <label>Waveform:</label>
+        <label className="option-label">Waveform:</label>
         <Select
           className="wafeform-select"
           defaultValue={this.state.waveform}
@@ -65,14 +72,19 @@ export default class Oscillator extends React.Component {
 
     if ('fixed' == this.state.input) {
       options.push((<li key="frequency">
-        <label>Frequency</label>
+        <label className="option-label">Frequency:</label>
         <input name="frequency" onChange={this.onFrequencyChanged.bind(this)} value={this.state.frequency} />
+      </li>));
+      options.push((<li key="active">
+        <label className="option-label">Output:</label>
+        <input id="activate-{this.props.audioComponent.id}" type="checkbox" onChange={this.onActiveChanged.bind(this)} value={this.state.active} />
+        <label htmlFor="activate-{this.props.audioComponent.id}">activate</label>
       </li>));
     }
     else
     if ('midi' == this.state.input) {
       options.push((<li key="midi-inputs">
-        <label>Midi Input</label>
+        <label className="option-label">Midi Input</label>
         <Select
           className="midi-input"
           onChange={this.onMidiInputChanged.bind(this)}

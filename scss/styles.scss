@@ -20,10 +20,6 @@ h1 {
 }
 
 .audio-component {
-
-  label {
-    display: block;
-  }
 }
 
 .audio-component-headline {
@@ -38,7 +34,7 @@ h1 {
   margin: 0;
   padding: 0;
 
-  label {
+  .option-label {
     width: 30%;
     float: left;
   }
