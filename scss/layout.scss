@@ -1,0 +1,33 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.column-layout {
+  background: $bg;
+  display: flex;
+  align-items: stretch;
+  list-style-type: none;
+  list-style-image: none;
+  //padding: 10px;
+  margin: 0;
+  padding: 0;
+  
+  flex-wrap: nowrap;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.column {
+  width: 25%;
+  border-left: 2px solid rgba(0, 0, 0, 0.3);
+  padding: 10px;
+
+  &:first-child {
+    border-left: none;
+  }
+}

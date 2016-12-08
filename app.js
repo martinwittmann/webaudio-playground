@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ColumnLayout from './components/ColumnLayout.js';
+
+import Oscillator from './audio-components/oscillator.js';
+
 require('./scss/midi.scss');
 
 let MidiApp = function() {
@@ -8,9 +11,15 @@ let MidiApp = function() {
     midiAccess: false,
     midiInputs: [],
     selectedMidiInput: -1,
-    column2: [],
-    column3: [],
-    column4: []
+    column2: {
+      components: []
+    },
+    column3: {
+      components: []
+    },
+    column4: {
+      components: []
+    }
   };
 
   this.audio = {
@@ -53,13 +62,18 @@ let MidiApp = function() {
 
   this.handleComponentEvent = function(type) {
     console.log('component event ' + type);
-    this.
+    if ('add-oscillator' == type) {
+      this.state.column2.components.push(new Oscillator(this.audio.context));
+    }
   };
 
   this.showApp = function() {
     let appSettings = {
       midiInputs: this.state.midiInputs,
-      onMidiInputSelected: this.onMidiInputSelected.bind(this)
+      onMidiInputSelected: this.onMidiInputSelected.bind(this),
+      column2: this.state.column2,
+      column3: this.state.column3,
+      column4: this.state.column4
     };
     ReactDOM.render(
       <ColumnLayout handleChildEvent={this.handleComponentEvent.bind(this)} settings={appSettings} />,
