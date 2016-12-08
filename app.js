@@ -28,9 +28,15 @@ let MidiApp = function() {
 
 
   this.onMidiMessage = function(ev) {
-    console.log(ev.data);
+    let message = ev.data;
+    // Redirect midi messages to all audio components in the first column which
+    // are capable of receiving midi events.
+    this.state.column2.components.map(component => {
+      if (component.midiEvent) {
+        component.midiEvent(message);
+      }
+    });    
   };
-
 
   this.onMidiAvailable = function (midiAccess) {
     this.state.midiAccess = midiAccess;
@@ -52,7 +58,7 @@ let MidiApp = function() {
 
   this.onMidiInputSelected = function(id) {
     this.state.selectedMidiInput = id;
-    this.state.midiAccess.inputs.get(id).onmidimessage = this.onMidiMessage;
+    this.state.midiAccess.inputs.get(id).onmidimessage = this.onMidiMessage.bind(this);
   };
 
   this.init = function() {
@@ -61,9 +67,9 @@ let MidiApp = function() {
   };
 
   this.handleComponentEvent = function(type) {
-    console.log('component event ' + type);
     if ('add-oscillator' == type) {
       this.state.column2.components.push(new Oscillator(this.audio.context));
+      this.showApp();
     }
   };
 

@@ -19,13 +19,13 @@ export default class ColumnLayout extends React.Component {
           <InspectorColumn handleEvent={this.handleChildEvent.bind(this)} />
         </li>
         <li className="column column-2">
-          <Column2 />
+          <Column2 settings={this.props.settings.column2} />
         </li>
         <li className="column column-3">
-          <Column3 />
+          <Column3 settings={this.props.settings.column3} />
         </li>
         <li className="column column-4">
-          <Column4 />
+          <Column4 settings={this.props.settings.column4} />
         </li>
       </ul>
     );

@@ -8,8 +8,8 @@ export default class Oscillator extends React.Component {
     return (
       <div className="oscillator">
         <label>Oscillator</label>
-        <p>{this.props.oscillator.waveform.value}</p>
-        <p>{this.props.oscillator.frequency.value}</p>
+        <p>{this.props.audioComponent.state.waveform}</p>
+        <p>{this.props.audioComponent.state.frequency}</p>
       </div>
     );
   }
