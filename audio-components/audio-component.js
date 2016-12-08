@@ -55,7 +55,7 @@ export default class AudioComponent {
   midiEvent(data) {
     let status = this.getStatusByte(data);
     if (this.isNoteOn(status) && this.handleNoteOn) {
-      this.handleNoteOn(data[1]);
+      this.handleNoteOn(data[1], data[2]);
     }
     else if (this.isNoteOff(status) && this.handleNoteOff) {
       this.handleNoteOff(data[1]);
