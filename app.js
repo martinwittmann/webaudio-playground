@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.js';
+import ColumnLayout from './components/ColumnLayout.js';
+require('./scss/midi.scss');
 
 let MidiApp = function() {
   this.state = {
     midiAccess: false,
     midiInputs: [],
-    selectedMidiInput: -1
+    selectedMidiInput: -1,
+    column2: [],
+    column3: [],
+    column4: []
+  };
+
+  this.audio = {
+    context: false
   };
 
 
@@ -40,11 +48,21 @@ let MidiApp = function() {
 
   this.init = function() {
     navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
+    this.audio.context = new (window.AudioContext || window.webkitAudioContext)();
+  };
+
+  this.handleComponentEvent = function(type) {
+    console.log('component event ' + type);
+    this.
   };
 
   this.showApp = function() {
+    let appSettings = {
+      midiInputs: this.state.midiInputs,
+      onMidiInputSelected: this.onMidiInputSelected.bind(this)
+    };
     ReactDOM.render(
-      <App midiInputs={this.state.midiInputs} onMidiInputSelected={this.onMidiInputSelected.bind(this)} />,
+      <ColumnLayout handleChildEvent={this.handleComponentEvent.bind(this)} settings={appSettings} />,
       document.querySelector('.app')
     );
   };
