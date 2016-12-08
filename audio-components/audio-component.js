@@ -6,6 +6,8 @@ export default class AudioComponent {
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
     }
+
+    this.initMidiAccess();
   }
 
   createGainNode(volume) {
@@ -55,6 +57,17 @@ export default class AudioComponent {
     }
   }
 
+  getMidiInputs() {
+    let result = [];
+    this.midiInputs.map(input => {
+      result.push({
+        name: input.name,
+        value: input.id
+      });
+    });
+    return result;
+  }
+
   midiNoteToFrequency(note) {
     return Math.pow(2, (note - 69) / 12) * 440;
   }
@@ -68,6 +81,28 @@ export default class AudioComponent {
       this.handleNoteOff(data[1]);
     }
   }
+
+  initMidiAccess() {
+    navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
+  }
+
+  onMidiAvailable(midiAccess) {
+    this.midiAccess = midiAccess;
+    this.midiInputs = [];
+
+    for (let input of midiAccess.inputs) {
+      this.midiInputs.push({
+        id: input[1].id,
+        name: input[1].name,
+        manufacturer: input[1].manufacturer,
+      });
+    }
+  }
+
+  onNoMidi(msg) {
+    console.log('No midi available: ' + msg);
+  };
+
 
   debug(msg) {
     console.log(msg);

@@ -14,7 +14,7 @@ export default class Column2 extends React.Component {
   }
 
   render() {
-    let listContent = this.props.settings.components.map(component => {
+    let listContent = this.props.settings.column2.components.map(component => {
       return this.renderAudioComponent(component);
     });
     return (
