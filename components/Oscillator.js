@@ -1,14 +1,20 @@
 import React from 'react';
+import Select from './Select.js';
 
 export default class Oscillator extends React.Component {
   constructor() {
     super();
   }
+
+  onWaveformChanged(value) {
+    this.props.onWaveformChanged(value);
+  }
+
   render() {
     return (
-      <div className="oscillator">
+      <div className="audio-component oscillator">
         <label>Oscillator</label>
-        <p>{this.props.audioComponent.state.waveform}</p>
+        <Select className="wafeform-select" defaultValue={this.props.audioComponent.state.waveform} options={this.props.audioComponent.getWaveforms()} onChange={this.onWaveformChanged.bind(this)} />
         <p>{this.props.audioComponent.state.frequency}</p>
       </div>
     );

@@ -5,7 +5,7 @@ export default class Column2 extends React.Component {
   renderAudioComponent(component) {
     switch (component.reactComponent) {
       case 'Oscillator':
-        return (<li key={component.id}><Oscillator audioComponent={component} /></li>);
+        return (<li key={component.id}><Oscillator audioComponent={component} onWaveformChanged={component.onWaveformChanged.bind(component)} /></li>);
 
       default:
         this.debug('No corresponding reactComponent was found for component ' + component.type);

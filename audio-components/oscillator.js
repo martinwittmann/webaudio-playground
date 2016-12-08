@@ -22,8 +22,33 @@ export default class Oscillator extends AudioComponent {
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
   }
 
+  getWaveforms() {
+    let result = [];
+    this.waveforms.map(waveform => {
+      result.push({
+        name: waveform.substr(0, 1).toUpperCase() + waveform.substr(1),
+        value: waveform
+      });
+    });
+
+    return result;
+  }
+
   mapVeloctiyToGain(velocity) {
     return velocity / (127 / this.maxGainPerNote)
+  }
+
+  onWaveformChanged(newWaveform) {
+    this.state.waveform = newWaveform;
+    Object.keys(this.audioNodes).map(key => {
+      let nodes = this.audioNodes[key];
+      Object.keys(nodes).map(nodeKey => {
+        let node = nodes[nodeKey];
+        if ('OscillatorNode' == node.constructor.name) {
+          node.type = newWaveform;
+        }
+      });
+    });
   }
 
   handleNoteOn(note, velocity = 127) {
@@ -44,6 +69,13 @@ export default class Oscillator extends AudioComponent {
     nodes.osc.connect(nodes.gain);
     nodes.gain.connect(this.totalGain);
     nodes.osc.start();
+
+    /*
+    setTimeout(function() {
+
+      nodes.osc.
+    }, 1000);
+    */
 
     this.audioNodes[note] = nodes;
   }
