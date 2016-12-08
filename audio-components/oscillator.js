@@ -1,6 +1,6 @@
 import AudioComponent from './audio-component.js';
 
-export default class Oscillator extends AudioComponent {
+export default class OscillatorComponent extends AudioComponent {
   constructor(audioContext, frequency = 440, waveform = 'sine', gain = 1) {
     super(audioContext);
 
@@ -34,6 +34,19 @@ export default class Oscillator extends AudioComponent {
     return result;
   }
 
+  getInputTypes() {
+    return [
+      {
+        name: 'Fixed',
+        value: 'fixed'
+      },
+      {
+        name: 'Midi',
+        value: 'midi'
+      }
+    ];
+  }
+
   mapVeloctiyToGain(velocity) {
     return velocity / (127 / this.maxGainPerNote)
   }
@@ -49,6 +62,25 @@ export default class Oscillator extends AudioComponent {
         }
       });
     });
+  }
+
+  onInputChanged(input) {
+    this.state.input = input;
+    this.stop();
+  }
+
+  stop() {
+    // Stop all playing oscillators.
+    Object.keys(this.audioNodes).map(key => {
+      let nodes = this.audioNodes[key];
+      Object.keys(nodes).map(nodeKey => {
+        let node = nodes[nodeKey];
+        if ('OscillatorNode' == node.constructor.name) {
+          node.stop();
+        }
+      });
+    });
+    this.audioNodes = {};
   }
 
   handleNoteOn(note, velocity = 127) {

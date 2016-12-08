@@ -1,3 +1,7 @@
+body {
+  font-family: Rajdhani;
+}
+
 h1 {
   margin-top: 0;
 }
@@ -10,7 +14,7 @@ h1 {
 }
 
 .oscillator {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px;
 }
@@ -19,5 +23,27 @@ h1 {
 
   label {
     display: block;
+  }
+}
+
+.audio-component-headline {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.audio-component-options {
+  list-style-type: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+
+  label {
+    width: 30%;
+    float: left;
+  }
+
+  li {
+    padding: 1px;
   }
 }

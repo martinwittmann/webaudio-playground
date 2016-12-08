@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ColumnLayout from './components/ColumnLayout.js';
 
-import Oscillator from './audio-components/oscillator.js';
+import OscillatorComponent from './audio-components/oscillator.js';
 
 require('./scss/midi.scss');
 
@@ -68,7 +68,7 @@ let MidiApp = function() {
 
   this.handleComponentEvent = function(type) {
     if ('add-oscillator' == type) {
-      this.state.column2.components.push(new Oscillator(this.audio.context));
+      this.state.column2.components.push(new OscillatorComponent(this.audio.context));
       this.showApp();
     }
   };
