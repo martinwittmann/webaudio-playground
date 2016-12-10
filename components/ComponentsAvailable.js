@@ -1,5 +1,4 @@
-import React, { PropTypes } from 'react';
-import { DragSource } from 'react-dnd';
+import React from 'react';
 import AudioComponent from './AudioComponent.js';
 
 export default class ComponentsAvailable extends React.Component {

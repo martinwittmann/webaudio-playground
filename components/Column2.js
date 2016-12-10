@@ -7,7 +7,7 @@ export default class Column2 extends React.Component {
   render() {
     return (
       <div className="column-content">
-        <ComponentsContainer components={this.props.settings.components} />
+        <ComponentsContainer settings={this.props.settings} />
       </div>
     );
   }

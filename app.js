@@ -22,7 +22,7 @@ export default class App {
     this.render();
   }
 
-  handleComponentEvent(type, ...args) {
+  handleEvent(type, ...args) {
     if ('add-component' == type) {
       if (args.length < 1) {
         this.debug('add-component event: Trying to add a component without specifying a type.');
@@ -35,12 +35,27 @@ export default class App {
   }
 
   addComponent(type) {
-    if ('undefined' == typeof this.registeredComponents[type]) {
-      this.debug('addComponent: Trying to add a component for an unregistered type "' + type + '".');
+    let component;
+    if ('String' == typeof type) {
+      // If we're given a component type string, add a component of that type.
+      if ('undefined' == typeof this.registeredComponents[type]) {
+        this.debug('addComponent: Trying to add a component for an unregistered type "' + type + '".');
+        return false;
+      }
+
+      component = this.registeredComponents[type].create();
+    }
+    else if ('Object' == typeof type) {
+      // We're given an existing component object, that we can add directly.
+      component = type;
+    }
+    else {
+      this.debug('addComponent: Called with invalid argument type ' + typeof type);
       return false;
     }
 
-    this.components.push(this.registeredComponents[type].create());
+    this.components.push(component);
+    this.render();
   }
 
   registerComponent(componentName, componentData) {
@@ -67,10 +82,13 @@ export default class App {
   render() {
     let appSettings = {
       components: this.components,
-      componentsAvailable: this.getAvailableComponents().map(c => { return c.create(); })
+      componentsAvailable: this.getAvailableComponents().map(c => { return c.create(); }),
+      emitEvent: this.handleEvent.bind(this)
     };
+    console.log(appSettings.components);
+    
     ReactDOM.render(
-      <ColumnLayout handleChildEvent={this.handleComponentEvent.bind(this)} settings={appSettings} />,
+      <ColumnLayout settings={appSettings} />,
       document.querySelector('.app')
     );
   }

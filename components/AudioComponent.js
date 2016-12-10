@@ -6,7 +6,9 @@ import Oscillator from './Oscillator.js';
 
 const audioComponentSource = {
   beginDrag(props) {
-    return {};
+    return {
+      id: props.component.id
+    };
   }
 };
 

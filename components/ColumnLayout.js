@@ -13,15 +13,15 @@ import Oscillator from './Oscillator.js';
 
 
 class ColumnLayout extends React.Component {
-  handleChildEvent(type) {
-    this.props.handleChildEvent(type);
+  handleEvent(type) {
+    this.props.settings.handleEvent(type);
   }
   render() {
     return (
       <ul className="column-layout">
         <li className="column column-1">
           <ComponentsAvailable components={this.props.settings.componentsAvailable} />
-          <Inspector handleEvent={this.handleChildEvent.bind(this)} />
+          <Inspector handleEvent={this.handleEvent.bind(this)} />
         </li>
         <li className="column column-2">
           <Column2 settings={this.props.settings} />
