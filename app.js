@@ -6,48 +6,64 @@ import OscillatorComponent from './audio-components/oscillator.js';
 
 require('./scss/midi.scss');
 
-let MidiApp = function() {
-  this.state = {
-    column2: {
-      components: []
-    },
-    column3: {
-      components: []
-    },
-    column4: {
-      components: []
-    }
-  };
+export default class App {
+  constructor() {
+    this.debug = true;
+    this.components = [];
+    this.registeredComponents = [];
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.render();
+  }
 
-  this.audio = {
-    context: false
-  };
+  handleComponentEvent(type, ...args) {
+    if ('add-component' == type) {
+      if (args.length < 1) {
+        this.debug('add-component event: Trying to add a component without specifying a type.');
+        return false;
+      }
 
-  this.handleComponentEvent = function(type) {
-    if ('add-oscillator' == type) {
-      this.state.column2.components.push(new OscillatorComponent(this.audio.context));
+      this.addComponent(args[0]);
+
+      //this.components.push(new OscillatorComponent(this.audioContext));
       this.render();
     }
-  };
+  }
 
-  this.init = function() {
-    this.audio.context = new (window.AudioContext || window.webkitAudioContext)();
-    this.render();
-  };
+  addComponent(type) {
 
-  this.render = function() {
+  }
+
+  registerComponents(components) {
+    components.map(registerCallback => {
+      console.log(this);
+      this.registerComponent(registerCallback);
+    });
+  }
+
+  registerComponent(registerCallback) {
+    registerCallback.apply(this, []);
+  }
+
+  getAvailableComponents() {
+    return [];
+  }
+
+  debug(msg) {
+    if (this.debug && 'undefined' != typeof console.log) {
+      console.log(msg);
+    }
+  }
+
+  render() {
     let appSettings = {
       column2: this.state.column2,
-      column3: this.state.column3,
-      column4: this.state.column4
+      componentsAvailable: this.getAvailableComponents()
     };
     ReactDOM.render(
       <ColumnLayout handleChildEvent={this.handleComponentEvent.bind(this)} settings={appSettings} />,
       document.querySelector('.app')
     );
   }
-
-  this.init();
 };
 
-let midi = new MidiApp();
+let app = new App();

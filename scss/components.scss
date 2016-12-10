@@ -1,0 +1,26 @@
+.components-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.components-connections,
+.components {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.components-connections {
+  background: rgba(0, 0, 0, .1);
+}
+
+.components {
+  z-index: 1; // Bring the components in front of the connection lines
+}
+
+.component {
+  position: absolute;
+}

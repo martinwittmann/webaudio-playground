@@ -1,5 +1,6 @@
 import React from 'react';
 import Oscillator from './Oscillator.js';
+import ComponentsContainer from './ComponentsContainer.js';
 
 export default class Column2 extends React.Component {
   renderAudioComponent(component) {
@@ -19,10 +20,7 @@ export default class Column2 extends React.Component {
     });
     return (
       <div className="column-content">
-        <div>Column2</div>
-        <ul className="column-content-list">
-          {listContent}
-        </ul>
+        <ComponentsContainer />
       </div>
     );
   }
