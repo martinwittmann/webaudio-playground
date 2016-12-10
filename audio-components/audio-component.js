@@ -11,6 +11,7 @@ export default class AudioComponent {
   }
 
   createGainNode(volume) {
+    this.debug(this);
     let gain = this.audioContext.createGain();
     gain.gain.value = volume;
     return gain;

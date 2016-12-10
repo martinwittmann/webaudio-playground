@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ColumnLayout from './components/ColumnLayout.js';
 
-import OscillatorComponent from './audio-components/oscillator.js';
+import OscillatorComponent from './audio-components/oscillator-component.js';
 
 require('./scss/midi.scss');
 
@@ -10,8 +10,16 @@ export default class App {
   constructor() {
     this.debug = true;
     this.components = [];
-    this.registeredComponents = [];
+    this.registeredComponents = {};
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Register components.
+    this.registerComponent( 'oscillator', {
+      create: function() {
+        return new OscillatorComponent(this.audioContext);
+      }
+    });
+
     this.render();
   }
 
@@ -23,29 +31,32 @@ export default class App {
       }
 
       this.addComponent(args[0]);
-
-      //this.components.push(new OscillatorComponent(this.audioContext));
       this.render();
     }
   }
 
   addComponent(type) {
+    if ('undefined' == typeof this.registeredComponents[type]) {
+      this.debug('addComponent: Trying to add a component for an unregistered type "' + type + '".');
+      return false;
+    }
 
+    this.components.push(this.registeredComponents[type].create());
   }
 
-  registerComponents(components) {
-    components.map(registerCallback => {
-      console.log(this);
-      this.registerComponent(registerCallback);
-    });
-  }
-
-  registerComponent(registerCallback) {
-    registerCallback.apply(this, []);
+  registerComponent(componentName, componentData) {
+    this.registeredComponents[componentName] = componentData;
   }
 
   getAvailableComponents() {
-    return [];
+    let result = [];
+    for (var componentType in this.registeredComponents) {
+      if (!this.registeredComponents.hasOwnProperty(componentType)) {
+        continue;
+      }
+      result.push(this.registeredComponents[componentType]);
+    }
+    return result;
   }
 
   debug(msg) {
@@ -56,8 +67,8 @@ export default class App {
 
   render() {
     let appSettings = {
-      column2: this.state.column2,
-      componentsAvailable: this.getAvailableComponents()
+      components: this.components,
+      componentsAvailable: this.getAvailableComponents().map(c => { return c.create(); })
     };
     ReactDOM.render(
       <ColumnLayout handleChildEvent={this.handleComponentEvent.bind(this)} settings={appSettings} />,

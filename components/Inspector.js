@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class InspectorColumn extends React.Component {
+export default class Inspector extends React.Component {
   addOsc(e) {
     this.props.handleEvent('add-oscillator');
   }
