@@ -1,6 +1,6 @@
 export default class AudioComponent {
-  constructor(audioContext) {
-    this.audioContext = audioContext;
+  constructor() {
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.id = 123;
 
     if (!this.audioContext) {
@@ -11,7 +11,6 @@ export default class AudioComponent {
   }
 
   createGainNode(volume) {
-    this.debug(this);
     let gain = this.audioContext.createGain();
     gain.gain.value = volume;
     return gain;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Oscillator from './Oscillator.js';
 
 export default class AudioComponent extends React.Component {
   debug(msg) {

@@ -11,12 +11,11 @@ export default class App {
     this.debug = true;
     this.components = [];
     this.registeredComponents = {};
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     // Register components.
     this.registerComponent( 'oscillator', {
       create: function() {
-        return new OscillatorComponent(this.audioContext);
+        return new OscillatorComponent();
       }
     });
 
