@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { ItemTypes } from '../dnd-constants.js';
+import { DragSource } from 'react-dnd';
+
 import Oscillator from './Oscillator.js';
 
-export default class AudioComponent extends React.Component {
+const audioComponentSource = {
+  beginDrag(props) {
+    return {};
+  }
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  }
+}
+
+class AudioComponent extends React.Component {
   debug(msg) {
     if ('undefined' != typeof console.log) {
       console.log(msg);
     }
   }
   render() {
+    const { connectDragSource, isDragging } = this.props;
     switch (this.props.component.reactComponent) {
       case 'Oscillator':
-        return (<Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
+        return connectDragSource(<div><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
 
       default:
         console.log(this.props.component);
@@ -19,3 +36,10 @@ export default class AudioComponent extends React.Component {
     }
   }
 }
+
+AudioComponent.propTypes = {
+  connectDragSource: PropTypes.func.isRequired,
+  isDragging: PropTypes.bool.isRequired
+};
+
+export default DragSource(ItemTypes.AUDIOCOMPONENT, audioComponentSource, collect)(AudioComponent);

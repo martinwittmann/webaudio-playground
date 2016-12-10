@@ -4,9 +4,15 @@ import Inspector from './Inspector.js';
 import Column2 from './Column2.js';
 import ComponentsAvailable from './ComponentsAvailable.js';
 
+// Drag & drop stuff.
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend'
+
+// All React components corresponding to audio components.
 import Oscillator from './Oscillator.js';
 
-export default class ColumnLayout extends React.Component {
+
+class ColumnLayout extends React.Component {
   handleChildEvent(type) {
     this.props.handleChildEvent(type);
   }
@@ -24,3 +30,5 @@ export default class ColumnLayout extends React.Component {
     );
   }
 }
+
+export default DragDropContext(HTML5Backend)(ColumnLayout);
