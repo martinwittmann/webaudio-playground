@@ -105,6 +105,7 @@ export default class OscillatorComponent extends AudioComponent {
       var that = this;
       nodes.clearNodesTimeout = setTimeout(() => {
         nodes.osc.stop();
+        nodes.osc.disconnect();
         delete that.audioNodes.fixed;
       }, 100);
     }
@@ -118,6 +119,7 @@ export default class OscillatorComponent extends AudioComponent {
         let node = nodes[nodeKey];
         if ('OscillatorNode' == node.constructor.name) {
           node.stop();
+          node.disconnect();
         }
       });
     });
@@ -158,6 +160,7 @@ export default class OscillatorComponent extends AudioComponent {
     var that = this;
     nodes.clearNodesTimeout = setTimeout(() => {
       nodes.osc.stop();
+      nodes.osc.disconnect();
       delete that.audioNodes[note];
     }, 100);
   }
