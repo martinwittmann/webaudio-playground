@@ -1,9 +1,9 @@
 export default class AudioComponent {
-  constructor(componentId, userTitle) {
+  constructor(audioContext, componentId, userTitle) {
     this.id = componentId;
 
     // Dirty hack to generate a unique title out of the id.
-    this.title = this.userTitle + ' ' + componentId.match(/\d+$/);
+    this.title = userTitle + ' ' + (parseInt(componentId.match(/\d+$/), 10) + 1);
 
     // This tells us that this component is shown in the sidebar and not (yet)
     // on the canvas. Since the only way to add a component to the canvas is via
@@ -11,7 +11,8 @@ export default class AudioComponent {
     // Once the component is dropped on the canvas this value gets overwritten.
     this.inSidebar = true;
 
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.audioContext = audioContext;
+    this.audioNodes = {};
     this.inputs = [];
     this.output = [];
 
@@ -20,6 +21,11 @@ export default class AudioComponent {
     }
 
     this.canvasSelector = '.components-container';
+  }
+
+  // NOTE: This is *not* automatically called when the object is garbage collected.
+  destruct() {
+    this.stop();
   }
 
   createGainNode(volume) {
@@ -116,6 +122,23 @@ export default class AudioComponent {
     if (input && 'undefined'!= input.onmidimessage) {
       input.onmidimessage = this.onMidiMessage.bind(this);
     }
+  }
+
+  stop() {
+    // Stop and destruct all audio nodes.
+
+    Object.keys(this.audioNodes).map(key => {
+      let nodes = this.audioNodes[key];
+      Object.keys(nodes).map(nodeKey => {
+        let node = nodes[nodeKey];
+        if ('OscillatorNode' == node.constructor.name) {
+          node.stop();
+          node.disconnect();
+        }
+      });
+    });
+
+    this.audioNodes = {};
   }
 
   onMidiMessage(ev) {

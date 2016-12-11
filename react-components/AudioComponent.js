@@ -34,11 +34,11 @@ class AudioComponent extends React.Component {
     let component;
     switch (this.props.component.reactComponent) {
       case 'Oscillator':
-        component = connectDragSource(<div className="audio-component-content"><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        component = (<Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
         break;
 
       case 'MidiIn':
-        component = connectDragSource(<div className="audio-component-content"><MidiIn audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        component = (<MidiIn audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
         break;
 
       default:
@@ -47,7 +47,7 @@ class AudioComponent extends React.Component {
         return false;
     }
 
-    return (
+    return connectDragSource(
       <div
         id={"component-" + this.props.component.id}
         className={"audio-component " + this.props.component.type}
@@ -60,8 +60,9 @@ class AudioComponent extends React.Component {
         }}
       >
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
-
-        {component}
+        <div className="audio-component-content">
+          {component}
+        </div>
       </div>
     );
   }

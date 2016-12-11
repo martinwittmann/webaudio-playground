@@ -4,9 +4,15 @@ import MidInComponent from './audio-components/midi-in-component.js';
 
 export default class componentsRegistry {
 
-  constructor() {
+  constructor(audioContext) {
+    this.audioContext = audioContext;
     this.registeredComponentTypes = {};
     this.components = [];
+
+    // This gets populated when calling getAvailableComponents() and is used as
+    // a cache to prevent recreating audiocomponents everytime we render the
+    // available compoents.
+    this.availableComponents = {};
 
     // We use this only to create component ids which inlcude the type.
     // See createComponentId().
@@ -22,12 +28,12 @@ export default class componentsRegistry {
 
     this.registerComponentType('oscillator', {
       create: function() {
-        return new OscillatorComponent(this.createComponentId('oscillator'));
+        return new OscillatorComponent(this.audioContext, this.createComponentId('oscillator'));
       }
     });
     this.registerComponentType('midi-in', {
       create: function() {
-        return new MidInComponent(this.createComponentId('midi-in'));
+        return new MidInComponent(this.audioContext, this.createComponentId('midi-in'));
       }
     });
   }
@@ -40,15 +46,28 @@ export default class componentsRegistry {
     }
   }
 
-  getAvailableComponents() {
+  getAvailableComponentTypes() {
     let result = [];
     for (var componentType in this.registeredComponentTypes) {
       if (!this.registeredComponentTypes.hasOwnProperty(componentType)) {
         continue;
       }
-      result.push(this.registeredComponentTypes[componentType]);
+      result.push(componentType);
     }
     return result;
+  }
+
+  getAvailableComponents() {
+    let componentTypes = this.getAvailableComponentTypes();
+    let result = [];
+
+    return componentTypes.map(type => {
+      if ('undefined' == typeof this.availableComponents[type]) {
+        this.availableComponents[type] = this.registeredComponentTypes[type].create.apply(this, []);
+      }
+
+      return this.availableComponents[type];
+    });
   }
 
   addComponent(type) {
@@ -71,12 +90,15 @@ export default class componentsRegistry {
       return false;
     }
 
+    // We need to remove this component from the available components so that a
+    // new one will be created.
+    delete this.availableComponents[component.type];
+    this.addedComponentTypes[component.type]++;
     this.components.push(component);
   }
 
   createComponentId(type) {
     let id = type + '-' + this.addedComponentTypes[type];
-    this.addedComponentTypes[type]++;
     return id;
   }
 }

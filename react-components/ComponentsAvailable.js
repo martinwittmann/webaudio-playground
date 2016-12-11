@@ -3,7 +3,7 @@ import AudioComponent from './AudioComponent.js';
 
 export default class ComponentsAvailable extends React.Component {
   render() {
-    let components = this.props.components.map(component => {
+    let components = this.props.components.componentsAvailable.map(component => {
       return (<li key={component.id}><AudioComponent component={component} inSidebar /></li>);
     });
     return (

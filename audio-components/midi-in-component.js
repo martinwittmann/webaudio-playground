@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class MidiInComponent extends AudioComponent {
-  constructor(id) {
-    super(id, 'Midi In');
+  constructor(audioContext, id) {
+    super(audioContext, id, 'Midi In');
 
     this.initMidiAccess();
 
@@ -12,9 +12,5 @@ export default class MidiInComponent extends AudioComponent {
     this.state = {
       midiInput: false
     };
-  }
-
-  stop() {
-
   }
 }

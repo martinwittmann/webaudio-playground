@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class OscillatorComponent extends AudioComponent {
-  constructor(id) {
-    super(id, 'Oscillator');
+  constructor(audioContext, id) {
+    super(audioContext, id, 'Oscillator');
 
     this.type = 'oscillator';
     this.reactComponent = 'Oscillator';
@@ -105,21 +105,6 @@ export default class OscillatorComponent extends AudioComponent {
         delete that.audioNodes.fixed;
       }, 100);
     }
-  }
-
-  stop() {
-    // Stop all playing oscillators.
-    Object.keys(this.audioNodes).map(key => {
-      let nodes = this.audioNodes[key];
-      Object.keys(nodes).map(nodeKey => {
-        let node = nodes[nodeKey];
-        if ('OscillatorNode' == node.constructor.name) {
-          node.stop();
-          node.disconnect();
-        }
-      });
-    });
-    this.audioNodes = {};
   }
 
   handleNoteOn(note, velocity = 127) {

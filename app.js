@@ -9,8 +9,8 @@ require('./scss/midi.scss');
 export default class App {
   constructor() {
     this.debug = true;
-    this.components = new componentsRegistry();
-
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.components = new componentsRegistry(this.audioContext);
     this.render();
   }
 
@@ -35,7 +35,7 @@ export default class App {
   render() {
     let appSettings = {
       components: this.components.components,
-      componentsAvailable: this.components.getAvailableComponents().map(c => { return c.create.apply(this.components); }),
+      componentsAvailable: this.components.getAvailableComponents(),
       emitEvent: this.handleEvent.bind(this)
     };
 
