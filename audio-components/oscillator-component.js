@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class OscillatorComponent extends AudioComponent {
-  constructor(audioContext, frequency = 440, waveform = 'sine', gain = .2) {
-    super(audioContext);
+  constructor(id) {
+    super(id);
 
     this.type = 'oscillator';
     this.reactComponent = 'Oscillator';
@@ -13,9 +13,9 @@ export default class OscillatorComponent extends AudioComponent {
     this.state = {
       input: 'fixed',
       active: false,
-      frequency,
-      waveform,
-      gain
+      frequency: 440,
+      waveform: 'sine',
+      gain: .2
     };
 
     this.totalGain = this.createGainNode(0.8);

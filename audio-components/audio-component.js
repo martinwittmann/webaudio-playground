@@ -1,5 +1,7 @@
 export default class AudioComponent {
-  constructor() {
+  constructor(componentId) {
+    console.log(componentId);
+    this.id = componentId;
     // This tells us that this component is shown in the sidebar and not (yet)
     // on the canvas. Since the only way to add a component to the canvas is via
     // the sidebar this should not have any sideeffects.
@@ -7,7 +9,6 @@ export default class AudioComponent {
     this.inSidebar = true;
 
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.id = 123;
 
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
