@@ -7,7 +7,7 @@ import Oscillator from './Oscillator.js';
 const audioComponentSource = {
   beginDrag(props) {
     return {
-      id: props.component.id
+      audioComponent: props.component
     };
   }
 };
@@ -20,22 +20,26 @@ function collect(connect, monitor) {
 }
 
 class AudioComponent extends React.Component {
-  debug(msg) {
+  log(msg) {
     if ('undefined' != typeof console.log) {
       console.log(msg);
     }
   }
   render() {
     const { connectDragSource, isDragging } = this.props;
+    let component;
     switch (this.props.component.reactComponent) {
       case 'Oscillator':
-        return connectDragSource(<div><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        component = connectDragSource(<div><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        break;
 
       default:
         console.log(this.props.component);
-        this.debug('AudioComponent::render(): No corresponding reactComponent was found for component ' + this.props.component.type);
+        this.log('AudioComponent::render(): No corresponding reactComponent was found for component ' + this.props.component.type);
         return false;
     }
+
+    return (<div id={"component-" + this.props.component.id} className="component">{component}</div>);
   }
 }
 

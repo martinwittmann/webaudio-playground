@@ -83,7 +83,12 @@ export default class AudioComponent {
   }
 
   initMidiAccess() {
-    navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
+    if ('undefined' != typeof navigator['requestMIDIAccess']) {
+      navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
+    }
+    else {
+      this.onNoMidi('The navigator does not supply requestMIDIAccess().');
+    }
   }
 
   onMidiInputChanged(id) {
@@ -118,7 +123,7 @@ export default class AudioComponent {
   };
 
 
-  debug(msg) {
+  log(msg) {
     console.log(msg);
   }
 }

@@ -22,5 +22,13 @@
 }
 
 .component {
-  position: absolute;
+}
+
+.components-container {
+
+  .component {
+    position: absolute;
+    width: 20%;
+    height: 100px;
+  }
 }

@@ -25,7 +25,7 @@ export default class App {
   handleEvent(type, ...args) {
     if ('add-component' == type) {
       if (args.length < 1) {
-        this.debug('add-component event: Trying to add a component without specifying a type.');
+        this.log('add-component event: Trying to add a component without specifying a type.');
         return false;
       }
 
@@ -39,23 +39,22 @@ export default class App {
     if ('String' == typeof type) {
       // If we're given a component type string, add a component of that type.
       if ('undefined' == typeof this.registeredComponents[type]) {
-        this.debug('addComponent: Trying to add a component for an unregistered type "' + type + '".');
+        this.log('addComponent: Trying to add a component for an unregistered type "' + type + '".');
         return false;
       }
 
       component = this.registeredComponents[type].create();
     }
-    else if ('Object' == typeof type) {
+    else if ('object' == typeof type) {
       // We're given an existing component object, that we can add directly.
       component = type;
     }
     else {
-      this.debug('addComponent: Called with invalid argument type ' + typeof type);
+      this.log('addComponent: Called with invalid argument type ' + typeof type);
       return false;
     }
 
     this.components.push(component);
-    this.render();
   }
 
   registerComponent(componentName, componentData) {
@@ -73,7 +72,7 @@ export default class App {
     return result;
   }
 
-  debug(msg) {
+  log(msg) {
     if (this.debug && 'undefined' != typeof console.log) {
       console.log(msg);
     }
@@ -85,8 +84,7 @@ export default class App {
       componentsAvailable: this.getAvailableComponents().map(c => { return c.create(); }),
       emitEvent: this.handleEvent.bind(this)
     };
-    console.log(appSettings.components);
-    
+
     ReactDOM.render(
       <ColumnLayout settings={appSettings} />,
       document.querySelector('.app')
