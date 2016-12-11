@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import MidiSettings from './MidiSettings.js';
 
@@ -8,3 +9,4 @@ export default class Settings extends React.Component {
     );
   }
 };
+*/

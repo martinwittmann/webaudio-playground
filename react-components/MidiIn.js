@@ -8,6 +8,7 @@ export default class MidiInputs extends React.Component {
   }
 
   render() {
+    console.log('ssssssss');
     let inputOptions = this.props.midiInputs.map((input) => {
       return (<option key={input.id} value={input.id}>{input.name}</option>);
     });

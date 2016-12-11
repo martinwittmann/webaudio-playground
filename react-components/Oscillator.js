@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from './Select.js';
-import MidiInputs from './MidiInputs.js';
 
 export default class Oscillator extends React.Component {
   constructor(props) {

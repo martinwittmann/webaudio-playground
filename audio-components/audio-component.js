@@ -1,6 +1,5 @@
 export default class AudioComponent {
   constructor(componentId) {
-    console.log(componentId);
     this.id = componentId;
     // This tells us that this component is shown in the sidebar and not (yet)
     // on the canvas. Since the only way to add a component to the canvas is via
