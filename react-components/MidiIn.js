@@ -1,21 +1,27 @@
 import React from 'react';
 
 export default class MidiIn extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {};
+  constructor(props) {
+    super(props);
+    props.audioComponent.reactComponent = this;
+    this.state = {
+      inputs: [],
+      midiInputs: props.audioComponent.getMidiInputs()
+    };
   }
 
-  onMidiInChanged(value) {
-    this.props.onChildEvent('midiInputChanged', value);
+  onMidiInChanged(ev) {
+    this.props.audioComponent.onMidiInChanged.apply(this.props.audioComponent, [ev.target.value]);
+
+    // Let the event bubble up until app.js.
+    this.props.onChildEvent('midiInputChanged', ev.target.value);
     this.setState({
-      midiInput: value
+      midiInput: ev.target.value
     });
   }
 
   render() {
-    let midiIns = this.props.audioComponent.getMidiInputs().map(input => {
+    let midiIns = this.state.midiInputs.map(input => {
       return (<option key={input.value} value={input.value}>{input.name}</option>);
     });
 

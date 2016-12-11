@@ -24,6 +24,7 @@ export default class AudioComponent {
   }
 
   // NOTE: This is *not* automatically called when the object is garbage collected.
+  //       So we need to call this method when removing/deleting audio components.
   destruct() {
     this.stop();
   }
@@ -100,8 +101,9 @@ export default class AudioComponent {
     }
   }
 
-  initMidiAccess() {
-    // Initialized no inputs to prevent errors since requestMIDIAccess is asynchronous.
+  initMidiAccess(callback) {
+    // Initialized with no inputs to prevent errors since requestMIDIAccess is
+    // asynchronous.
     this.midiInputs = [];
 
     if ('undefined' != typeof navigator['requestMIDIAccess']) {
@@ -112,16 +114,26 @@ export default class AudioComponent {
     }
   }
 
-  onMidiInputChanged(id) {
-    this.stop();
+  onMidiInChanged(id) {
+    this.stop(); // Stop everything that's currently playing.
+
     if (this.state.midiInput) {
+      // Unset existing midi event handler.
       this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
+      this.unregisterInput('midi-in-' + this.state.midiInput);
     }
+
+    // 
     this.state.midiInput = id;
     let input = this.midiAccess.inputs.get(id);
     if (input && 'undefined'!= input.onmidimessage) {
       input.onmidimessage = this.onMidiMessage.bind(this);
     }
+
+    this.registerInput({
+      type: 'midi',
+      id: 'midi-in-' + id
+    });
   }
 
   stop() {
@@ -146,6 +158,14 @@ export default class AudioComponent {
     this.midiEvent(message);
   }
 
+  onMidiAccessDone() {
+    if (this.reactComponent) {
+      this.reactComponent.setState({
+        midiInputs: this.getMidiInputs()
+      });
+    }
+  }
+
   onMidiAvailable(midiAccess) {
     this.midiAccess = midiAccess;
     this.midiInputs = [];
@@ -156,16 +176,16 @@ export default class AudioComponent {
         name: input[1].name,
         manufacturer: input[1].manufacturer,
       });
-      this.registerInput({
-        type: 'midi',
-        id: input[1].id,
-        name: input[1].name
-      });
     }
+
+    this.onMidiAccessDone();
   }
 
   onNoMidi(msg) {
     this.log('No midi available: ' + msg);
+    if ('function' == this.onMidiAccessDone) {
+      this.onMidiAccessDone();
+    }
   };
 
   mapVeloctiyToGain(velocity) {
@@ -174,6 +194,26 @@ export default class AudioComponent {
 
   registerInput(input) {
     this.inputs.push(input);
+    if (this.reactComponent) {
+      this.reactComponent.setState({
+        inputs: this.inputs
+      });
+    }
+  }
+
+  unregisterInput(inputId) {
+    for (let i=0;i<this.inputs.length;i++) {
+      if (this.inputs[i].id == inputId) {
+        this.inputs.splice(i, 1);
+        break;
+      }
+    }
+
+    if (this.reactComponent) {
+      this.reactComponent.setState({
+        inputs: this.inputs
+      });
+    }
   }
 
   registerOutput(output) {

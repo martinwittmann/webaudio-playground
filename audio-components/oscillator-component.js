@@ -5,7 +5,7 @@ export default class OscillatorComponent extends AudioComponent {
     super(audioContext, id, 'Oscillator');
 
     this.type = 'oscillator';
-    this.reactComponent = 'Oscillator';
+    this.reactComponentType = 'Oscillator';
 
     this.maxGainPerNote = 0.4;
     this.audioNodes = {};

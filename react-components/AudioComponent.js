@@ -32,7 +32,7 @@ class AudioComponent extends React.Component {
   render() {
     const { connectDragSource, isDragging } = this.props;
     let component;
-    switch (this.props.component.reactComponent) {
+    switch (this.props.component.reactComponentType) {
       case 'Oscillator':
         component = (<Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
         break;
@@ -43,7 +43,7 @@ class AudioComponent extends React.Component {
 
       default:
         console.log(this.props.component);
-        this.log('AudioComponent::render(): No corresponding reactComponent was found for component ' + this.props.component.type);
+        this.log('AudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
         return false;
     }
 
