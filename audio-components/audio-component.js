@@ -114,26 +114,45 @@ export default class AudioComponent {
     }
   }
 
-  onMidiInChanged(id) {
+  onMidiInChanged(ev) {
+    // The raw onChange event from a select from node.
+    let id = ev.target.value;
+
     this.stop(); // Stop everything that's currently playing.
 
     if (this.state.midiInput) {
       // Unset existing midi event handler.
       this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
-      this.unregisterInput('midi-in-' + this.state.midiInput);
     }
 
-    // 
+    // Set the midi input.
     this.state.midiInput = id;
     let input = this.midiAccess.inputs.get(id);
     if (input && 'undefined'!= input.onmidimessage) {
       input.onmidimessage = this.onMidiMessage.bind(this);
     }
 
-    this.registerInput({
-      type: 'midi',
-      id: 'midi-in-' + id
-    });
+    // Add / update the component's input 
+    let inputIndex = this.getInputIndex(id);
+    if (inputIndex > -1) {
+      // Update the input.
+      this.updateInput({
+        type: 'midi',
+        id: 'midi-in-' + id
+      });
+    }
+    else {
+      this.registerInput({
+        type: 'midi',
+        id: 'midi-in-' + id
+      });
+    }
+
+    if (this.reactComponent) {
+      this.reactComponent.setState({
+        midiInput: id
+      });
+    }
   }
 
   stop() {
@@ -214,6 +233,16 @@ export default class AudioComponent {
         inputs: this.inputs
       });
     }
+  }
+
+  getInputIndex(id) {
+    for (let i=0;i<this.inputs.length;i++) {
+      if (this.inputs[i].id == id) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   registerOutput(output) {

@@ -10,23 +10,13 @@ export default class MidiIn extends React.Component {
     };
   }
 
-  onMidiInChanged(ev) {
-    this.props.audioComponent.onMidiInChanged.apply(this.props.audioComponent, [ev.target.value]);
-
-    // Let the event bubble up until app.js.
-    this.props.onChildEvent('midiInputChanged', ev.target.value);
-    this.setState({
-      midiInput: ev.target.value
-    });
-  }
-
   render() {
     let midiIns = this.state.midiInputs.map(input => {
       return (<option key={input.value} value={input.value}>{input.name}</option>);
     });
 
     return (
-      <select onChange={this.onMidiInChanged.bind(this)}>
+      <select onChange={this.props.audioComponent.onMidiInChanged.bind(this.props.audioComponent)}>
         <option value="">[Please select input]</option>
         {midiIns}
       </select>
