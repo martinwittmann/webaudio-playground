@@ -2,7 +2,7 @@ import AudioComponent from './audio-component.js';
 
 export default class OscillatorComponent extends AudioComponent {
   constructor(id) {
-    super(id);
+    super(id, 'Oscillator');
 
     this.type = 'oscillator';
     this.reactComponent = 'Oscillator';
@@ -47,10 +47,6 @@ export default class OscillatorComponent extends AudioComponent {
         value: 'midi'
       }
     ];
-  }
-
-  mapVeloctiyToGain(velocity) {
-    return velocity / (127 / this.maxGainPerNote)
   }
 
   onWaveformChanged(newWaveform) {
@@ -149,7 +145,6 @@ export default class OscillatorComponent extends AudioComponent {
   }
 
   handleNoteOff(note) {
-    //console.log('note off ' + note);
     if (!this.audioNodes[note]) {
       // This note is not playing right now.
       return false;

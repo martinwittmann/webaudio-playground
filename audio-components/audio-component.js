@@ -1,6 +1,10 @@
 export default class AudioComponent {
-  constructor(componentId) {
+  constructor(componentId, userTitle) {
     this.id = componentId;
+
+    // Dirty hack to generate a unique title out of the id.
+    this.title = this.userTitle + ' ' + componentId.match(/\d+$/);
+
     // This tells us that this component is shown in the sidebar and not (yet)
     // on the canvas. Since the only way to add a component to the canvas is via
     // the sidebar this should not have any sideeffects.
@@ -8,12 +12,13 @@ export default class AudioComponent {
     this.inSidebar = true;
 
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.inputs = [];
+    this.output = [];
 
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
     }
 
-    this.initMidiAccess();
     this.canvasSelector = '.components-container';
   }
 
@@ -90,6 +95,9 @@ export default class AudioComponent {
   }
 
   initMidiAccess() {
+    // Initialized no inputs to prevent errors since requestMIDIAccess is asynchronous.
+    this.midiInputs = [];
+
     if ('undefined' != typeof navigator['requestMIDIAccess']) {
       navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
     }
@@ -104,7 +112,10 @@ export default class AudioComponent {
       this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
     }
     this.state.midiInput = id;
-    this.midiAccess.inputs.get(id).onmidimessage = this.onMidiMessage.bind(this);
+    let input = this.midiAccess.inputs.get(id);
+    if (input && 'undefined'!= input.onmidimessage) {
+      input.onmidimessage = this.onMidiMessage.bind(this);
+    }
   }
 
   onMidiMessage(ev) {
@@ -122,13 +133,29 @@ export default class AudioComponent {
         name: input[1].name,
         manufacturer: input[1].manufacturer,
       });
+      this.registerInput({
+        type: 'midi',
+        id: input[1].id,
+        name: input[1].name
+      });
     }
   }
 
   onNoMidi(msg) {
-    console.log('No midi available: ' + msg);
+    this.log('No midi available: ' + msg);
   };
 
+  mapVeloctiyToGain(velocity) {
+    return velocity / (127 / this.maxGainPerNote)
+  }
+
+  registerInput(input) {
+    this.inputs.push(input);
+  }
+
+  registerOutput(output) {
+    this.outputs.push(output);
+  }
 
   log(msg) {
     console.log(msg);

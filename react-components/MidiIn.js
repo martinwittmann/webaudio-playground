@@ -1,26 +1,29 @@
 import React from 'react';
-import Oscillator from './Oscillator.js';
 
-export default class MidiInputs extends React.Component {
-  onMidiInputSelected(e) {
-    var inputIndex = e.target.value;
-    this.props.onMidiInputChanged(inputIndex);
+export default class MidiIn extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {};
+  }
+
+  onMidiInChanged(value) {
+    this.props.onChildEvent('midiInputChanged', value);
+    this.setState({
+      midiInput: value
+    });
   }
 
   render() {
-    console.log('ssssssss');
-    let inputOptions = this.props.midiInputs.map((input) => {
-      return (<option key={input.id} value={input.id}>{input.name}</option>);
+    let midiIns = this.props.audioComponent.getMidiInputs().map(input => {
+      return (<option key={input.value} value={input.value}>{input.name}</option>);
     });
 
     return (
-      <div className="midi-settings">
-        <h1>Midi Settings</h1>
-        <select className="midi-inputs" onChange={this.onMidiInputChanged.bind(this)}>
-          <option value="">[Please select input]</option>
-          {inputOptions}
-        </select>
-      </div>
+      <select onChange={this.onMidiInChanged.bind(this)}>
+        <option value="">[Please select input]</option>
+        {midiIns}
+      </select>
     );
   }
 }

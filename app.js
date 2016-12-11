@@ -35,7 +35,7 @@ export default class App {
   render() {
     let appSettings = {
       components: this.components.components,
-      componentsAvailable: this.components.getAvailableComponents().map(c => { return c.create(); }),
+      componentsAvailable: this.components.getAvailableComponents().map(c => { return c.create.apply(this.components); }),
       emitEvent: this.handleEvent.bind(this)
     };
 

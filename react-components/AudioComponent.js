@@ -2,7 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { ItemTypes } from '../dnd-constants.js';
 import { DragSource } from 'react-dnd';
 
+import AudioComponentInputs from './AudioComponentInputs.js';
+
+// React components for our audio components.
 import Oscillator from './Oscillator.js';
+import MidiIn from './MidiIn.js';
 
 const audioComponentSource = {
   beginDrag(props) {
@@ -30,7 +34,11 @@ class AudioComponent extends React.Component {
     let component;
     switch (this.props.component.reactComponent) {
       case 'Oscillator':
-        component = connectDragSource(<div><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        component = connectDragSource(<div className="audio-component-content"><Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
+        break;
+
+      case 'MidiIn':
+        component = connectDragSource(<div className="audio-component-content"><MidiIn audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} /></div>);
         break;
 
       default:
@@ -42,13 +50,17 @@ class AudioComponent extends React.Component {
     return (
       <div
         id={"component-" + this.props.component.id}
-        className="component"
+        className={"audio-component " + this.props.component.type}
         ref={(el) => {
           if (el && !this.props.component.initialBoundingRect) {
+            // We store the dom element's coordinates once to be able to position
+            // it correctly when it's dragged onto the canvas.
             this.props.component.initialBoundingRect = el.getBoundingClientRect();
           }
         }}
       >
+        <h2 className="audio-component-headline">{this.props.component.title}</h2>
+
         {component}
       </div>
     );

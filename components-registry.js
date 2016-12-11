@@ -1,4 +1,5 @@
 import OscillatorComponent from './audio-components/oscillator-component.js';
+import MidInComponent from './audio-components/midi-in-component.js';
 
 
 export default class componentsRegistry {
@@ -11,11 +12,23 @@ export default class componentsRegistry {
     // See createComponentId().
     this.addedComponentTypes = {};
 
-    // Register components.
+    // Register components:
+    
+    // 1. Create and import the audio-component derived class
+    // 2. Call this.registerComponentType for the new type
+    // 3. Create the corresponding react component
+    // 4. Import the react component in the AudioComponent.js react component.
+    // 5. Add render code in AudioComponent.js::render()
+
     this.registerComponentType('oscillator', {
       create: function() {
         return new OscillatorComponent(this.createComponentId('oscillator'));
-      }.bind(this)
+      }
+    });
+    this.registerComponentType('midi-in', {
+      create: function() {
+        return new MidInComponent(this.createComponentId('midi-in'));
+      }
     });
   }
 
@@ -47,7 +60,7 @@ export default class componentsRegistry {
         return false;
       }
 
-      component = this.registeredComponentTypes[type].create();
+      component = this.registeredComponentTypes[type].create.apply(this, []);
     }
     else if ('object' == typeof type) {
       // We're given an existing component object, that we can add directly.

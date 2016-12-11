@@ -1,5 +1,4 @@
 import React from 'react';
-import Settings from './Settings.js';
 import Inspector from './Inspector.js';
 import Column2 from './Column2.js';
 import ComponentsAvailable from './ComponentsAvailable.js';

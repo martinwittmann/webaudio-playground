@@ -42,13 +42,6 @@ export default class Oscillator extends React.Component {
     });
   }
 
-  onMidiInputChanged(value) {
-    this.props.onChildEvent('midiInputChanged', value);
-    this.setState({
-      midiInput: value
-    });
-  }
-
   render() {
     let options = [
       (<li key="input">
@@ -82,25 +75,10 @@ export default class Oscillator extends React.Component {
         <label htmlFor="activate-{this.props.audioComponent.id}">activate</label>
       </li>));
     }
-    else
-    if ('midi' == this.state.input) {
-      options.push((<li key="midi-inputs">
-        <label className="option-label">Midi Input</label>
-        <Select
-          className="midi-input"
-          onChange={this.onMidiInputChanged.bind(this)}
-          value={this.state.midiInput}
-          options={this.props.audioComponent.getMidiInputs()}
-        />
-      </li>));
-    }
     return (
-      <div className="audio-component oscillator">
-        <h2 className="audio-component-headline">Oscillator</h2>
-        <ul className="audio-component-options">
-          {options}
-        </ul>
-      </div>
+      <ul className="audio-component-options">
+        {options}
+      </ul>
     );
   }
 };
