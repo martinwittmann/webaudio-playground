@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ColumnLayout from './components/ColumnLayout.js';
+import ColumnLayout from './react-components/ColumnLayout.js';
 
 import componentsRegistry from './components-registry.js';
 
