@@ -39,7 +39,19 @@ class AudioComponent extends React.Component {
         return false;
     }
 
-    return (<div id={"component-" + this.props.component.id} className="component">{component}</div>);
+    return (
+      <div
+        id={"component-" + this.props.component.id}
+        className="component"
+        ref={(el) => {
+          if (el && !this.props.component.initialBoundingRect) {
+            this.props.component.initialBoundingRect = el.getBoundingClientRect();
+          }
+        }}
+      >
+        {component}
+      </div>
+    );
   }
 }
 

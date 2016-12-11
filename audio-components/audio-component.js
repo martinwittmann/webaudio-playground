@@ -1,5 +1,11 @@
 export default class AudioComponent {
   constructor() {
+    // This tells us that this component is shown in the sidebar and not (yet)
+    // on the canvas. Since the only way to add a component to the canvas is via
+    // the sidebar this should not have any sideeffects.
+    // Once the component is dropped on the canvas this value gets overwritten.
+    this.inSidebar = true;
+
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     this.id = 123;
 
@@ -8,6 +14,7 @@ export default class AudioComponent {
     }
 
     this.initMidiAccess();
+    this.canvasSelector = '.components-container';
   }
 
   createGainNode(volume) {

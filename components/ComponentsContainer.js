@@ -10,15 +10,30 @@ const componentTarget = {
     let component = monitor.getItem().audioComponent;
 
     let originalNode = document.querySelector('#component-' + component.id);
+    let originalNodeWidth = Math.round(originalNode.getBoundingClientRect().width);
     originalNode.parentNode.removeChild(originalNode);
 
     props.settings.emitEvent('add-component', component);
 
     let node = document.querySelector('#component-' + component.id);
+
+    // Calculate the position where we want to drop the component:
+
+    // These coordinates must be > component.boundingRect since this
+    let cursorPosOnDragStart = monitor.getInitialClientOffset();
+    let cursorOffsetInsideComponentOnDragStart = {
+      x: cursorPosOnDragStart.x - component.initialBoundingRect.left,
+      y: cursorPosOnDragStart.y - component.initialBoundingRect.top
+    };
+
     let droppedAt = monitor.getClientOffset();
-    node.style.borderColor = 'red';
-    node.style.left = droppedAt.x + 'px';
-    node.style.top = droppedAt.y + 'px';
+    let containerRect = document.querySelector(component.canvasSelector).getBoundingClientRect();
+
+    component.inSidebar = false; // Mark the component to be shown on the canvas.
+
+    node.style.left = (droppedAt.x - containerRect.left - cursorOffsetInsideComponentOnDragStart.x) + 'px';
+    node.style.top = (droppedAt.y - containerRect.top - cursorOffsetInsideComponentOnDragStart.y) + 'px';
+    node.style.width = originalNodeWidth + 'px';
   }
 };
 
@@ -50,7 +65,6 @@ class ComponentsContainer extends React.Component {
     );
   }
 }
-
 
 ComponentsContainer.propTypes = {
   isOver: PropTypes.bool.isRequired
