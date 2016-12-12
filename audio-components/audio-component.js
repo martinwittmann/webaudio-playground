@@ -36,6 +36,13 @@ export default class AudioComponent {
     this.stop();
   }
 
+  moveReactContainerComponent(pos) {
+    this.state.canvasPos = pos;
+    this.reactContainerComponent.setState({
+      canvasPos: pos
+    });
+  }
+
   createGainNode(volume) {
     let gain = this.audioContext.createGain();
     gain.gain.value = volume;
@@ -150,13 +157,12 @@ export default class AudioComponent {
       // Update the input.
       this.updateOutput(outputIndex, {
         type: 'midi',
-        id: 'midi-in-' + id
       });
     }
     else {
       this.registerOutput({
         type: 'midi',
-        id: 'midi-in-' + id,
+        name: input.name
       });
     }
 
@@ -258,6 +264,7 @@ export default class AudioComponent {
   }
 
   updateOutput(index, newOutput) {
+    newOutput.id = this.id + '--output-' + this.newOutput.length;
     return this.updateIO('outputs', index, newOutput);
   }
 
@@ -288,6 +295,7 @@ export default class AudioComponent {
   }
 
   registerOutput(output) {
+    output.id = this.id + '--output-' + this.outputs.length;
     this.outputs.push(output);
 
     if (this.reactComponent) {

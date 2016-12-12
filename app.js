@@ -29,6 +29,10 @@ export default class App {
       case 'get-available-component-by-id':
         return this.components.getAvailableComponentById(args[0]);
         break;
+
+      case 'get-canvas-component-by-id':
+        return this.components.getCanvasComponentById(args[0]);
+        break;
     }
   }
 

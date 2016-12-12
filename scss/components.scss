@@ -38,6 +38,7 @@
   padding: 10px;
   border-radius: 3px;
   position: relative;
+  cursor: move;
 }
 
 .audio-component-headline {
@@ -82,7 +83,12 @@
     transition: all 0.3s ease 0s;
     width: $io-size;
     height: $io-size;
-    cursor: hand;
+    cursor: pointer;
+
+    &.connecting {
+      background: #fff071;
+    border: $io-border-width solid rgba(0, 0, 0, 0.3);
+    }
 
     &:hover {
       background: #1acf18;

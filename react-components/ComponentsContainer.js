@@ -4,23 +4,67 @@ import ReactAudioComponent from './ReactAudioComponent.js';
 export default class ComponentsContainer extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      isConnectingComponents: false,
+      sourceComponent: false
+    };
   }
 
-  onDragOver(ev) {
+  onStartConnectingComponents([sourceComponent, sourceOutputComponent]) {
+    console.log('Start connecting...');
+    this.setState({
+      isConnectingComponents: true,
+      sourceComponent: sourceComponent,
+      sourceOutputComponent: sourceOutputComponent
+    });
+  }
+
+  onStopConnectingComponents() {
+    console.log('Stopped connecting.');
+    this.setState({
+      isConnectingComponents: false
+    });
+    this.state.sourceOutputComponent.setState({
+      activeIO: false
+    });
+  }
+
+  onDragOverContainer(ev) {
     // For some reason this is necessary for the onDrop event to fire.
     // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
     ev.preventDefault();
   }
 
-  onDrop(ev) {
+  handleEvent(type, ...args) {
+    switch (type) {
+      case 'start-connecting':
+        this.onStartConnectingComponents(args);
+        break;
+
+      case 'stop-connecting':
+
+        this.onStopConnectingComponents(args);
+    }
+  }
+
+  onMouseUp(ev) {
+    if (this.state.isConnectingComponents) {
+      this.onStopConnectingComponents();
+    }
+  }
+
+  onDropComponent(ev) {
     ev.preventDefault();
 
     let componentId = ev.dataTransfer.getData('id');
-    let component = this.props.settings.emitEvent('get-available-component-by-id', componentId);
     let cursorPosOnDragStart = {
       x: parseFloat(ev.dataTransfer.getData('dragStartX'), 10),
       y: parseFloat(ev.dataTransfer.getData('dragStartY'), 10)
     };
+    let newCanvasPos, component;
+
+    let componentIsOnCanvas = parseInt(ev.dataTransfer.getData('onCanvas'), 10);
 
     // Handle the dropping by either adding the component to the canvas or moving it on the canvas.
     let droppedAt = {
@@ -28,9 +72,9 @@ export default class ComponentsContainer extends React.Component {
       y: ev.pageY
     };
 
-    if (component.inSidebar) {
+    if (!componentIsOnCanvas) {
       // Add the component to the canvas at the expected position.
-
+      component = this.props.settings.emitEvent('get-available-component-by-id', componentId);
       this.props.settings.emitEvent('add-component', component);
 
       // Calculate the position where we want to drop the component:
@@ -41,37 +85,43 @@ export default class ComponentsContainer extends React.Component {
 
       let containerRect = document.querySelector(component.canvasSelector).getBoundingClientRect();
 
-      // It's important that we retrieve the node *after* we deleted the original
-      // node because otherwise we'd get the original instead of the dropped node.
-      let node = document.querySelector('#component-' + component.id);
-      component.state.canvasPos.x = droppedAt.x - containerRect.left - posInCompOnDragStart.x;
-      component.state.canvasPos.y = droppedAt.y - containerRect.top - posInCompOnDragStart.y;
       component.inSidebar = false; // Mark the component to be shown on the canvas.
+
+      newCanvasPos = {
+        x: droppedAt.x - containerRect.left - posInCompOnDragStart.x,
+        y: droppedAt.y - containerRect.top - posInCompOnDragStart.y
+      };
     }
     else {
       // Just move the component to the expected position.
-      let node = document.querySelector('#component-' + component.id);
-      node.style.left = parseFloat(node.style.left) + (droppedAt.x - cursorPosOnDragStart.x) + 'px';
-      node.style.top = parseFloat(node.style.top) + (droppedAt.y - cursorPosOnDragStart.y) + 'px';
+      component = this.props.settings.emitEvent('get-canvas-component-by-id', componentId);
+      newCanvasPos = {
+        x: component.state.canvasPos.x + (droppedAt.x - cursorPosOnDragStart.x),
+        y: component.state.canvasPos.y + (droppedAt.y - cursorPosOnDragStart.y)
+      };
     }
+
+    // Update the container's position.
+    component.moveReactContainerComponent(newCanvasPos);
   }
 
   render() {
     const { x, y, connectDropTarget, isOver } = this.props;
     let components = this.props.settings.components.map(component => {
-      return (<div key={component.id}><ReactAudioComponent component={component} /></div>);
+      return (<ReactAudioComponent key={component.id} component={component} emitEvent={this.handleEvent.bind(this)} />);
     });
 
     return (
       <div
         className="components-container"
-       >
+        onMouseUp={this.onMouseUp.bind(this)}
+      >
         <svg className="components-connections" width="100%" height="100%">
         </svg>
         <div
           className="components"
-          onDrop={this.onDrop.bind(this)}
-          onDragOver={this.onDragOver.bind(this)}
+          onDrop={this.onDropComponent.bind(this)}
+          onDragOver={this.onDragOverContainer.bind(this)}
         >
           {components}
         </div>

@@ -81,6 +81,16 @@ export default class componentsRegistry {
     return false;
   }
 
+  getCanvasComponentById(id) {
+    for (let key in this.components) {
+      let c = this.components[key];
+      if (c.id === id) {
+        return c;
+      }
+    }
+    return false;
+  }
+
   addComponent(type) {
     let component;
     if ('String' == typeof type) {
@@ -111,5 +121,11 @@ export default class componentsRegistry {
   createComponentId(type) {
     let id = type + '-' + this.addedComponentTypes[type];
     return id;
+  }
+
+  log(msg) {
+    if (console && 'undefined' != console.log) {
+      console.log(msg);
+    }
   }
 }

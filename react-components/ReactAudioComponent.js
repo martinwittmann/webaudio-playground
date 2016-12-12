@@ -23,14 +23,37 @@ export default class ReactAudioComponent extends React.Component {
     };
   }
 
-  handleChildEvent(type, ev) {
+  handleChildEvent(type, ...args) {
+    let outputData, ev;
     switch (type) {
       case 'start-connecting':
-        this.state.canBeDragged = false;
+        ev = args[0];
+        ev.preventDefault();
+        outputData = this.parseOutputIdAttribute(ev.target.getAttribute('id'));
+
+        this.setState({
+          canBeDragged: false
+        });
+        this.props.emitEvent('start-connecting', this, args[1]);
         break;
 
       case 'stop-connecting':
-        this.state.canBeDragged = true;
+        ev = args[0];
+        ev.preventDefault();
+
+        this.setState({
+          canBeDragged: true
+        });
+        this.props.emitEvent('stop-connecting');
+    }
+  }
+
+  parseOutputIdAttribute(id) {
+    let parts = id.split('--');
+
+    return {
+      componentId: parts[0],
+      outputId: parts[1].match(/\d+$/).pop()
     }
   }
 
@@ -38,6 +61,10 @@ export default class ReactAudioComponent extends React.Component {
     ev.dataTransfer.setData('id', this.props.component.id);
     ev.dataTransfer.setData('dragStartX', ev.pageX);
     ev.dataTransfer.setData('dragStartY', ev.pageY);
+    // We need to save this as number because otherwise false becomes 'false'
+    // which makes parsing the values complicated. Se we work around this by
+    // casting to number.
+    ev.dataTransfer.setData('onCanvas', this.props.component.inSidebar ? 0 : 1);
   }
 
   render() {
@@ -58,8 +85,8 @@ export default class ReactAudioComponent extends React.Component {
     }
 
     let inlineStyles = {
-      left: this.state.canvasPos.x + 'px',
-      top: this.state.canvasPos.y + 'px'
+      left: Math.round(this.state.canvasPos.x) + 'px',
+      top: Math.round(this.state.canvasPos.y) + 'px'
     };
 
     return (
