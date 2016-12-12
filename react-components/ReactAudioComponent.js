@@ -10,19 +10,18 @@ import Oscillator from './Oscillator.js';
 import MidiIn from './MidiIn.js';
 
 const ReactAudioComponentSource = {
+  canDrag(props, monitor) {
+    console.log(this);
+    console.log(monitor);
+    console.log(monitor.getItem());
+    return true;
+  },
   beginDrag(props) {
     return {
       audioComponent: props.component
     };
   }
 };
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  }
-}
 
 class ReactAudioComponent extends React.Component {
   constructor(props) {
@@ -31,8 +30,29 @@ class ReactAudioComponent extends React.Component {
 
     this.state = {
       inputs: props.component.getInputs(),
-      outputs: props.component.getOutputs()
+      outputs: props.component.getOutputs(),
+      canBeDragged: true
     };
+  }
+
+
+  dndCollect(connect, monitor) {
+    return {
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging()
+    }
+  }
+
+  handleChildEvent(type, ev) {
+    console.log(type);
+    switch (type) {
+      case 'start-connecting':
+        this.state.canBeDragged = false;
+        break;
+
+      case 'stop-connecting':
+        this.state.canBeDragged = true;
+    }
   }
 
   render() {
@@ -69,7 +89,7 @@ class ReactAudioComponent extends React.Component {
         <div className="audio-component-content">
           {component}
         </div>
-        <ReactAudioComponentOutputs outputs={this.state.outputs} />
+        <ReactAudioComponentOutputs outputs={this.state.outputs} handleEvent={this.handleChildEvent.bind(this)} />
       </div>
     );
   }
@@ -85,4 +105,4 @@ ReactAudioComponent.propTypes = {
   isDragging: PropTypes.bool.isRequired
 };
 
-export default DragSource(ItemTypes.REACTAUDIOCOMPONENT, ReactAudioComponentSource, collect)(ReactAudioComponent);
+export default DragSource(ItemTypes.REACTAUDIOCOMPONENT, ReactAudioComponentSource, ReactAudioComponent.prototype.dndCollect)(ReactAudioComponent);

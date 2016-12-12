@@ -2,6 +2,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .components-connections,
@@ -36,6 +37,7 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 10px;
   border-radius: 3px;
+  position: relative;
 }
 
 .audio-component-headline {
@@ -57,5 +59,33 @@
 
   li {
     padding: 1px;
+  }
+}
+
+.component-outputs {
+  $offset: ($io-size / -2) - $io-border-width;
+  position: absolute;
+  bottom: $offset;
+  left: $offset;
+  right: $offset;
+  list-style-type: none;
+  list-style-image: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+
+  > li {
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.01);
+    border: $io-border-width solid rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease 0s;
+    width: $io-size;
+    height: $io-size;
+    cursor: hand;
+
+    &:hover {
+      background: #1acf18;
+    }
   }
 }

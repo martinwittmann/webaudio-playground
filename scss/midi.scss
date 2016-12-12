@@ -1,6 +1,9 @@
 $bg: rgba(0, 0, 0, 0);
 $column-width: 20%;
 
+$io-size: 10px;
+$io-border-width: 2px;
+
 @import "layout.scss";
 @import "components.scss";
 @import "inspector.scss";
