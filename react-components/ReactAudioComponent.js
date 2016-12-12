@@ -2,13 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { ItemTypes } from '../dnd-constants.js';
 import { DragSource } from 'react-dnd';
 
-import AudioComponentInputs from './AudioComponentInputs.js';
+import ReactAudioComponentInputs from './ReactAudioComponentInputs.js';
+import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
 
 // React components for our audio components.
 import Oscillator from './Oscillator.js';
 import MidiIn from './MidiIn.js';
 
-const audioComponentSource = {
+const ReactAudioComponentSource = {
   beginDrag(props) {
     return {
       audioComponent: props.component
@@ -23,12 +24,17 @@ function collect(connect, monitor) {
   }
 }
 
-class AudioComponent extends React.Component {
-  log(msg) {
-    if ('undefined' != typeof console.log) {
-      console.log(msg);
-    }
+class ReactAudioComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    props.component.reactContainerComponent = this;
+
+    this.state = {
+      inputs: props.component.getInputs(),
+      outputs: props.component.getOutputs()
+    };
   }
+
   render() {
     const { connectDragSource, isDragging } = this.props;
     let component;
@@ -42,8 +48,7 @@ class AudioComponent extends React.Component {
         break;
 
       default:
-        console.log(this.props.component);
-        this.log('AudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
+        this.log('ReactAudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
         return false;
     }
 
@@ -59,18 +64,25 @@ class AudioComponent extends React.Component {
           }
         }}
       >
+        <ReactAudioComponentInputs inputs={this.state.inputs} />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
           {component}
         </div>
+        <ReactAudioComponentOutputs outputs={this.state.outputs} />
       </div>
     );
   }
+  log(msg) {
+    if ('undefined' != typeof console.log) {
+      console.log(msg);
+    }
+  }
 }
 
-AudioComponent.propTypes = {
+ReactAudioComponent.propTypes = {
   connectDragSource: PropTypes.func.isRequired,
   isDragging: PropTypes.bool.isRequired
 };
 
-export default DragSource(ItemTypes.AUDIOCOMPONENT, audioComponentSource, collect)(AudioComponent);
+export default DragSource(ItemTypes.REACTAUDIOCOMPONENT, ReactAudioComponentSource, collect)(ReactAudioComponent);

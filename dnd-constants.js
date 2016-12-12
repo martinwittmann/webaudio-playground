@@ -1,3 +1,3 @@
 export const ItemTypes = {
-  AUDIOCOMPONENT: 'audioComponent'
+  REACTAUDIOCOMPONENT: 'audioComponent'
 };

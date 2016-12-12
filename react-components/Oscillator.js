@@ -5,10 +5,11 @@ export default class Oscillator extends React.Component {
   constructor(props) {
     super(props);
     props.audioComponent.reactComponent = this;
+    
     this.state = {
       inputs: [],
 
-      // There are old state properties...
+      // These are old state properties...
       input: this.props.audioComponent.state.input,
       waveform: this.props.audioComponent.state.waveform,
       frequency: this.props.audioComponent.state.frequency,

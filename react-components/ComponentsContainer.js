@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import AudioComponent from './AudioComponent.js';
+import ReactAudioComponent from './ReactAudioComponent.js';
 
 import { ItemTypes } from '../dnd-constants.js';
 import { DropTarget } from 'react-dnd';
@@ -66,7 +66,7 @@ class ComponentsContainer extends React.Component {
   render() {
     const { x, y, connectDropTarget, isOver } = this.props;
     let components = this.props.settings.components.map(component => {
-      return (<div key={component.id}><AudioComponent component={component} /></div>);
+      return (<div key={component.id}><ReactAudioComponent component={component} /></div>);
     });
 
     return connectDropTarget(
@@ -85,4 +85,4 @@ ComponentsContainer.propTypes = {
   isOver: PropTypes.bool.isRequired
 };
 
-export default DropTarget(ItemTypes.AUDIOCOMPONENT, componentTarget, collect)(ComponentsContainer);
+export default DropTarget(ItemTypes.REACTAUDIOCOMPONENT, componentTarget, collect)(ComponentsContainer);

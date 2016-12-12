@@ -14,7 +14,7 @@ export default class AudioComponent {
     this.audioContext = audioContext;
     this.audioNodes = {};
     this.inputs = [];
-    this.output = [];
+    this.outputs = [];
 
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
@@ -133,24 +133,30 @@ export default class AudioComponent {
     }
 
     // Add / update the component's input 
-    let inputIndex = this.getInputIndex(id);
-    if (inputIndex > -1) {
+    let outputIndex = this.getOutputIndex(id);
+    if (outputIndex > -1) {
       // Update the input.
-      this.updateInput({
+      this.updateOutput(outputIndex, {
         type: 'midi',
         id: 'midi-in-' + id
       });
     }
     else {
-      this.registerInput({
+      this.registerOutput({
         type: 'midi',
-        id: 'midi-in-' + id
+        id: 'midi-in-' + id,
       });
     }
 
     if (this.reactComponent) {
       this.reactComponent.setState({
-        midiInput: id
+        midiInput: id,
+      });
+    }
+    if (this.reactContainerComponent) {
+      this.reactContainerComponent.setState({
+        inputs: this.getInputs(),
+        outputs: this.getOutputs()
       });
     }
   }
@@ -220,24 +226,22 @@ export default class AudioComponent {
     }
   }
 
-  unregisterInput(inputId) {
-    for (let i=0;i<this.inputs.length;i++) {
-      if (this.inputs[i].id == inputId) {
-        this.inputs.splice(i, 1);
-        break;
-      }
-    }
-
-    if (this.reactComponent) {
-      this.reactComponent.setState({
-        inputs: this.inputs
-      });
-    }
+  getInputIndex(id) {
+    return this.getIOIndex('inputs', id);
   }
 
-  getInputIndex(id) {
-    for (let i=0;i<this.inputs.length;i++) {
-      if (this.inputs[i].id == id) {
+  getOutputIndex(id) {
+    return this.getIOIndex('outputs', id);
+  }
+
+  getIOIndex(type, id) {
+    if ('undefined' == typeof this[type]) {
+      this.log('getIOIndex: Trying to get IO for unknown type ' + type + '.');
+      return -1;
+    }
+
+    for (let i=0;i<this[type].length;i++) {
+      if (this[type][i].id == id) {
         return i;
       }
     }
@@ -245,8 +249,39 @@ export default class AudioComponent {
     return -1;
   }
 
+  updateOutput(index) {
+    return this.updateIO('output', index);
+  }
+
+  updateInput(index) {
+    return this.updateIO('output', index);
+  }
+
+  updateIO(type, index) {
+    if ('undefined' == this[type][index]) {
+      this.log('updateIO: Trying to update non-existing ' + type + ' with index ' + index + '.');
+      return false;
+    }
+
+    return this[type][index] = output;
+  }
+
+  getInputs() {
+    return this.inputs;
+  }
+
+  getOutputs() {
+    return this.outputs;
+  }
+
   registerOutput(output) {
     this.outputs.push(output);
+
+    if (this.reactComponent) {
+      this.reactComponent.setState({
+        outputs: this.outputs
+      });
+    }
   }
 
   log(msg) {

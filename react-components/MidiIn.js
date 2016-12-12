@@ -4,6 +4,7 @@ export default class MidiIn extends React.Component {
   constructor(props) {
     super(props);
     props.audioComponent.reactComponent = this;
+    
     this.state = {
       inputs: [],
       midiInputs: props.audioComponent.getMidiInputs()

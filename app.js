@@ -39,6 +39,8 @@ export default class App {
       emitEvent: this.handleEvent.bind(this)
     };
 
+    let outputs = [];
+
     ReactDOM.render(
       <ColumnLayout settings={appSettings} />,
       document.querySelector('.app')
