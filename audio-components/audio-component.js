@@ -120,19 +120,19 @@ export default class AudioComponent {
 
     this.stop(); // Stop everything that's currently playing.
 
-    if (this.state.midiInput) {
+    if (this.state.midiIn) {
       // Unset existing midi event handler.
-      this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
+      this.midiAccess.inputs.get(this.state.midiIn).onmidimessage = undefined;
     }
 
 
     // Determine whether there is an input already.
-    // This must be done *before* we set the the midiInput because we need the
+    // This must be done *before* we set the the midiIn because we need the
     // current/old id to be able to find the input.
-    let outputIndex = this.getOutputIndex('midi-in-' + this.state.midiInput);
+    let outputIndex = this.getOutputIndex('midi-in-' + this.state.midiIn);
 
     // Set the midi input.
-    this.state.midiInput = id;
+    this.state.midiIn = id;
     let input = this.midiAccess.inputs.get(id);
     if (input && 'undefined'!= input.onmidimessage) {
       input.onmidimessage = this.onMidiMessage.bind(this);
@@ -155,7 +155,7 @@ export default class AudioComponent {
 
     if (this.reactComponent) {
       this.reactComponent.setState({
-        midiInput: id,
+        midiIn: id,
       });
     }
     // NOTE: We don't need to call setState for reactContainerComponent since
