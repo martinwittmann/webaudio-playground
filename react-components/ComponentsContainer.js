@@ -39,9 +39,18 @@ export default class ComponentsContainer extends React.Component {
 
   onStopConnectingComponents() {
     this.log('Stopped connecting.');
+
+    // Remove the classes for marking connectable ios on this component (the container).
     this.setState({
-      isConnectingComponents: false,
+      isConnectingComponents: false
     });
+
+    // Allow the component to be moved around again.
+    this.state.sourceComponent.setState({
+      canBeDragged: true
+    });
+
+    // Remove the class for the connecting io.
     this.state.sourceIOComponent.setState({
       activeIO: false
     });
@@ -67,6 +76,7 @@ export default class ComponentsContainer extends React.Component {
 
   onMouseUp(ev) {
     if (this.state.isConnectingComponents) {
+      // Only stop connecting if we started.
       this.onStopConnectingComponents();
     }
   }
@@ -130,8 +140,7 @@ export default class ComponentsContainer extends React.Component {
 
     let cls = ['components-container'];
     if (this.state.isConnectingComponents) {
-      cls.push('connect-to-' + this.state.connectableIOType);   
-      cls.push('connect-to-type-' + this.state.connectableType);   
+      cls.push('connect-to-' + this.state.connectableType + '-' + this.state.connectableIOType);   
     }
 
     return (

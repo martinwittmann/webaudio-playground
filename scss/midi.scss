@@ -4,6 +4,7 @@ $column-width: 20%;
 $io-size: 10px;
 $io-border-width: 2px;
 
+@import "mixins.scss";
 @import "layout.scss";
 @import "components.scss";
 @import "inspector.scss";

@@ -86,8 +86,7 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
     cursor: pointer;
 
     &.connecting {
-      background: #fff071;
-    border: $io-border-width solid rgba(0, 0, 0, 0.3);
+      @include connectingIo();
     }
 
     &:hover {
@@ -108,50 +107,76 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
   bottom: $component-io-offset;
 }
 
-.connect-to-input {
-  // This class is added to the components container while connecting from an output.
 
-  .component-io {
 
-    li {
-      opacity: 0.2;
-    }
+.connect-to-midi-input {
 
-    .connecting,
-    .input {
-      opacity: 1;
-    }
+  .io {
+    opacity: 0.2;
+  }
+
+  .connecting,
+  .midi.input {
+    opacity: 1;
   }
 }
 
-.connect-to-output {
-  // This class is added to the components container while connecting from an input.
+.connect-to-midi-output {
 
-  .component-io {
+  .io {
+    opacity: 0.2;
+  }
 
-    li {
-      opacity: 0.2;
-    }
-
-    .connecting,
-    .output {
-      opacity: 1;
-    }
+  .connecting,
+  .midi.output {
+    opacity: 1;
   }
 }
 
-.connect-to-type-midi {
-  // This class is added to the components container while connecting from a midi io.
+.connect-to-frequency-input {
 
-  .component-io {
+  .io {
+    opacity: 0.2;
+  }
 
-    li {
-      opacity: 0.2;
-    }
+  .connecting,
+  .frequency.input {
+    opacity: 1;
+  }
+}
 
-    .connecting,
-    .midi {
-      opacity: 1;
-    }
+.connect-to-frequency-output {
+
+  .io {
+    opacity: 0.2;
+  }
+
+  .connecting,
+  .frequency.output {
+    opacity: 1;
+  }
+}
+
+.connect-to-number-input {
+
+  .io {
+    opacity: 0.2;
+  }
+
+  .connecting,
+  .number.input {
+    opacity: 1;
+  }
+}
+
+.connect-to-number-output {
+
+  .io {
+    opacity: 0.2;
+  }
+
+  .connecting,
+  .number.output {
+    opacity: 1;
   }
 }

@@ -25,7 +25,7 @@ export default class ReactAudioComponentInputs extends React.Component {
 
   render() {
     let inputs = this.props.inputs.map((input, index) => {
-      let cls = [input.ioType, input.type];
+      let cls = ['io', input.ioType, input.type];
       if (input.id == this.state.activeIO) {
         cls.push('connecting');
       }

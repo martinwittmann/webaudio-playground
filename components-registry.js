@@ -25,6 +25,7 @@ export default class componentsRegistry {
     // 3. Create the corresponding react component
     // 4. Import the react component in the ReactAudioComponent.js component.
     // 5. Add render code in AudioComponent.js::render()
+    // 6. Add/copy some css classes at the bottom of scss/components.scss
 
     this.registerComponentType('oscillator', {
       create: function() {
