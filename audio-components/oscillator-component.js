@@ -10,13 +10,12 @@ export default class OscillatorComponent extends AudioComponent {
     this.maxGainPerNote = 0.4;
     this.audioNodes = {};
 
-    this.state = {
-      input: 'fixed',
-      active: false,
-      frequency: 440,
-      waveform: 'sine',
-      gain: .2
-    };
+    // Initialize state for this component type.
+    this.state.input = 'fixed';
+    this.state.active = false;
+    this.state.frequency = 440;
+    this.state.waveform = 'sine';
+    this.state.gain = .2;
 
     this.totalGain = this.createGainNode(0.8);
     this.totalGain.connect(this.audioContext.destination);

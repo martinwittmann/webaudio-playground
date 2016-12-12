@@ -15,6 +15,10 @@ export default class ReactAudioComponent extends React.Component {
     this.state = {
       inputs: props.component.getInputs(),
       outputs: props.component.getOutputs(),
+      canvasPos: {
+        x: props.component.state.canvasPos.x,
+        y: props.component.state.canvasPos.y
+      },
       canBeDragged: true
     };
   }
@@ -31,8 +35,9 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   onDragStart(ev) {
-    console.log('drag start');
-    ev.dataTransfer.setData('text', this.props.component.id);
+    ev.dataTransfer.setData('id', this.props.component.id);
+    ev.dataTransfer.setData('dragStartX', ev.pageX);
+    ev.dataTransfer.setData('dragStartY', ev.pageY);
   }
 
   render() {
@@ -52,10 +57,16 @@ export default class ReactAudioComponent extends React.Component {
         return false;
     }
 
+    let inlineStyles = {
+      left: this.state.canvasPos.x + 'px',
+      top: this.state.canvasPos.y + 'px'
+    };
+
     return (
       <div
         id={"component-" + this.props.component.id}
         className={"audio-component " + this.props.component.type}
+        style={inlineStyles}
         ref={(el) => {
           if (el && !this.props.component.initialBoundingRect) {
             // We store the dom element's coordinates once to be able to position

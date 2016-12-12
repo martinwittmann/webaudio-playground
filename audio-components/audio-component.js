@@ -16,6 +16,13 @@ export default class AudioComponent {
     this.inputs = [];
     this.outputs = [];
 
+    this.state = {
+      canvasPos: {
+        x: 0,
+        y: 0
+      }
+    };
+
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
     }

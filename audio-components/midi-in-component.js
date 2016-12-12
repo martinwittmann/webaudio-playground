@@ -10,8 +10,7 @@ export default class MidiInComponent extends AudioComponent {
     this.type = 'midi-in';
     this.reactComponentType = 'MidiIn';
 
-    this.state = {
-      midiInput: false
-    };
+    // Initialize state for this component type.
+    this.state.midiInput = false;
   }
 }
