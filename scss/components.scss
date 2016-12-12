@@ -40,6 +40,14 @@
     .io.connecting,
     .io.connectable {
       opacity: 1;
+
+      &.hover,
+      &:hover {
+        // Unfortunately when connecting the :hover pseudo class is not applied
+        // since technically the user is dragging the mouse.
+        // I solved this via javascript in the io components.
+        @include connectingIo();
+      }
     }
   }
 }
@@ -88,7 +96,7 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
   padding: 0;
   margin: 0;
 
-  > li {
+  .io {
     border-radius: 50px;
     background: rgba(0, 0, 0, 0.01);
     border: $io-border-width solid rgba(0, 0, 0, 0.4);

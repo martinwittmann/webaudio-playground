@@ -21,6 +21,13 @@ export default class OscillatorComponent extends AudioComponent {
     this.totalGain.connect(this.audioContext.destination);
 
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
+
+
+    this.registerInput({
+      type: 'frequency',
+      name: 'Frequency In',
+    });
+
   }
 
   getWaveforms() {

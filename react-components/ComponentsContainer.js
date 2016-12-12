@@ -42,18 +42,24 @@ export default class ComponentsContainer extends React.Component {
 
     // Remove the classes for marking connectable ios on this component (the container).
     this.setState({
-      isConnectingComponents: false
+      isConnectingComponents: false,
+      connectableIOType: false,
+      connectableType: false
     });
 
     // Allow the component to be moved around again.
-    this.state.sourceComponent.setState({
-      canBeDragged: true
-    });
+    if (this.state.sourceComponent) {
+      this.state.sourceComponent.setState({
+        canBeDragged: true
+      });
+    }
 
     // Remove the class for the connecting io.
-    this.state.sourceIOComponent.setState({
-      activeIO: false
-    });
+    if (this.state.sourceIOComponent) {
+      this.state.sourceIOComponent.setState({
+        activeIO: false
+      });
+    }
   }
 
   onDragOverContainer(ev) {

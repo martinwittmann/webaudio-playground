@@ -23,6 +23,18 @@ export default class ReactAudioComponentInputs extends React.Component {
     });
   }
 
+  onMouseEnter(ev) {
+    if (ev.target.className.match(/connectable/)) {
+      ev.target.className += ' hover';
+    }
+  }
+
+  onMouseLeave(ev) {
+    if (ev.target.className.match(/hover/)) {
+      ev.target.className = ev.target.className.replace(/\shover/, '');
+    }
+  }
+
   render() {
     let inputs = this.props.inputs.map((input, index) => {
       let cls = ['io', input.ioType, input.type];
@@ -30,7 +42,7 @@ export default class ReactAudioComponentInputs extends React.Component {
         cls.push('connecting');
       }
 
-      if (this.props.connectableIos) {
+      if (this.props.connectableIos && this.props.connectableIos.type && this.props.connectableIos.ioType) {
         if (input.type == this.props.connectableIos.type && input.ioType == this.props.connectableIos.ioType) {
           cls.push('connectable');
         }
@@ -43,6 +55,8 @@ export default class ReactAudioComponentInputs extends React.Component {
         className={cls.join(' ')}
         onMouseDown={this.onMouseDown.bind(this)}
         onMouseUp={this.onMouseUp.bind(this)}
+        onMouseEnter={this.onMouseEnter.bind(this)}
+        onMouseLeave={this.onMouseLeave.bind(this)}
         data-io-index={index}
       ></li>)
     });
