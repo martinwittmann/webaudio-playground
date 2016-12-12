@@ -125,6 +125,12 @@ export default class AudioComponent {
       this.midiAccess.inputs.get(this.state.midiInput).onmidimessage = undefined;
     }
 
+
+    // Determine whether there is an input already.
+    // This must be done *before* we set the the midiInput because we need the
+    // current/old id to be able to find the input.
+    let outputIndex = this.getOutputIndex('midi-in-' + this.state.midiInput);
+
     // Set the midi input.
     this.state.midiInput = id;
     let input = this.midiAccess.inputs.get(id);
@@ -132,8 +138,7 @@ export default class AudioComponent {
       input.onmidimessage = this.onMidiMessage.bind(this);
     }
 
-    // Add / update the component's input 
-    let outputIndex = this.getOutputIndex(id);
+    // Add / update the component's input.
     if (outputIndex > -1) {
       // Update the input.
       this.updateOutput(outputIndex, {
@@ -153,12 +158,8 @@ export default class AudioComponent {
         midiInput: id,
       });
     }
-    if (this.reactContainerComponent) {
-      this.reactContainerComponent.setState({
-        inputs: this.getInputs(),
-        outputs: this.getOutputs()
-      });
-    }
+    // NOTE: We don't need to call setState for reactContainerComponent since
+    //       registerInput/registerOutput call this already.
   }
 
   stop() {
@@ -220,7 +221,7 @@ export default class AudioComponent {
   registerInput(input) {
     this.inputs.push(input);
     if (this.reactComponent) {
-      this.reactComponent.setState({
+      this.reactContainerComponent.setState({
         inputs: this.inputs
       });
     }
@@ -249,21 +250,26 @@ export default class AudioComponent {
     return -1;
   }
 
-  updateOutput(index) {
-    return this.updateIO('output', index);
+  updateOutput(index, newOutput) {
+    return this.updateIO('outputs', index, newOutput);
   }
 
-  updateInput(index) {
-    return this.updateIO('output', index);
+  updateInput(index, newInput) {
+    return this.updateIO('inputs', index, newInput);
   }
 
-  updateIO(type, index) {
-    if ('undefined' == this[type][index]) {
+  updateIO(type, index, newIO) {
+    if ('undefined' == typeof this[type] || 'undefined' == typeof this[type][index]) {
       this.log('updateIO: Trying to update non-existing ' + type + ' with index ' + index + '.');
       return false;
     }
 
-    return this[type][index] = output;
+    if (!newIO) {
+      this.log('updateIO: Trying to update output with invalid/empty newIO.');
+      return false;
+    }
+
+    return this[type][index] = newIO;
   }
 
   getInputs() {
@@ -278,7 +284,7 @@ export default class AudioComponent {
     this.outputs.push(output);
 
     if (this.reactComponent) {
-      this.reactComponent.setState({
+      this.reactContainerComponent.setState({
         outputs: this.outputs
       });
     }

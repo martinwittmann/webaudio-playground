@@ -21,6 +21,7 @@ export default class App {
         return false;
       }
 
+      console.log(args[0]);
       this.components.addComponent(args[0]);
       this.render();
     }
