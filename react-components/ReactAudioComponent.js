@@ -6,6 +6,7 @@ import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
 // React components for our audio components.
 import Oscillator from './Oscillator.js';
 import MidiIn from './MidiIn.js';
+import Midi2Frequency from './Midi2Frequency.js';
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ export default class ReactAudioComponent extends React.Component {
         this.setState({
           canBeDragged: false
         });
-        this.props.emitEvent('start-connecting', this, args[1]);
+        this.props.emitEvent('start-connecting', this, args[1], args[2]);
         break;
 
       case 'stop-connecting':
@@ -79,6 +80,10 @@ export default class ReactAudioComponent extends React.Component {
         component = (<MidiIn audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
         break;
 
+      case 'Midi2Frequency':
+        component = (<Midi2Frequency audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
+        break;
+
       default:
         this.log('ReactAudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
         return false;
@@ -104,12 +109,18 @@ export default class ReactAudioComponent extends React.Component {
         draggable={this.state.canBeDragged}
         onDragStart={this.onDragStart.bind(this)}
       >
-        <ReactAudioComponentInputs inputs={this.state.inputs} />
+        <ReactAudioComponentInputs
+          inputs={this.state.inputs}
+          handleEvent={this.handleChildEvent.bind(this)}
+        />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
           {component}
         </div>
-        <ReactAudioComponentOutputs outputs={this.state.outputs} handleEvent={this.handleChildEvent.bind(this)} />
+        <ReactAudioComponentOutputs
+          outputs={this.state.outputs}
+          handleEvent={this.handleChildEvent.bind(this)}
+        />
       </div>
     );
   }

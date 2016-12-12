@@ -1,6 +1,6 @@
 import OscillatorComponent from './audio-components/oscillator-component.js';
 import MidInComponent from './audio-components/midi-in-component.js';
-
+import Midi2FrequencyComponent from './audio-components/midi-2-frequency-component.js';
 
 export default class componentsRegistry {
 
@@ -23,7 +23,7 @@ export default class componentsRegistry {
     // 1. Create and import the audio-component derived class
     // 2. Call this.registerComponentType for the new type
     // 3. Create the corresponding react component
-    // 4. Import the react component in the AudioComponent.js react component.
+    // 4. Import the react component in the ReactAudioComponent.js component.
     // 5. Add render code in AudioComponent.js::render()
 
     this.registerComponentType('oscillator', {
@@ -34,6 +34,11 @@ export default class componentsRegistry {
     this.registerComponentType('midi-in', {
       create: function() {
         return new MidInComponent(this.audioContext, this.createComponentId('midi-in'));
+      }
+    });
+    this.registerComponentType('midi-2-frequency', {
+      create: function() {
+        return new Midi2FrequencyComponent(this.audioContext, this.createComponentId('midi-2-frequency'));
       }
     });
   }

@@ -63,12 +63,12 @@
   }
 }
 
-.component-outputs {
-  $offset: ($io-size / -2) - $io-border-width;
+$component-io-offset: ($io-size / -2) - $io-border-width;
+
+.component-io {
   position: absolute;
-  bottom: $offset;
-  left: $offset;
-  right: $offset;
+  left: $component-io-offset;
+  right: $component-io-offset;
   list-style-type: none;
   list-style-image: none;
   display: flex;
@@ -92,6 +92,66 @@
 
     &:hover {
       background: #1acf18;
+    }
+  }
+
+  .components-available & {
+    display: none;
+  }
+}
+
+.component-inputs {
+  top: $component-io-offset;
+}
+
+.component-outputs {
+  bottom: $component-io-offset;
+}
+
+.connect-to-input {
+  // This class is added to the components container while connecting from an output.
+
+  .component-io {
+
+    li {
+      opacity: 0.2;
+    }
+
+    .connecting,
+    .input {
+      opacity: 1;
+    }
+  }
+}
+
+.connect-to-output {
+  // This class is added to the components container while connecting from an input.
+
+  .component-io {
+
+    li {
+      opacity: 0.2;
+    }
+
+    .connecting,
+    .output {
+      opacity: 1;
+    }
+  }
+}
+
+.connect-to-type-midi {
+  // This class is added to the components container while connecting from a midi io.
+
+  .component-io {
+
+    li {
+      opacity: 0.2;
+    }
+
+    .connecting,
+    .midi {
+      opacity: 1;
     }
   }
 }

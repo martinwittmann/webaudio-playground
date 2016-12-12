@@ -231,15 +231,6 @@ export default class AudioComponent {
     return velocity / (127 / this.maxGainPerNote)
   }
 
-  registerInput(input) {
-    this.inputs.push(input);
-    if (this.reactComponent) {
-      this.reactContainerComponent.setState({
-        inputs: this.inputs
-      });
-    }
-  }
-
   getInputIndex(id) {
     return this.getIOIndex('inputs', id);
   }
@@ -294,8 +285,21 @@ export default class AudioComponent {
     return this.outputs;
   }
 
+  registerInput(input) {
+    input.id = this.id + '--input-' + this.inputs.length;
+    input.ioType = 'input';
+    this.inputs.push(input);
+    
+    if (this.reactComponent) {
+      this.reactContainerComponent.setState({
+        inputs: this.inputs
+      });
+    }
+  }
+
   registerOutput(output) {
     output.id = this.id + '--output-' + this.outputs.length;
+    output.ioType = 'output';
     this.outputs.push(output);
 
     if (this.reactComponent) {

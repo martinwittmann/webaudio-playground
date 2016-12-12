@@ -1,11 +1,45 @@
 import React from 'react';
 
 export default class ReactAudioComponentInputs extends React.Component {
-  render() {
-    //console.log(this);
-    let inputs = this.props.inputs.map(input => {
-      return (<li key={input.id} title={input.name}></li>)
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeIO: false
+    };
+  }
+
+  onMouseDown(ev) {
+    this.props.handleEvent('start-connecting', ev, this, this.props.inputs[ev.target.dataset.ioIndex]);
+    this.setState({
+      activeIO: ev.target.id
     });
-    return (<ul className="component-inputs">{inputs}</ul>);
+  }
+
+  onMouseUp(ev) {
+    this.props.handleEvent('stop-connecting', ev);
+    this.setState({
+      activeIO: false
+    });
+  }
+
+  render() {
+    let inputs = this.props.inputs.map((input, index) => {
+      let cls = [input.ioType, input.type];
+      if (input.id == this.state.activeIO) {
+        cls.push('connecting');
+      }
+
+      return (<li
+        key={input.id}
+        title={input.name}
+        id={input.id}
+        className={cls.join(' ')}
+        onMouseDown={this.onMouseDown.bind(this)}
+        onMouseUp={this.onMouseUp.bind(this)}
+        data-io-index={index}
+      ></li>)
+    });
+    return (<ul className="component-io component-inputs">{inputs}</ul>);
   }
 }

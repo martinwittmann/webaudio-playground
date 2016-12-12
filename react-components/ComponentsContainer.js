@@ -7,25 +7,42 @@ export default class ComponentsContainer extends React.Component {
 
     this.state = {
       isConnectingComponents: false,
-      sourceComponent: false
+      sourceComponent: false,
+      sourceIOComponent: false,
+      connectableIOType: false,
+      connectableType: false
     };
   }
 
-  onStartConnectingComponents([sourceComponent, sourceOutputComponent]) {
-    console.log('Start connecting...');
+  onStartConnectingComponents([sourceComponent, sourceIOComponent, io]) {
+    this.log('Start connecting...');
+    let connectableIOType;
+    if ('output' == io.ioType) {
+      connectableIOType = 'input';
+    }
+    else if ('input' == io.ioType) {
+      connectableIOType = 'output';
+    }
+    else {
+      this.log('onStartConnectingComponents: Trying to start connecting from unknown ioType: ' + io.ioType);
+      return false;
+    }
+
     this.setState({
       isConnectingComponents: true,
       sourceComponent: sourceComponent,
-      sourceOutputComponent: sourceOutputComponent
+      sourceIOComponent: sourceIOComponent,
+      connectableIOType: connectableIOType,
+      connectableType: io.type
     });
   }
 
   onStopConnectingComponents() {
-    console.log('Stopped connecting.');
+    this.log('Stopped connecting.');
     this.setState({
-      isConnectingComponents: false
+      isConnectingComponents: false,
     });
-    this.state.sourceOutputComponent.setState({
+    this.state.sourceIOComponent.setState({
       activeIO: false
     });
   }
@@ -111,9 +128,15 @@ export default class ComponentsContainer extends React.Component {
       return (<ReactAudioComponent key={component.id} component={component} emitEvent={this.handleEvent.bind(this)} />);
     });
 
+    let cls = ['components-container'];
+    if (this.state.isConnectingComponents) {
+      cls.push('connect-to-' + this.state.connectableIOType);   
+      cls.push('connect-to-type-' + this.state.connectableType);   
+    }
+
     return (
       <div
-        className="components-container"
+        className={cls.join(' ')}
         onMouseUp={this.onMouseUp.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
@@ -127,5 +150,11 @@ export default class ComponentsContainer extends React.Component {
         </div>
       </div>
     );
+  }
+
+  log(msg) {
+    if (console && console.log) {
+      console.log(msg);
+    }
   }
 }
