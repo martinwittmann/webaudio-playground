@@ -1,6 +1,4 @@
-import React, { Component, PropTypes } from 'react';
-import { ItemTypes } from '../dnd-constants.js';
-import { DragSource } from 'react-dnd';
+import React from 'react';
 
 import ReactAudioComponentInputs from './ReactAudioComponentInputs.js';
 import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
@@ -9,21 +7,7 @@ import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
 import Oscillator from './Oscillator.js';
 import MidiIn from './MidiIn.js';
 
-const ReactAudioComponentSource = {
-  canDrag(props, monitor) {
-    console.log(this);
-    console.log(monitor);
-    console.log(monitor.getItem());
-    return true;
-  },
-  beginDrag(props) {
-    return {
-      audioComponent: props.component
-    };
-  }
-};
-
-class ReactAudioComponent extends React.Component {
+export default class ReactAudioComponent extends React.Component {
   constructor(props) {
     super(props);
     props.component.reactContainerComponent = this;
@@ -35,16 +19,7 @@ class ReactAudioComponent extends React.Component {
     };
   }
 
-
-  dndCollect(connect, monitor) {
-    return {
-      connectDragSource: connect.dragSource(),
-      isDragging: monitor.isDragging()
-    }
-  }
-
   handleChildEvent(type, ev) {
-    console.log(type);
     switch (type) {
       case 'start-connecting':
         this.state.canBeDragged = false;
@@ -53,6 +28,11 @@ class ReactAudioComponent extends React.Component {
       case 'stop-connecting':
         this.state.canBeDragged = true;
     }
+  }
+
+  onDragStart(ev) {
+    console.log('drag start');
+    ev.dataTransfer.setData('text', this.props.component.id);
   }
 
   render() {
@@ -72,7 +52,7 @@ class ReactAudioComponent extends React.Component {
         return false;
     }
 
-    return connectDragSource(
+    return (
       <div
         id={"component-" + this.props.component.id}
         className={"audio-component " + this.props.component.type}
@@ -83,6 +63,8 @@ class ReactAudioComponent extends React.Component {
             this.props.component.initialBoundingRect = el.getBoundingClientRect();
           }
         }}
+        draggable={this.state.canBeDragged}
+        onDragStart={this.onDragStart.bind(this)}
       >
         <ReactAudioComponentInputs inputs={this.state.inputs} />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
@@ -99,10 +81,3 @@ class ReactAudioComponent extends React.Component {
     }
   }
 }
-
-ReactAudioComponent.propTypes = {
-  connectDragSource: PropTypes.func.isRequired,
-  isDragging: PropTypes.bool.isRequired
-};
-
-export default DragSource(ItemTypes.REACTAUDIOCOMPONENT, ReactAudioComponentSource, ReactAudioComponent.prototype.dndCollect)(ReactAudioComponent);

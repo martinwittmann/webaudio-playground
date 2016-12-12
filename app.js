@@ -15,14 +15,20 @@ export default class App {
   }
 
   handleEvent(type, ...args) {
-    if ('add-component' == type) {
-      if (args.length < 1) {
-        this.log('add-component event: Trying to add a component without specifying a type.');
-        return false;
-      }
+    switch (type) {
+      case 'add-component':
+        if (args.length < 1) {
+          this.log('add-component event: Trying to add a component without specifying a type.');
+          return false;
+        }
 
-      this.components.addComponent(args[0]);
-      this.render();
+        this.components.addComponent(args[0]);
+        this.render();
+        break;
+
+      case 'get-available-component-by-id':
+        return this.components.getAvailableComponentById(args[0]);
+        break;
     }
   }
 

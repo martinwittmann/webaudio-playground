@@ -70,6 +70,17 @@ export default class componentsRegistry {
     });
   }
 
+  getAvailableComponentById(id) {
+    for (let key in this.availableComponents) {
+      let c = this.availableComponents[key];
+      if (c.id === id) {
+        return c;
+      }
+    }
+
+    return false;
+  }
+
   addComponent(type) {
     let component;
     if ('String' == typeof type) {

@@ -1,14 +1,26 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactAudioComponent from './ReactAudioComponent.js';
 
-import { ItemTypes } from '../dnd-constants.js';
-import { DropTarget } from 'react-dnd';
+export default class ComponentsContainer extends React.Component {
+  constructor() {
+    super();
+  }
 
-const componentTarget = {
-  drop(props, monitor) {
+  onDragOver(ev) {
+    // For some reason this is necessary for the onDrop event to fire.
+    // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
+    ev.preventDefault();
+  }
+
+  onDrop(ev) {
+    let componentId = ev.dataTransfer.getData('text');
+    let component = this.props.settings.emitEvent('get-available-component-by-id', componentId);
+    console.log(component);
     // Handle the dropping by either adding the component to the canvas or moving it on the canvas.
+    ev.preventDefault();
+    return;
 
-    let component = monitor.getItem().audioComponent;
+    //let component = monitor.getItem().audioComponent;
     let cursorPosOnDragStart = monitor.getInitialClientOffset();
     let droppedAt = monitor.getClientOffset();
 
@@ -50,39 +62,27 @@ const componentTarget = {
       node.style.top = parseFloat(node.style.top) + (droppedAt.y - cursorPosOnDragStart.y) + 'px';
     }
   }
-};
 
-function collect(connect, monitor) {
-  return {
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
-  };
-}
-
-class ComponentsContainer extends React.Component {
-  constructor() {
-    super();
-  }
   render() {
     const { x, y, connectDropTarget, isOver } = this.props;
     let components = this.props.settings.components.map(component => {
       return (<div key={component.id}><ReactAudioComponent component={component} /></div>);
     });
 
-    return connectDropTarget(
-      <div className="components-container">
+    return (
+      <div
+        className="components-container"
+       >
         <svg className="components-connections" width="100%" height="100%">
         </svg>
-        <div className="components">
+        <div
+          className="components"
+          onDrop={this.onDrop.bind(this)}
+          onDragOver={this.onDragOver.bind(this)}
+        >
           {components}
         </div>
       </div>
     );
   }
 }
-
-ComponentsContainer.propTypes = {
-  isOver: PropTypes.bool.isRequired
-};
-
-export default DropTarget(ItemTypes.REACTAUDIOCOMPONENT, componentTarget, collect)(ComponentsContainer);
