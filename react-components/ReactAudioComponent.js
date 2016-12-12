@@ -20,7 +20,8 @@ export default class ReactAudioComponent extends React.Component {
         x: props.component.state.canvasPos.x,
         y: props.component.state.canvasPos.y
       },
-      canBeDragged: true
+      canBeDragged: true,
+      connectableIos: props.connectableIos
     };
   }
 
@@ -73,15 +74,24 @@ export default class ReactAudioComponent extends React.Component {
     let component;
     switch (this.props.component.reactComponentType) {
       case 'Oscillator':
-        component = (<Oscillator audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
+        component = (<Oscillator
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
         break;
 
       case 'MidiIn':
-        component = (<MidiIn audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
+        component = (<MidiIn
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
         break;
 
       case 'Midi2Frequency':
-        component = (<Midi2Frequency audioComponent={this.props.component} onChildEvent={this.props.component.onChildEvent.bind(this.props.component)} />);
+        component = (<Midi2Frequency
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
         break;
 
       default:
@@ -112,6 +122,7 @@ export default class ReactAudioComponent extends React.Component {
         <ReactAudioComponentInputs
           inputs={this.state.inputs}
           handleEvent={this.handleChildEvent.bind(this)}
+          connectableIos={this.props.connectableIos}
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
@@ -120,6 +131,7 @@ export default class ReactAudioComponent extends React.Component {
         <ReactAudioComponentOutputs
           outputs={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
+          connectableIos={this.props.connectableIos}
         />
       </div>
     );

@@ -5,7 +5,7 @@ export default class ReactAudioComponentInputs extends React.Component {
     super(props);
 
     this.state = {
-      activeIO: false
+      activeIO: false,
     };
   }
 
@@ -28,6 +28,12 @@ export default class ReactAudioComponentInputs extends React.Component {
       let cls = ['io', input.ioType, input.type];
       if (input.id == this.state.activeIO) {
         cls.push('connecting');
+      }
+
+      if (this.props.connectableIos) {
+        if (input.type == this.props.connectableIos.type && input.ioType == this.props.connectableIos.ioType) {
+          cls.push('connectable');
+        }
       }
 
       return (<li

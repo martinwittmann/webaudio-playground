@@ -30,6 +30,12 @@ export default class ReactAudioComponentOutputs extends React.Component {
         cls.push('connecting');
       }
 
+      if (this.state.connectableIos) {
+        if (output.type == this.state.connectableIos.type && output.ioType == this.state.connectableIos.ioType) {
+          cls.push('connectable');
+        }
+      }
+
       return (<li
         key={output.id}
         title={output.name}

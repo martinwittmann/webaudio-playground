@@ -30,6 +30,18 @@
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     background: #ffffff;
   }
+
+  &.connecting {
+
+    .io {
+      opacity: .15;
+    }
+
+    .io.connecting,
+    .io.connectable {
+      opacity: 1;
+    }
+  }
 }
 
 .audio-component {
@@ -105,78 +117,4 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
 
 .component-outputs {
   bottom: $component-io-offset;
-}
-
-
-
-.connect-to-midi-input {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .midi.input {
-    opacity: 1;
-  }
-}
-
-.connect-to-midi-output {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .midi.output {
-    opacity: 1;
-  }
-}
-
-.connect-to-frequency-input {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .frequency.input {
-    opacity: 1;
-  }
-}
-
-.connect-to-frequency-output {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .frequency.output {
-    opacity: 1;
-  }
-}
-
-.connect-to-number-input {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .number.input {
-    opacity: 1;
-  }
-}
-
-.connect-to-number-output {
-
-  .io {
-    opacity: 0.2;
-  }
-
-  .connecting,
-  .number.output {
-    opacity: 1;
-  }
 }

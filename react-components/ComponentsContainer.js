@@ -134,13 +134,27 @@ export default class ComponentsContainer extends React.Component {
 
   render() {
     const { x, y, connectDropTarget, isOver } = this.props;
+
+    let connectableIos = {};
+    if (this.state.connectableIOType) {
+      connectableIos.ioType = this.state.connectableIOType;
+    }
+    if (this.state.connectableType) {
+      connectableIos.type = this.state.connectableType;
+    }
+
     let components = this.props.settings.components.map(component => {
-      return (<ReactAudioComponent key={component.id} component={component} emitEvent={this.handleEvent.bind(this)} />);
+      return (<ReactAudioComponent
+        key={component.id}
+        component={component}
+        emitEvent={this.handleEvent.bind(this)}
+        connectableIos={connectableIos}
+      />);
     });
 
     let cls = ['components-container'];
     if (this.state.isConnectingComponents) {
-      cls.push('connect-to-' + this.state.connectableType + '-' + this.state.connectableIOType);   
+      cls.push('connecting');
     }
 
     return (
