@@ -8,20 +8,21 @@ export default class ComponentsContainer extends React.Component {
     this.state = {
       isConnectingComponents: false,
       sourceComponent: false,
-      sourceIOComponent: false,
-      connectableIOType: false,
+      sourceIoComponent: false,
+      sourceIo: false,
+      connectableIoType: false,
       connectableType: false
     };
   }
 
-  onStartConnectingComponents([sourceComponent, sourceIOComponent, io]) {
+  onStartConnectingComponents([sourceComponent, sourceIoComponent, io]) {
     this.log('Start connecting...');
-    let connectableIOType;
+    let connectableIoType;
     if ('output' == io.ioType) {
-      connectableIOType = 'input';
+      connectableIoType = 'input';
     }
     else if ('input' == io.ioType) {
-      connectableIOType = 'output';
+      connectableIoType = 'output';
     }
     else {
       this.log('onStartConnectingComponents: Trying to start connecting from unknown ioType: ' + io.ioType);
@@ -31,13 +32,11 @@ export default class ComponentsContainer extends React.Component {
     this.setState({
       isConnectingComponents: true,
       sourceComponent: sourceComponent,
-      sourceIOComponent: sourceIOComponent,
-      connectableIOType: connectableIOType,
-      connectableType: io.type
+      sourceIoComponent: sourceIoComponent,
+      connectableIoType: connectableIoType,
+      connectableType: io.type,
+      sourceIo: io
     });
-
-    console.log(sourceComponent.props);
-    console.log(io);
   }
 
   onStopConnectingComponents() {
@@ -46,8 +45,11 @@ export default class ComponentsContainer extends React.Component {
     // Remove the classes for marking connectable ios on this component (the container).
     this.setState({
       isConnectingComponents: false,
-      connectableIOType: false,
-      connectableType: false
+      connectableIoType: false,
+      connectableType: false,
+      sourceComponent: false,
+      sourceIoComponent: false,
+      sourceIo: false
     });
 
     // Allow the component to be moved around again.
@@ -58,17 +60,29 @@ export default class ComponentsContainer extends React.Component {
     }
 
     // Remove the class for the connecting io.
-    if (this.state.sourceIOComponent) {
-      this.state.sourceIOComponent.setState({
+    if (this.state.sourceIoComponent) {
+      this.state.sourceIoComponent.setState({
         activeIO: false
       });
     }
   }
 
-  onCreateConnection() {
+  onCreateConnection(args) {
     this.log('Create connection...');
-    let fromComponent = this.state.sourceComponent.component;
-    let fromIo = this.state.sourceIOComponent;
+    let component1 = this.state.sourceComponent.props.component;
+    let component1Io = this.state.sourceIo;
+    let component2 = args[0].props.component;
+    let component2Io = args[1];
+
+    // We always create the connection from the output to the input.
+    // Right now there's no technical reason for this apart from being logic.
+    // We need to check component2Io since this is where the mouseUp event fired.
+    if ('output' == component2Io.ioType) {
+      component2.connectOutput(component2Io, component1Io);
+    }
+    else {
+      component1.connectOutput(component1Io, component2Io);
+    }
   }
 
   onDragOverContainer(ev) {
@@ -84,7 +98,7 @@ export default class ComponentsContainer extends React.Component {
         break;
 
       case 'create-connection':
-        this.onCreateConnection();
+        this.onCreateConnection(args);
         break;
 
       case 'stop-connecting':
@@ -155,8 +169,8 @@ export default class ComponentsContainer extends React.Component {
     const { x, y, connectDropTarget, isOver } = this.props;
 
     let connectableIos = {};
-    if (this.state.connectableIOType) {
-      connectableIos.ioType = this.state.connectableIOType;
+    if (this.state.connectableIoType) {
+      connectableIos.ioType = this.state.connectableIoType;
     }
     if (this.state.connectableType) {
       connectableIos.type = this.state.connectableType;

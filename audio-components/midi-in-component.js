@@ -15,9 +15,6 @@ export default class MidiInComponent extends AudioComponent {
   }
 
   handleMidiEvent(data) {
-    let outputIndex = this.getOutputIndex('midi-in-' + this.state.midiIn);
-    if (outputIndex > -1) {
-      this.transmitToOutput(outputIndex, data);
-    }
+    console.log('handleMidiEvent', data);
   }
 }

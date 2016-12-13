@@ -43,7 +43,7 @@ export default class ReactAudioComponent extends React.Component {
         break;
 
       case 'create-connection':
-        this.props.emitEvent();
+        this.props.emitEvent('create-connection', this, args[0]);
         break;
 
       case 'stop-connecting':

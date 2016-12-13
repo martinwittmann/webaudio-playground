@@ -20,7 +20,8 @@ export default class ReactAudioComponentInputs extends React.Component {
   onMouseUp(ev) {
     if (this.state.connectable) {
       // Finish creating the connection.
-      this.props.handleEvent('create-connection', ev);
+      let input = this.props.inputs[ev.target.dataset.ioIndex];
+      this.props.handleEvent('create-connection', input);
     }
     else {
       this.props.handleEvent('stop-connecting', ev);

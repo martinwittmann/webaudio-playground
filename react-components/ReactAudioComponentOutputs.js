@@ -21,7 +21,7 @@ export default class ReactAudioComponentOutputs extends React.Component {
     if (this.state.connectable) {
       // Finish creating the connection.
       let output = this.props.outputs[ev.target.dataset.ioIndex];
-      this.props.handleEvent('create-connection', ev, output);
+      this.props.handleEvent('create-connection', output);
     }
     else {
       this.props.handleEvent('stop-connecting', ev);
@@ -40,7 +40,6 @@ export default class ReactAudioComponentOutputs extends React.Component {
         connectable: true
       });
     }
-
   }
 
   onMouseLeave(ev) {

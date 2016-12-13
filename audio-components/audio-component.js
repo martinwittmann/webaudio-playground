@@ -16,6 +16,12 @@ export default class AudioComponent {
     this.inputs = [];
     this.outputs = [];
 
+    // In callbacks we store all functions that need to call another function at
+    // some point. For example the Midi in component adds handleMidiEvent to
+    // this.callbacks when connectect to another midi input and everytime
+    // handleMidiEvent gets called it calls the corresponding callback stored here.
+    this.callbacks = {}
+
     this.state = {
       canvasPos: {
         x: 0,
@@ -107,9 +113,7 @@ export default class AudioComponent {
   }
 
   midiEvent(data) {
-    if (this.handleMidiEvent) {
-      this.handleMidiEvent(data);
-    }
+    /*
     let status = this.getStatusByte(data);
     if (this.isNoteOn(status) && this.handleNoteOn) {
       this.handleNoteOn(data[1], data[2]);
@@ -117,6 +121,7 @@ export default class AudioComponent {
     else if (this.isNoteOff(status) && this.handleNoteOff) {
       this.handleNoteOff(data[1]);
     }
+    */
   }
 
   initMidiAccess(callback) {
@@ -314,12 +319,7 @@ export default class AudioComponent {
   }
 
   getConnectOutputCallback() {
-    switch (output.type) {
-      case 'midi':
-        // We're connecting this component's midi output to some midi input.
-        return this.connectMidiOutput;
-        break;
-    }
+    return this.connectMidiOutput;
   }
 
   getUnconnectOutputCallback() {
@@ -342,8 +342,9 @@ export default class AudioComponent {
 
   }
 
-  connectMidiOutput() {
-
+  connectOutput(output, toInput) {
+    this.log('Connecting ' + output.name + ' (' + output.id + ') to ' + toInput.name + ' (' + toInput.id + ')');
+    output.sendDataCallback = toInput.receiveDataCallback;
   }
 
   transmitToOutput(index, ...args) {
@@ -352,7 +353,7 @@ export default class AudioComponent {
       return false;
     }
 
-    output.targetCallback(args);
+    output.sendDataCallback(args);
   }
 
   log(msg) {
