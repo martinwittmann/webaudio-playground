@@ -20,7 +20,8 @@ export default class AudioComponent {
       canvasPos: {
         x: 0,
         y: 0
-      }
+      },
+      connections: []
     };
 
     if (!this.audioContext) {
@@ -106,6 +107,9 @@ export default class AudioComponent {
   }
 
   midiEvent(data) {
+    if (this.handleMidiEvent) {
+      this.handleMidiEvent(data);
+    }
     let status = this.getStatusByte(data);
     if (this.isNoteOn(status) && this.handleNoteOn) {
       this.handleNoteOn(data[1], data[2]);
@@ -307,6 +311,48 @@ export default class AudioComponent {
         outputs: this.outputs
       });
     }
+  }
+
+  getConnectOutputCallback() {
+    switch (output.type) {
+      case 'midi':
+        // We're connecting this component's midi output to some midi input.
+        return this.connectMidiOutput;
+        break;
+    }
+  }
+
+  getUnconnectOutputCallback() {
+
+  }
+
+  getTransmitFromOutputCallback() {
+
+  }
+
+  getConnectInputCallback() {
+
+  }
+
+  getUnconnectInputCallback() {
+
+  }
+
+  getTransmitFromInputCallback() {
+
+  }
+
+  connectMidiOutput() {
+
+  }
+
+  transmitToOutput(index, ...args) {
+    let output = this.outputs[index];
+    if (!output || !output.targetCallback) {
+      return false;
+    }
+
+    output.targetCallback(args);
   }
 
   log(msg) {

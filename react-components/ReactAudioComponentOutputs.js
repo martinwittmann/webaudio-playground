@@ -5,7 +5,8 @@ export default class ReactAudioComponentOutputs extends React.Component {
     super(props);
 
     this.state = {
-      activeIO: false
+      activeIO: false,
+      connectable: false
     };
   }
 
@@ -17,22 +18,36 @@ export default class ReactAudioComponentOutputs extends React.Component {
   }
 
   onMouseUp(ev) {
-    this.props.handleEvent('stop-connecting', ev);
+    if (this.state.connectable) {
+      // Finish creating the connection.
+      let output = this.props.outputs[ev.target.dataset.ioIndex];
+      this.props.handleEvent('create-connection', ev, output);
+    }
+    else {
+      this.props.handleEvent('stop-connecting', ev);
+    }
+
     this.setState({
-      activeIO: false
+      activeIO: false,
+      connectable: false
     });
   }
 
   onMouseEnter(ev) {
     if (ev.target.className.match(/connectable/)) {
       ev.target.className += ' hover';
+      this.setState({
+        connectable: true
+      });
     }
+
   }
 
   onMouseLeave(ev) {
-    if (ev.target.className.match(/hover/)) {
-      ev.target.className = ev.target.className.replace(/\shover/, '');
-    }
+    ev.target.className = ev.target.className.replace(/\s?hover/, '');
+    this.setState({
+      connectable: false
+    });
   }
 
   render() {

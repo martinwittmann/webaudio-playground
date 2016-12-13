@@ -35,6 +35,9 @@ export default class ComponentsContainer extends React.Component {
       connectableIOType: connectableIOType,
       connectableType: io.type
     });
+
+    console.log(sourceComponent.props);
+    console.log(io);
   }
 
   onStopConnectingComponents() {
@@ -62,6 +65,12 @@ export default class ComponentsContainer extends React.Component {
     }
   }
 
+  onCreateConnection() {
+    this.log('Create connection...');
+    let fromComponent = this.state.sourceComponent.component;
+    let fromIo = this.state.sourceIOComponent;
+  }
+
   onDragOverContainer(ev) {
     // For some reason this is necessary for the onDrop event to fire.
     // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
@@ -72,6 +81,10 @@ export default class ComponentsContainer extends React.Component {
     switch (type) {
       case 'start-connecting':
         this.onStartConnectingComponents(args);
+        break;
+
+      case 'create-connection':
+        this.onCreateConnection();
         break;
 
       case 'stop-connecting':

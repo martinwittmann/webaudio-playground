@@ -36,7 +36,14 @@ export default class ReactAudioComponent extends React.Component {
         this.setState({
           canBeDragged: false
         });
-        this.props.emitEvent('start-connecting', this, args[1], args[2]);
+        
+        let sourceIoComponent = args[1];
+        let io = args[2];
+        this.props.emitEvent('start-connecting', this, sourceIoComponent, io);
+        break;
+
+      case 'create-connection':
+        this.props.emitEvent();
         break;
 
       case 'stop-connecting':
