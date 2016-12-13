@@ -318,34 +318,25 @@ export default class AudioComponent {
     }
   }
 
-  getUnconnectOutputCallback() {
-
-  }
-
-  getTransmitFromOutputCallback() {
-
-  }
-
-  getConnectInputCallback() {
-
-  }
-
-  getUnconnectInputCallback() {
-
-  }
-
-  getTransmitFromInputCallback() {
-
-  }
-
   connectOutput(output, toInput) {
     this.log('Connecting ' + output.name + ' (' + output.id + ') to ' + toInput.name + ' (' + toInput.id + ')');
     output.sendDataCallback = toInput.receiveDataCallback;
   }
 
-  transmitToOutput(index, ...args) {
-    let output = this.outputs[index];
-    if (!output || !output.targetCallback) {
+  sendToOutput(index, ...args) {
+    let output;
+    if ('number' == typeof index) {
+      output = this.outputs[index];
+    }
+    else if ('object' == index) {
+      output = index;
+    }
+    else {
+      this.log('sendToOutput: Called with invalid output variable type ' + typeof index);
+      return false;
+    }
+
+    if (!output || !output.sendDataCallback) {
       return false;
     }
 

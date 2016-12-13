@@ -7,6 +7,7 @@ import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
 import Oscillator from './Oscillator.js';
 import MidiIn from './MidiIn.js';
 import Midi2Frequency from './Midi2Frequency.js';
+import MidiKeyboard from './MidiKeyboard.js';
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {
@@ -96,6 +97,13 @@ export default class ReactAudioComponent extends React.Component {
 
       case 'Midi2Frequency':
         component = (<Midi2Frequency
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
+        break;
+
+      case 'MidiKeyboard':
+        component = (<MidiKeyboard
           audioComponent={this.props.component}
           onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
         />);
