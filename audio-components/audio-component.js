@@ -1,5 +1,6 @@
 export default class AudioComponent {
-  constructor(audioContext, componentId, userTitle) {
+  constructor(app, componentId, userTitle) {
+    this.app = app;
     this.id = componentId;
 
     // Dirty hack to generate a unique title out of the id.
@@ -11,7 +12,7 @@ export default class AudioComponent {
     // Once the component is dropped on the canvas this value gets overwritten.
     this.inSidebar = true;
 
-    this.audioContext = audioContext;
+    this.audioContext = app.audioContext;
     this.audioNodes = {};
     this.inputs = [];
     this.outputs = [];
@@ -33,8 +34,6 @@ export default class AudioComponent {
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
     }
-
-    this.canvasSelector = '.components-container';
   }
 
   // NOTE: This is *not* automatically called when the object is garbage collected.

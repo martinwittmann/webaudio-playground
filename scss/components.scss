@@ -82,7 +82,7 @@
   }
 }
 
-$component-io-offset: ($io-size / -2) - $io-border-width;
+$component-io-offset: ($io-size / -2);
 
 .component-io {
   position: absolute;
@@ -96,6 +96,7 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
   margin: 0;
 
   .io {
+    box-sizing: border-box;
     border-radius: 50px;
     background: rgba(0, 0, 0, 0.01);
     border: $io-border-width solid rgba(0, 0, 0, 0.4);
@@ -110,6 +111,10 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
 
     &:hover {
       background: #1acf18;
+    }
+
+    &.connected {
+      background: #bbb;
     }
   }
 

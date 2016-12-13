@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class OscillatorComponent extends AudioComponent {
-  constructor(audioContext, id) {
-    super(audioContext, id, 'Oscillator');
+  constructor(app, id) {
+    super(app, id, 'Oscillator');
 
     this.type = 'oscillator';
     this.reactComponentType = 'Oscillator';

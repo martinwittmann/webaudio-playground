@@ -44,7 +44,7 @@ export default class ReactAudioComponent extends React.Component {
         break;
 
       case 'create-connection':
-        this.props.emitEvent('create-connection', this, args[0]);
+        this.props.emitEvent('create-connection', this, args[0], args[1]);
         break;
 
       case 'stop-connecting':
@@ -138,6 +138,7 @@ export default class ReactAudioComponent extends React.Component {
           inputs={this.state.inputs}
           handleEvent={this.handleChildEvent.bind(this)}
           connectableIos={this.props.connectableIos}
+          settings={this.props.settings}
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
@@ -147,6 +148,8 @@ export default class ReactAudioComponent extends React.Component {
           outputs={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
           connectableIos={this.props.connectableIos}
+          settings={this.props.settings}
+          canvasSelector={this.props.canvasSelector}
         />
       </div>
     );

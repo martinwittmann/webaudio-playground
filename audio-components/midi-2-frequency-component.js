@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class Midi2FrequencyComponent extends AudioComponent {
-  constructor(audioContext, id) {
-    super(audioContext, id, 'Midi to Frequency');
+  constructor(app, id) {
+    super(app, id, 'Midi to Frequency');
 
     this.type = 'midi-2-frequency';
     this.reactComponentType = 'Midi2Frequency';

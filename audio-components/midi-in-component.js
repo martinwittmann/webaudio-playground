@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class MidiInComponent extends AudioComponent {
-  constructor(audioContext, id) {
-    super(audioContext, id, 'Midi In');
+  constructor(app, id) {
+    super(app, id, 'Midi In');
 
     // Initialized webaudio midi and add all midi inputs as component inputs.
     this.initMidiAccess();

@@ -5,8 +5,7 @@ import MidiKeyboardComponent from './audio-components/midi-keyboard-component.js
 
 export default class componentsRegistry {
 
-  constructor(audioContext) {
-    this.audioContext = audioContext;
+  constructor(app) {
     this.registeredComponentTypes = {};
     this.components = [];
 
@@ -29,22 +28,22 @@ export default class componentsRegistry {
 
     this.registerComponentType('oscillator', {
       create: function() {
-        return new OscillatorComponent(this.audioContext, this.createComponentId('oscillator'));
+        return new OscillatorComponent(app, this.createComponentId('oscillator'));
       }
     });
     this.registerComponentType('midi-in', {
       create: function() {
-        return new MidInComponent(this.audioContext, this.createComponentId('midi-in'));
+        return new MidInComponent(app, this.createComponentId('midi-in'));
       }
     });
     this.registerComponentType('midi-2-frequency', {
       create: function() {
-        return new Midi2FrequencyComponent(this.audioContext, this.createComponentId('midi-2-frequency'));
+        return new Midi2FrequencyComponent(app, this.createComponentId('midi-2-frequency'));
       }
     });
     this.registerComponentType('midi-keyboard', {
       create: function() {
-        return new MidiKeyboardComponent(this.audioContext, this.createComponentId('midi-keyboard'));
+        return new MidiKeyboardComponent(app, this.createComponentId('midi-keyboard'));
       }
     });
   }

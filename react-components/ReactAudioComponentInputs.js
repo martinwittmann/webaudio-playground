@@ -6,7 +6,9 @@ export default class ReactAudioComponentInputs extends React.Component {
 
     this.state = {
       activeIO: false,
-      connectable: false
+      connectable: false,
+      canvasSelector: props.canvasSelector,
+      connected: false
     };
   }
 
@@ -21,7 +23,7 @@ export default class ReactAudioComponentInputs extends React.Component {
     if (this.state.connectable) {
       // Finish creating the connection.
       let input = this.props.inputs[ev.target.dataset.ioIndex];
-      this.props.handleEvent('create-connection', input);
+      this.props.handleEvent('create-connection', input, this);
     }
     else {
       this.props.handleEvent('stop-connecting', ev);
@@ -62,6 +64,10 @@ export default class ReactAudioComponentInputs extends React.Component {
         }
       }
 
+      if (this.state.connected) {
+        cls.push('connected');
+      }
+
       return (<li
         key={input.id}
         title={input.name}
@@ -72,6 +78,11 @@ export default class ReactAudioComponentInputs extends React.Component {
         onMouseEnter={this.onMouseEnter.bind(this)}
         onMouseLeave={this.onMouseLeave.bind(this)}
         data-io-index={index}
+        ref={(el) => {
+          if (el) {
+            this.coordinates = el.getBoundingClientRect();
+          }
+        }}
       ></li>)
     });
     return (<ul className="component-io component-inputs">{inputs}</ul>);

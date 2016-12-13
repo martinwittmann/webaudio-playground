@@ -10,7 +10,7 @@ export default class App {
   constructor() {
     this.debug = true;
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.components = new componentsRegistry(this.audioContext);
+    this.components = new componentsRegistry(this);
     this.render();
   }
 
@@ -46,7 +46,11 @@ export default class App {
     let appSettings = {
       components: this.components.components,
       componentsAvailable: this.components.getAvailableComponents(),
-      emitEvent: this.handleEvent.bind(this)
+      emitEvent: this.handleEvent.bind(this),
+      canvasSelector: '.components-container',
+      // This == $iosize / 2 (from midi.scss) to center the io connection lines in the io circles.
+      ioOffset: 7,
+      ioConnectionLineColor: 'rgba(0, 0, 0, 0.4)'
     };
 
     let outputs = [];

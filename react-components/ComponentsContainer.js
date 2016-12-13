@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactAudioComponent from './ReactAudioComponent.js';
+import ComponentConnectionLines from './ComponentConnectionLines.js';
 
 export default class ComponentsContainer extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       isConnectingComponents: false,
@@ -11,12 +12,13 @@ export default class ComponentsContainer extends React.Component {
       sourceIoComponent: false,
       sourceIo: false,
       connectableIoType: false,
-      connectableType: false
+      connectableType: false,
+      connectionLines: [],
+      canvasSelector: props.settings.canvasSelector
     };
   }
 
   onStartConnectingComponents([sourceComponent, sourceIoComponent, io]) {
-    this.log('Start connecting...');
     let connectableIoType;
     if ('output' == io.ioType) {
       connectableIoType = 'input';
@@ -40,8 +42,6 @@ export default class ComponentsContainer extends React.Component {
   }
 
   onStopConnectingComponents() {
-    this.log('Stopped connecting.');
-
     // Remove the classes for marking connectable ios on this component (the container).
     this.setState({
       isConnectingComponents: false,
@@ -73,16 +73,40 @@ export default class ComponentsContainer extends React.Component {
     let component1Io = this.state.sourceIo;
     let component2 = args[0].props.component;
     let component2Io = args[1];
+    let component2IoComponent = args[2];
+    let outputComponent, inputComponent;
 
     // We always create the connection from the output to the input.
     // Right now there's no technical reason for this apart from being logic.
     // We need to check component2Io since this is where the mouseUp event fired.
     if ('output' == component2Io.ioType) {
       component2.connectOutput(component2Io, component1Io);
+      outputComponent = component2IoComponent;
+      inputComponent = this.state.sourceIoComponent;
     }
     else {
       component1.connectOutput(component1Io, component2Io);
+      outputComponent = this.state.sourceIoComponent;
+      inputComponent = component2IoComponent;
     }
+
+    let newLines = this.state.connectionLines.slice();
+    newLines.push({
+      from: outputComponent,
+      to: inputComponent
+    });
+
+    this.state.sourceIoComponent.setState({
+      connected: true
+    });
+
+    component2IoComponent.setState({
+      connected: true
+    });
+
+    this.setState({
+      connectionLines: newLines
+    });
   }
 
   onDragOverContainer(ev) {
@@ -143,7 +167,7 @@ export default class ComponentsContainer extends React.Component {
         y: cursorPosOnDragStart.y - component.initialBoundingRect.top
       };
 
-      let containerRect = document.querySelector(component.canvasSelector).getBoundingClientRect();
+      let containerRect = document.querySelector(this.state.canvasSelector).getBoundingClientRect();
 
       component.inSidebar = false; // Mark the component to be shown on the canvas.
 
@@ -182,6 +206,7 @@ export default class ComponentsContainer extends React.Component {
         component={component}
         emitEvent={this.handleEvent.bind(this)}
         connectableIos={connectableIos}
+        settings={this.props.settings}
       />);
     });
 
@@ -196,6 +221,7 @@ export default class ComponentsContainer extends React.Component {
         onMouseUp={this.onMouseUp.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
+          <ComponentConnectionLines lines={this.state.connectionLines} settings={this.props.settings} />
         </svg>
         <div
           className="components"

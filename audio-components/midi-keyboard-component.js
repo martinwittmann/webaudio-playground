@@ -1,8 +1,8 @@
 import AudioComponent from './audio-component.js';
 
 export default class MidiKeyboardComponent extends AudioComponent {
-  constructor(audioContext, id) {
-    super(audioContext, id, 'Midi Keyboard');
+  constructor(app, id) {
+    super(app, id, 'Midi Keyboard');
 
     this.type = 'midi-keyboard';
     this.reactComponentType = 'MidiKeyboard';
