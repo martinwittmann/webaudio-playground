@@ -318,10 +318,6 @@ export default class AudioComponent {
     }
   }
 
-  getConnectOutputCallback() {
-    return this.connectMidiOutput;
-  }
-
   getUnconnectOutputCallback() {
 
   }
