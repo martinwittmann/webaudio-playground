@@ -1,4 +1,5 @@
 import React from 'react';
+import KeyboardOctave from './KeyboardOctave.js';
 
 export default class MidiKeyboard extends React.Component {
   constructor(props) {
@@ -11,8 +12,11 @@ export default class MidiKeyboard extends React.Component {
   }
 
   render() {
+    // This should be the c'.
     return (
-      <div>MidiKeyboard</div>
-    );
+      <div className="keyboard-content octaves-2">
+        <KeyboardOctave startNote={60} />
+        <KeyboardOctave startNote={72} />
+      </div>);
   }
 }

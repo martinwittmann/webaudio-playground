@@ -26,7 +26,6 @@
 
   .audio-component {
     position: absolute;
-    width: 20%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     background: #ffffff;
   }
@@ -125,4 +124,74 @@ $component-io-offset: ($io-size / -2) - $io-border-width;
 
 .component-outputs {
   bottom: $component-io-offset;
+}
+
+
+$key-width: 25px;
+$key-height: 85px;
+$black-key-width-factor: .68;
+$black-key-height-factor: .58;
+$octave-width: 7 * $key-width;
+
+.keyboard-content {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+
+  &.octaves-2 {
+    width: 2 * $octave-width;
+  }
+
+  &.octaves-3 {
+    width: 3 * $octave-width;
+  }
+
+  &.octaves-4 {
+    width: 4 * $octave-width;
+  }
+}
+
+.keyboard-keys {
+
+  list-style-type: none;
+  list-style-image: none;
+  overflow: visble;
+  margin: 0 ($key-width * $black-key-width-factor * -1) 0 0;
+  margin: 0;
+  padding: 0;
+  float: left;
+
+  .key {
+    float: left;
+    background: #ffffff;
+    height: $key-height;
+    width: $key-width;
+    color: transparent;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:first-child {
+      //border-left: 0;
+    }
+
+    &.key-black {
+      background: #555;
+      height: $key-height * $black-key-height-factor;
+      width: $key-width * $black-key-width-factor;
+      position: relative;
+      margin-left: $key-width * $black-key-width-factor * -.5;
+      margin-right: $key-width * $black-key-width-factor * -.5;
+    }
+  }
+
+  &.additionalC {
+    margin-right: 0;
+  }
+
+  &:last-child {
+
+    > :last-child {
+      border-right: none;
+    }
+  }
 }
