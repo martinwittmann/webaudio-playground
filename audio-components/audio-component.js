@@ -337,6 +337,7 @@ export default class AudioComponent {
     }
 
     if (!output || !output.sendDataCallback) {
+      this.log('sendToOutput: Trying to send data to invalid output or to output without sendDataCallback.', index, args);
       return false;
     }
 

@@ -11,12 +11,24 @@ export default class MidiKeyboard extends React.Component {
     props.audioComponent.reactComponent = this;
   }
 
+  handleEvent(type, noteValue) {
+    switch (type) {
+      case 'note-on':
+        this.props.audioComponent.createAndSendMidiMessage('note-on', noteValue);
+        break;
+
+      case 'note-off':
+        this.props.audioComponent.createAndSendMidiMessage('note-off', noteValue);
+        break;
+    }
+  }
+
   render() {
     // This should be the c'.
     return (
       <div className="keyboard-content octaves-2">
-        <KeyboardOctave startNote={60} />
-        <KeyboardOctave startNote={72} />
+        <KeyboardOctave startNote={60} emitEvent={this.handleEvent.bind(this)} />
+        <KeyboardOctave startNote={72} emitEvent={this.handleEvent.bind(this)} />
       </div>);
   }
 }
