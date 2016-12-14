@@ -13,7 +13,7 @@ export default class ReactAudioComponentOutputs extends React.Component {
   }
 
   onMouseDown(ev) {
-    this.props.handleEvent('start-connecting', ev, this, this.props.outputs[ev.target.dataset.ioIndex]);
+    this.props.handleEvent('start-connecting', ev, this, this.props.outputs[ev.target.dataset.ioIndex], {x: ev.pageX, y: ev.pageY});
     this.setState({
       activeIO: ev.target.id,
     });

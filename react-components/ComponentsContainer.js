@@ -18,7 +18,7 @@ export default class ComponentsContainer extends React.Component {
     };
   }
 
-  onStartConnectingComponents([sourceComponent, sourceIoComponent, io]) {
+  onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {
     let connectableIoType;
     if ('output' == io.ioType) {
       connectableIoType = 'input';
@@ -31,19 +31,34 @@ export default class ComponentsContainer extends React.Component {
       return false;
     }
 
+    this.connectingFromIoPos = {
+      x: sourceIoComponent.coordinates.left + this.props.settings.ioOffset,
+      y: sourceIoComponent.coordinates.top + this.props.settings.ioOffset
+    };
+
     this.setState({
       isConnectingComponents: true,
       sourceComponent: sourceComponent,
       sourceIoComponent: sourceIoComponent,
       connectableIoType: connectableIoType,
       connectableType: io.type,
-      sourceIo: io
+      sourceIo: io,
     });
+
+    // We can't simply use the bind wrapped function since removeEventListener
+    // needs the exact same function instance. So we store it, and use it in
+    // onStopConnectingComponents() to remove the event listener.
+    // For performance reasons I did not want to use this event handler all the
+    // time, so we only subscribe when necessary.
+    this.mouseMoveCallback = this.onMouseMove.bind(this);
+    document.querySelector(this.state.canvasSelector).addEventListener('mousemove', this.mouseMoveCallback);
   }
 
   onStopConnectingComponents() {
     // Remove the classes for marking connectable ios on this component (the container).
+
     this.setState({
+      currentMousePos: false,
       isConnectingComponents: false,
       connectableIoType: false,
       connectableType: false,
@@ -65,6 +80,7 @@ export default class ComponentsContainer extends React.Component {
         activeIO: false
       });
     }
+    document.querySelector(this.state.canvasSelector).removeEventListener('mousemove', this.mouseMoveCallback);
   }
 
   onCreateConnection(args) {
@@ -109,6 +125,17 @@ export default class ComponentsContainer extends React.Component {
     });
   }
 
+  onMouseMove(ev) {
+    if (this.state.isConnectingComponents) {
+      this.setState({
+        currentMousePos: {
+          x: ev.pageX,
+          y: ev.pageY
+        }
+      });
+    }
+  }
+
   onDragOverContainer(ev) {
     // For some reason this is necessary for the onDrop event to fire.
     // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
@@ -140,15 +167,16 @@ export default class ComponentsContainer extends React.Component {
 
   onDropComponent(ev) {
     ev.preventDefault();
+    let dragData = ev.dataTransfer.getData('text/plain');
+    console.log(dragData.dragStartX);
 
-    let componentId = ev.dataTransfer.getData('id');
     let cursorPosOnDragStart = {
-      x: parseFloat(ev.dataTransfer.getData('dragStartX'), 10),
-      y: parseFloat(ev.dataTransfer.getData('dragStartY'), 10)
+      x: parseFloat(dragData.dragStartX, 10),
+      y: parseFloat(dragData.dragStartY, 10)
     };
     let newCanvasPos, component;
 
-    let componentIsOnCanvas = parseInt(ev.dataTransfer.getData('onCanvas'), 10);
+    let componentIsOnCanvas = parseInt(dragData.onCanvas, 10);
 
     // Handle the dropping by either adding the component to the canvas or moving it on the canvas.
     let droppedAt = {
@@ -158,7 +186,7 @@ export default class ComponentsContainer extends React.Component {
 
     if (!componentIsOnCanvas) {
       // Add the component to the canvas at the expected position.
-      component = this.props.settings.emitEvent('get-available-component-by-id', componentId);
+      component = this.props.settings.emitEvent('get-available-component-by-id', dragData.componentId);
       this.props.settings.emitEvent('add-component', component);
 
       // Calculate the position where we want to drop the component:
@@ -167,7 +195,7 @@ export default class ComponentsContainer extends React.Component {
         y: cursorPosOnDragStart.y - component.initialBoundingRect.top
       };
 
-      let containerRect = document.querySelector(this.state.canvasSelector).getBoundingClientRect();
+      let containerRect = this.getContainerRect();
 
       component.inSidebar = false; // Mark the component to be shown on the canvas.
 
@@ -178,7 +206,7 @@ export default class ComponentsContainer extends React.Component {
     }
     else {
       // Just move the component to the expected position.
-      component = this.props.settings.emitEvent('get-canvas-component-by-id', componentId);
+      component = this.props.settings.emitEvent('get-canvas-component-by-id', dragData.componentId);
       newCanvasPos = {
         x: component.state.canvasPos.x + (droppedAt.x - cursorPosOnDragStart.x),
         y: component.state.canvasPos.y + (droppedAt.y - cursorPosOnDragStart.y)
@@ -187,6 +215,13 @@ export default class ComponentsContainer extends React.Component {
 
     // Update the container's position.
     component.moveReactContainerComponent(newCanvasPos);
+  }
+
+  getContainerRect() {
+    if ('undefined' == typeof this.containerRect) {
+      this.containerRect = document.querySelector(this.props.settings.canvasSelector).getBoundingClientRect();
+    }
+    return this.containerRect;
   }
 
   render() {
@@ -210,9 +245,21 @@ export default class ComponentsContainer extends React.Component {
       />);
     });
 
-    let cls = ['components-container'];
+    let connectingLine = false;
+    let cls = [this.props.settings.canvasSelector.replace(/\./, '')];
+
     if (this.state.isConnectingComponents) {
       cls.push('connecting');
+
+      if (this.state.currentMousePos) {
+        let containerRect = this.getContainerRect();
+        connectingLine = {
+          x1: this.connectingFromIoPos.x - containerRect.left,
+          y1: this.connectingFromIoPos.y - containerRect.top,
+          x2: this.state.currentMousePos.x - containerRect.left,
+          y2: this.state.currentMousePos.y - containerRect.top
+        };
+      }
     }
 
     return (
@@ -221,7 +268,7 @@ export default class ComponentsContainer extends React.Component {
         onMouseUp={this.onMouseUp.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
-          <ComponentConnectionLines lines={this.state.connectionLines} settings={this.props.settings} />
+          <ComponentConnectionLines lines={this.state.connectionLines} settings={this.props.settings} connectingLine={connectingLine} />
         </svg>
         <div
           className="components"

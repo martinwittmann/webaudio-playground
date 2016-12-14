@@ -27,6 +27,20 @@ export default class ComponentConnectionLines extends React.Component {
           />);
       });
     }
+
+    if (this.props.connectingLine) {
+      lines.push((
+        <line key="connecting-line"
+          x1={this.props.connectingLine.x1}
+          y1={this.props.connectingLine.y1}
+          x2={this.props.connectingLine.x2}
+          y2={this.props.connectingLine.y2}
+          strokeWidth="2"
+          stroke={this.props.settings.ioConnectionLineColor}
+        />
+      ));
+
+    }
     return (<g className="connection-lines">{lines}</g>);
   }
 }

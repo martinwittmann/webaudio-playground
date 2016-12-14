@@ -40,7 +40,7 @@ export default class ReactAudioComponent extends React.Component {
         
         let sourceIoComponent = args[1];
         let io = args[2];
-        this.props.emitEvent('start-connecting', this, sourceIoComponent, io);
+        this.props.emitEvent('start-connecting', this, sourceIoComponent, io, { x: ev.pageX, y: ev.pageY});
         break;
 
       case 'create-connection':
@@ -67,14 +67,41 @@ export default class ReactAudioComponent extends React.Component {
     }
   }
 
-  onDragStart(ev) {
-    ev.dataTransfer.setData('id', this.props.component.id);
-    ev.dataTransfer.setData('dragStartX', ev.pageX);
-    ev.dataTransfer.setData('dragStartY', ev.pageY);
+  onDragStartComponent(ev) {
+    let dragData = {
+      id: this.props.component.id,
+      dragStartX: ev.pageX,
+      dragStartY: ev.pageY
+    }
+    ev.dataTransfer.setData('text/plain', JSON.stringify(dragData));
     // We need to save this as number because otherwise false becomes 'false'
     // which makes parsing the values complicated. Se we work around this by
     // casting to number.
     ev.dataTransfer.setData('onCanvas', this.props.component.inSidebar ? 0 : 1);
+
+    if (!this.props.component.inSidebar) {
+      // We prevent showing a dragImage for components on the canvas since we
+      // want to directly move it instead of dragging and on drop settinga new position.
+      let img = new Image();
+      ev.dataTransfer.setDragImage(img, 0, 0);
+    }
+  }
+
+  onDragComponent(ev) {
+    if (this.inSidebar) {
+      return true;
+    }
+
+    console.log('!!', ev.dataTransfer.getData('text/plain'));
+
+        /*
+    this.setState({
+      canvasPos: {
+        x: ev.dataTransfer.getData('dragStartX')
+        y:
+      }
+    });
+    */
   }
 
   render() {
@@ -132,7 +159,8 @@ export default class ReactAudioComponent extends React.Component {
           }
         }}
         draggable={this.state.canBeDragged}
-        onDragStart={this.onDragStart.bind(this)}
+        onDragStart={this.onDragStartComponent.bind(this)}
+        onDrag={this.onDragComponent.bind(this)}
       >
         <ReactAudioComponentInputs
           inputs={this.state.inputs}

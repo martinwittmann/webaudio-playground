@@ -45,7 +45,7 @@
         // Unfortunately when connecting the :hover pseudo class is not applied
         // since technically the user is dragging the mouse.
         // I solved this via javascript in the io components.
-        @include connectingIo();
+        //@include connectingIo();
       }
     }
   }
@@ -106,11 +106,11 @@ $component-io-offset: ($io-size / -2);
     cursor: pointer;
 
     &.connecting {
-      @include connectingIo();
+      //@include connectingIo();
     }
 
     &:hover {
-      background: #1acf18;
+      //background: #1acf18;
     }
 
     &.connected {
