@@ -10,7 +10,7 @@ export default class Midi2FrequencyComponent extends AudioComponent {
     this.registerInput({
       type: 'midi',
       name: 'Midi In',
-      receiveDataCallback: this.handleMidiInput,
+      receiveDataCallback: this.handleMidiInput.bind(this),
     });
 
     this.registerOutput({
@@ -19,7 +19,34 @@ export default class Midi2FrequencyComponent extends AudioComponent {
     });
   }
 
-  handleMidiInput(message) {
-    console.log(this.id + ': Received midi message:', message);
+  mapVelocityToGain(veloctiy) {
+    return (veloctiy / 127) * .5;
+  }
+
+  midiNoteToFrequency(note) {
+    return Math.pow(2, (note - 69) / 12) * 440;
+  }
+
+  handleMidiInput(inputData) {
+    let message = inputData[0];
+    let outputIndex = 0; // This component only supports 1 output, so we can hard-code it.
+    let data = false;
+
+    if (this.isNoteOn(message[0])) {
+      data = {
+        frequency: this.midiNoteToFrequency(message[1]),
+        gain: this.mapVelocityToGain(message[2])
+      };
+    }
+    else if (this.isNoteOff(message[0], message[1])) {
+      data = {
+        frequency: this.midiNoteToFrequency(message[1]),
+        gain: 0
+      };
+    }
+
+    if (data && this.outputs.length > 0) {
+      this.sendToOutput(outputIndex, data);
+    }
   }
 }

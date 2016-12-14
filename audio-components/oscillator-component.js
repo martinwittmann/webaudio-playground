@@ -26,8 +26,20 @@ export default class OscillatorComponent extends AudioComponent {
     this.registerInput({
       type: 'frequency',
       name: 'Frequency In',
+      receiveDataCallback: this.handleFrequencyIn.bind(this)
     });
 
+  }
+
+  handleFrequencyIn(args) {
+    let data = args[0];
+
+    if (data.gain > 0) {
+      this.playFrequency(data.frequency, data.gain);
+    }
+    else {
+      this.stopFrequency(data.frequency);
+    }
   }
 
   getWaveforms() {
@@ -113,18 +125,16 @@ export default class OscillatorComponent extends AudioComponent {
     }
   }
 
-  handleNoteOn(note, velocity = 127) {
-    let gain = this.mapVeloctiyToGain(velocity);
-
-    if ('undefined' != typeof this.audioNodes[note]) {
-      let nodes = this.audioNodes[note];
+  playFrequency(frequency, gain = .5) {
+    if ('undefined' != typeof this.audioNodes[frequency]) {
+      let nodes = this.audioNodes[frequency];
       nodes.gain.gain.value = gain;
       clearTimeout(nodes.clearNodesTimeout);
       return;
     }
 
     let nodes = {
-      osc: this.createOscillatorNode(this.state.waveform, this.midiNoteToFrequency(note)),
+      osc: this.createOscillatorNode(this.state.waveform, frequency),
       gain: this.createGainNode(gain),
     };
 
@@ -132,22 +142,22 @@ export default class OscillatorComponent extends AudioComponent {
     nodes.gain.connect(this.totalGain);
     nodes.osc.start();
 
-    this.audioNodes[note] = nodes;
+    this.audioNodes[frequency] = nodes;
   }
 
-  handleNoteOff(note) {
-    if (!this.audioNodes[note]) {
+  stopFrequency(frequency) {
+    if (!this.audioNodes[frequency]) {
       // This note is not playing right now.
       return false;
     }
 
-    var nodes = this.audioNodes[note];
+    var nodes = this.audioNodes[frequency];
     nodes.gain.gain.value = 0;
     var that = this;
     nodes.clearNodesTimeout = setTimeout(() => {
       nodes.osc.stop();
       nodes.osc.disconnect();
-      delete that.audioNodes[note];
+      delete that.audioNodes[frequency];
     }, 100);
   }
 }

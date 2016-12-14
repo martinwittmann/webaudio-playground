@@ -107,20 +107,10 @@ export default class AudioComponent {
     return result;
   }
 
-  midiNoteToFrequency(note) {
-    return Math.pow(2, (note - 69) / 12) * 440;
-  }
-
   midiEvent(data) {
-    /*
-    let status = this.getStatusByte(data);
-    if (this.isNoteOn(status) && this.handleNoteOn) {
-      this.handleNoteOn(data[1], data[2]);
+    if (this.handleMidiEvent) {
+      this.handleMidiEvent(data);
     }
-    else if (this.isNoteOff(status) && this.handleNoteOff) {
-      this.handleNoteOff(data[1]);
-    }
-    */
   }
 
   initMidiAccess(callback) {
@@ -335,12 +325,14 @@ export default class AudioComponent {
       return false;
     }
 
-    if (!output || !output.sendDataCallback) {
-      this.log('sendToOutput: Trying to send data to invalid output or to output without sendDataCallback.', index, args);
+    if (!output) {
+      this.log('sendToOutput: Trying to send data to invalid output.', index, args);
       return false;
     }
 
-    output.sendDataCallback(args);
+    if (output.sendDataCallback) {
+      output.sendDataCallback(args);
+    }
   }
 
   log(msg) {

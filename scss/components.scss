@@ -3,10 +3,13 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.components-connections,
-.components {
+.components-connections {
   position: absolute;
   left: 0;
   top: 0;
@@ -16,10 +19,6 @@
 
 .components-connections {
   background: rgba(0, 0, 0, .05);
-}
-
-.components {
-  z-index: 1; // Bring the components in front of the connection lines
 }
 
 .components-container {

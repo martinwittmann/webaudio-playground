@@ -47,7 +47,7 @@ export default class Oscillator extends React.Component {
   }
 
   render() {
-    let options = [
+    /*
       (<li key="input">
         <label className="option-label">Input:</label>
         <Select
@@ -57,8 +57,10 @@ export default class Oscillator extends React.Component {
           onChange={this.onInputChanged.bind(this)}
         />
       </li>),
+    */
+    let options = [
+
      (<li key="waveform">
-        <label className="option-label">Waveform:</label>
         <Select
           className="wafeform-select"
           defaultValue={this.state.waveform}
@@ -68,6 +70,7 @@ export default class Oscillator extends React.Component {
       </li>)
     ];
 
+/*
     if ('fixed' == this.state.input) {
       options.push((<li key="frequency">
         <label className="option-label">Frequency:</label>
@@ -79,6 +82,7 @@ export default class Oscillator extends React.Component {
         <label htmlFor="activate-{this.props.audioComponent.id}">activate</label>
       </li>));
     }
+    */
     return (
       <ul className="audio-component-options">
         {options}

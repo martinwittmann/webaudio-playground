@@ -17,7 +17,8 @@ export default class ComponentConnectionLines extends React.Component {
     if (this.props.lines) {
       lines = this.props.lines.map(line => {
         return (
-          <line key="1"
+          <line key={line.outputId + '--' + line.inputId}
+            className="connection-line"
             x1={line.from.coordinates.left - canvasRect.left + this.props.settings.ioOffset}
             y1={line.from.coordinates.top - canvasRect.top + this.props.settings.ioOffset}
             x2={line.to.coordinates.left - canvasRect.left + this.props.settings.ioOffset}

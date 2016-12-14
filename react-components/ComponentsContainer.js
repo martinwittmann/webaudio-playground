@@ -292,20 +292,16 @@ export default class ComponentsContainer extends React.Component {
       <div
         className={cls.join(' ')}
         onMouseUp={this.onMouseUp.bind(this)}
+        onDrop={this.onDropComponent.bind(this)}
+        onDragOver={this.onDragOverContainer.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
           <ComponentConnectionLines lines={this.state.connectionLines} settings={this.props.settings} connectingLine={connectingLine} />
         </svg>
-        <div
-          className="components"
-          onDrop={this.onDropComponent.bind(this)}
-          onDragOver={this.onDragOverContainer.bind(this)}
-        >
-          {components}
-        </div>
+        {components}
       </div>
     );
-  }
+  } //
 
   log(msg) {
     if (console && console.log) {
