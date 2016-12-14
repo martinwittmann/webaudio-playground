@@ -1,14 +1,14 @@
 import React from 'react';
-import Inspector from './Inspector.js';
-import Column2 from './Column2.js';
-import ComponentsAvailable from './ComponentsAvailable.js';
+import Inspector from './Inspector.jsx';
+import Column2 from './Column2.jsx';
+import ComponentsAvailable from './ComponentsAvailable.jsx';
 
 // Drag & drop stuff.
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend'
 
 // All React components corresponding to audio components.
-import Oscillator from './Oscillator.js';
+//import Oscillator from './Oscillator.jsx';
 
 
 class ColumnLayout extends React.Component {

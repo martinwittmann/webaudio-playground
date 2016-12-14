@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactAudioComponent from './ReactAudioComponent.js';
-import ComponentConnectionLines from './ComponentConnectionLines.js';
+import ReactAudioComponent from './ReactAudioComponent.jsx';
+import ComponentConnectionLines from './ComponentConnectionLines.jsx';
 
 export default class ComponentsContainer extends React.Component {
   constructor(props) {

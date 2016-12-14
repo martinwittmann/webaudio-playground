@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from './Select.js';
+import Select from './Select.jsx';
 
 export default class Oscillator extends React.Component {
   constructor(props) {

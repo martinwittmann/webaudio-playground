@@ -1,5 +1,5 @@
 import React from 'react';
-import KeyboardOctave from './KeyboardOctave.js';
+import KeyboardOctave from './KeyboardOctave.jsx';
 
 export default class MidiKeyboard extends React.Component {
   constructor(props) {

@@ -57,6 +57,13 @@
   border-radius: 3px;
   position: relative;
   cursor: move;
+
+  // Don't allow text selection for components.
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select:none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .audio-component-headline {

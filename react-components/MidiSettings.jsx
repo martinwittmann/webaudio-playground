@@ -1,5 +1,5 @@
 import React from 'react';
-import Oscillator from './Oscillator.js';
+import Oscillator from './Oscillator.jsx';
 
 export default class MidiSettings extends React.Component {
   onMidiInputSelected(e) {

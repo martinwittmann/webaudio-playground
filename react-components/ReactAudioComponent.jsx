@@ -1,13 +1,13 @@
 import React from 'react';
 
-import ReactAudioComponentInputs from './ReactAudioComponentInputs.js';
-import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.js';
+import ReactAudioComponentInputs from './ReactAudioComponentInputs.jsx';
+import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.jsx';
 
 // React components for our audio components.
-import Oscillator from './Oscillator.js';
-import MidiIn from './MidiIn.js';
-import Midi2Frequency from './Midi2Frequency.js';
-import MidiKeyboard from './MidiKeyboard.js';
+import Oscillator from './Oscillator.jsx';
+import MidiIn from './MidiIn.jsx';
+import Midi2Frequency from './Midi2Frequency.jsx';
+import MidiKeyboard from './MidiKeyboard.jsx';
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {
@@ -85,6 +85,11 @@ export default class ReactAudioComponent extends React.Component {
 
   onDragStartComponent(ev) {
     let onCanvas = !this.props.component.inSidebar;
+
+    if (ev.dataTransfer) {
+      // 
+      ev.dataTransfer.setData('text/plain', '');
+    }
 
     let dragData = {
       componentId: this.props.component.id,

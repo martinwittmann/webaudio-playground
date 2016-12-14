@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactAudioComponent from './ReactAudioComponent.js';
+import ReactAudioComponent from './ReactAudioComponent.jsx';
 
 export default class ComponentsAvailable extends React.Component {
   render() {

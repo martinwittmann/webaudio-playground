@@ -1,7 +1,7 @@
 import React from 'react';
-import Oscillator from './Oscillator.js';
-import ComponentsContainer from './ComponentsContainer.js';
-import ReactAudioComponent from './ReactAudioComponent.js';
+import Oscillator from './Oscillator.jsx';
+import ComponentsContainer from './ComponentsContainer.jsx';
+import ReactAudioComponent from './ReactAudioComponent.jsx';
 
 export default class Column2 extends React.Component {
   render() {
