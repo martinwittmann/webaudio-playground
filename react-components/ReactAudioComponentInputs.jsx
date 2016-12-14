@@ -17,6 +17,7 @@ export default class ReactAudioComponentInputs extends React.Component {
     this.setState({
       activeIO: ev.target.id
     });
+    ev.preventDefault();
   }
 
   onMouseUp(ev) {

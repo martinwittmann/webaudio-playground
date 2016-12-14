@@ -22,9 +22,11 @@ export default class ReactAudioComponent extends React.Component {
         y: props.component.state.canvasPos.y
       },
       canBeDraggedToCanvas: props.component.inSidebar,
-      canBeDragged: true,
       connectableIos: props.connectableIos
     };
+
+    // I moved this out of state to be able to set it directly and synchronously.
+    this.canBeDragged = true;
   }
 
   handleChildEvent(type, ...args) {
@@ -34,10 +36,7 @@ export default class ReactAudioComponent extends React.Component {
         ev = args[0];
         ev.preventDefault();
         outputData = this.parseOutputIdAttribute(ev.target.getAttribute('id'));
-
-        this.setState({
-          canBeDragged: false
-        });
+        this.canBeDragged = false;
         
         let sourceIoComponent = args[1];
         let io = args[2];
@@ -52,9 +51,7 @@ export default class ReactAudioComponent extends React.Component {
         ev = args[0];
         ev.preventDefault();
 
-        this.setState({
-          canBeDragged: true
-        });
+        this.canBeDragged = true;
         this.props.emitEvent('stop-connecting');
     }
   }
@@ -69,12 +66,11 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   onMouseDown(ev) {
-    if (this.state.canBeDragged) {
+    if (this.canBeDragged) {
       this.onDragStartComponent(ev);
+      this.globalMouseMoveEventHandler = this.onDragComponent.bind(this);
+      document.addEventListener('mousemove', this.globalMouseMoveEventHandler);
     }
-
-    this.globalMouseMoveEventHandler = this.onDragComponent.bind(this);
-    document.addEventListener('mousemove', this.globalMouseMoveEventHandler);
   }
 
   onMouseUp(ev) {
@@ -85,6 +81,7 @@ export default class ReactAudioComponent extends React.Component {
 
   onDragStartComponent(ev) {
     let onCanvas = !this.props.component.inSidebar;
+    console.log(this.canBeDragged);
 
     if (ev.dataTransfer) {
       // 
