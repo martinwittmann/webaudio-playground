@@ -19,7 +19,7 @@ class ColumnLayout extends React.Component {
     return (
       <ul className="column-layout">
         <li className="column column-1">
-          <ComponentsAvailable components={this.props.settings} />
+          <ComponentsAvailable settings={this.props.settings} />
           <Inspector handleEvent={this.handleEvent.bind(this)} />
         </li>
         <li className="column column-2">

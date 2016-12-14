@@ -173,7 +173,8 @@ export default class ComponentsContainer extends React.Component {
 
   onDropComponent(ev) {
     ev.preventDefault();
-    let dragData = JSON.parse(ev.dataTransfer.getData('text/plain'));
+    //let dragData = JSON.parse(ev.dataTransfer.getData('text/plain'));
+    let dragData = window.dragData;
 
     let cursorPosOnDragStart = {
       x: parseFloat(dragData.dragStartX, 10),
@@ -204,23 +205,11 @@ export default class ComponentsContainer extends React.Component {
 
       component.inSidebar = false; // Mark the component to be shown on the canvas.
 
-      newCanvasPos = {
+      component.moveReactContainerComponent({
         x: droppedAt.x - containerRect.left - posInCompOnDragStart.x,
         y: droppedAt.y - containerRect.top - posInCompOnDragStart.y
-      };
+      });
     }
-    else {
-      // Just move the component to the expected position.
-      return;
-      component = this.props.settings.emitEvent('get-canvas-component-by-id', dragData.componentId);
-      newCanvasPos = {
-        x: component.state.canvasPos.x + (droppedAt.x - cursorPosOnDragStart.x),
-        y: component.state.canvasPos.y + (droppedAt.y - cursorPosOnDragStart.y)
-      };
-    }
-
-    // Update the container's position.
-    component.moveReactContainerComponent(newCanvasPos);
   }
 
   updateComponentConnectionLines(reactAudioComponent, deltaX, deltaY) {
@@ -296,7 +285,11 @@ export default class ComponentsContainer extends React.Component {
         onDragOver={this.onDragOverContainer.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
-          <ComponentConnectionLines lines={this.state.connectionLines} settings={this.props.settings} connectingLine={connectingLine} />
+          <ComponentConnectionLines
+            lines={this.state.connectionLines}
+            settings={this.props.settings}
+            connectingLine={connectingLine}
+          />
         </svg>
         {components}
       </div>

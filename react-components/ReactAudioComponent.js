@@ -21,6 +21,7 @@ export default class ReactAudioComponent extends React.Component {
         x: props.component.state.canvasPos.x,
         y: props.component.state.canvasPos.y
       },
+      canBeDraggedToCanvas: props.component.inSidebar,
       canBeDragged: true,
       connectableIos: props.connectableIos
     };
@@ -67,40 +68,49 @@ export default class ReactAudioComponent extends React.Component {
     }
   }
 
+  onMouseDown(ev) {
+    if (this.state.canBeDragged) {
+      this.onDragStartComponent(ev);
+    }
+
+    this.globalMouseMoveEventHandler = this.onDragComponent.bind(this);
+    document.addEventListener('mousemove', this.globalMouseMoveEventHandler);
+  }
+
+  onMouseUp(ev) {
+    if (this.globalMouseMoveEventHandler) {
+      document.removeEventListener('mousemove', this.globalMouseMoveEventHandler);
+    }
+  }
+
   onDragStartComponent(ev) {
+    let onCanvas = !this.props.component.inSidebar;
+
     let dragData = {
       componentId: this.props.component.id,
       dragStartX: ev.pageX,
       dragStartY: ev.pageY,
-      lastDragX: ev.pageX,
-      lastDragY: ev.pageY,
-      onCanvas: !this.props.component.inSidebar
+      lastDragX: onCanvas ? ev.pageX : 0,
+      lastDragY: onCanvas ? ev.pageY : 0,
+      onCanvas: onCanvas
     }
-    ev.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-    // NOTE: Since chrome does not allow (ie. is returning nothing) calling getData
-    //       on all eventhandlers but onDrop we can't use getData in onDrop
-    //       so we store the data in this component itset.
-    //       Additionally we need to use set/getData in ComponentsContainer to
-    //       get info about the dropped component.
-    //       So right now we set and use both.
+
+    window.dragData = dragData;
+
     this.setState({
       dragData: dragData
     });
-
-    if (!this.props.component.inSidebar) {
-      // We prevent showing a dragImage for components on the canvas since we
-      // want to directly move it instead of dragging and on drop settinga new position.
-      let img = new Image();
-      ev.dataTransfer.setDragImage(img, 0, 0);
-    }
   }
 
   onDragComponent(ev) {
     if (!this.state.dragData.onCanvas) {
       return true;
     }
+
     let deltaX = ev.pageX - this.state.dragData.lastDragX;
     let deltaY = ev.pageY - this.state.dragData.lastDragY;
+
+    //console.log(ev.pageX, ev.pageY, this.state.dragData.lastDragX, this.state.dragData.lastDragY);
 
     // This is most probably a dirty hack.
     this.state.dragData.lastDragX = ev.pageX;
@@ -175,9 +185,11 @@ export default class ReactAudioComponent extends React.Component {
             this.props.component.initialBoundingRect = el.getBoundingClientRect();
           }
         }}
-        draggable={this.state.canBeDragged}
+        draggable={this.state.canBeDraggedToCanvas}
         onDragStart={this.onDragStartComponent.bind(this)}
         onDrag={this.onDragComponent.bind(this)}
+        onMouseDown={this.onMouseDown.bind(this)}
+        onMouseUp={this.onMouseUp.bind(this)}
       >
         <ReactAudioComponentInputs
           inputs={this.state.inputs}

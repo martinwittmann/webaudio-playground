@@ -3,8 +3,14 @@ import ReactAudioComponent from './ReactAudioComponent.js';
 
 export default class ComponentsAvailable extends React.Component {
   render() {
-    let components = this.props.components.componentsAvailable.map(component => {
-      return (<li key={component.id}><ReactAudioComponent component={component} inSidebar /></li>);
+    let components = this.props.settings.componentsAvailable.map(component => {
+      return (
+        <li key={component.id}>
+          <ReactAudioComponent
+            component={component}
+            settings={this.props.settings}
+            inSidebar
+          /></li>);
     });
     return (
       <ul className="components-available">
