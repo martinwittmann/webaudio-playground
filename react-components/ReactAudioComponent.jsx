@@ -21,12 +21,9 @@ export default class ReactAudioComponent extends React.Component {
         x: props.component.state.canvasPos.x,
         y: props.component.state.canvasPos.y
       },
-      canBeDraggedToCanvas: props.component.inSidebar,
+      canBeDragged: true,
       connectableIos: props.connectableIos
     };
-
-    // I moved this out of state to be able to set it directly and synchronously.
-    this.canBeDragged = true;
   }
 
   handleChildEvent(type, ...args) {
@@ -36,7 +33,10 @@ export default class ReactAudioComponent extends React.Component {
         ev = args[0];
         ev.preventDefault();
         outputData = this.parseOutputIdAttribute(ev.target.getAttribute('id'));
-        this.canBeDragged = false;
+
+        this.setState({
+          canBeDragged: false
+        });
         
         let sourceIoComponent = args[1];
         let io = args[2];
@@ -51,7 +51,9 @@ export default class ReactAudioComponent extends React.Component {
         ev = args[0];
         ev.preventDefault();
 
-        this.canBeDragged = true;
+        this.setState({
+          canBeDragged: true
+        });
         this.props.emitEvent('stop-connecting');
     }
   }
@@ -65,23 +67,8 @@ export default class ReactAudioComponent extends React.Component {
     }
   }
 
-  onMouseDown(ev) {
-    if (this.canBeDragged) {
-      this.onDragStartComponent(ev);
-      this.globalMouseMoveEventHandler = this.onDragComponent.bind(this);
-      document.addEventListener('mousemove', this.globalMouseMoveEventHandler);
-    }
-  }
-
-  onMouseUp(ev) {
-    if (this.globalMouseMoveEventHandler) {
-      document.removeEventListener('mousemove', this.globalMouseMoveEventHandler);
-    }
-  }
-
   onDragStartComponent(ev) {
     let onCanvas = !this.props.component.inSidebar;
-    console.log(this.canBeDragged);
 
     if (ev.dataTransfer) {
       // 
@@ -102,6 +89,13 @@ export default class ReactAudioComponent extends React.Component {
     this.setState({
       dragData: dragData
     });
+
+    if (!this.props.component.inSidebar) {
+      // We prevent showing a dragImage for components on the canvas since we
+      // want to directly move it instead of dragging and on drop settinga new position.
+      let img = new Image();
+      ev.dataTransfer.setDragImage(img, 0, 0);
+    }
   }
 
   onDragComponent(ev) {
@@ -187,11 +181,9 @@ export default class ReactAudioComponent extends React.Component {
             this.props.component.initialBoundingRect = el.getBoundingClientRect();
           }
         }}
-        draggable={this.state.canBeDraggedToCanvas}
+        draggable={this.state.canBeDragged}
         onDragStart={this.onDragStartComponent.bind(this)}
         onDrag={this.onDragComponent.bind(this)}
-        onMouseDown={this.onMouseDown.bind(this)}
-        onMouseUp={this.onMouseUp.bind(this)}
       >
         <ReactAudioComponentInputs
           inputs={this.state.inputs}
