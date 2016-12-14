@@ -80,7 +80,15 @@ export default class ReactAudioComponentOutputs extends React.Component {
         data-io-index={index}
         ref={(el) => {
           if (el) {
-            this.coordinates = el.getBoundingClientRect();
+            let rect = el.getBoundingClientRect();
+            // We can't store the DOMrect directly since we need to change these
+            // values if a component gets dragged around.
+            this.coordinates = {
+              top: rect.top,
+              right: rect.right,
+              bottom: rect.bottom,
+              left: rect.left
+            }
           }
         }}
       ></li>)

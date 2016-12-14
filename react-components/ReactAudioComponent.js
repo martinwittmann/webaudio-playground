@@ -69,15 +69,23 @@ export default class ReactAudioComponent extends React.Component {
 
   onDragStartComponent(ev) {
     let dragData = {
-      id: this.props.component.id,
+      componentId: this.props.component.id,
       dragStartX: ev.pageX,
-      dragStartY: ev.pageY
+      dragStartY: ev.pageY,
+      lastDragX: ev.pageX,
+      lastDragY: ev.pageY,
+      onCanvas: !this.props.component.inSidebar
     }
     ev.dataTransfer.setData('text/plain', JSON.stringify(dragData));
-    // We need to save this as number because otherwise false becomes 'false'
-    // which makes parsing the values complicated. Se we work around this by
-    // casting to number.
-    ev.dataTransfer.setData('onCanvas', this.props.component.inSidebar ? 0 : 1);
+    // NOTE: Since chrome does not allow (ie. is returning nothing) calling getData
+    //       on all eventhandlers but onDrop we can't use getData in onDrop
+    //       so we store the data in this component itset.
+    //       Additionally we need to use set/getData in ComponentsContainer to
+    //       get info about the dropped component.
+    //       So right now we set and use both.
+    this.setState({
+      dragData: dragData
+    });
 
     if (!this.props.component.inSidebar) {
       // We prevent showing a dragImage for components on the canvas since we
@@ -88,20 +96,29 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   onDragComponent(ev) {
-    if (this.inSidebar) {
+    if (!this.state.dragData.onCanvas) {
       return true;
     }
+    let deltaX = ev.pageX - this.state.dragData.lastDragX;
+    let deltaY = ev.pageY - this.state.dragData.lastDragY;
 
-    console.log('!!', ev.dataTransfer.getData('text/plain'));
+    // This is most probably a dirty hack.
+    this.state.dragData.lastDragX = ev.pageX;
+    this.state.dragData.lastDragY = ev.pageY;
 
-        /*
     this.setState({
       canvasPos: {
-        x: ev.dataTransfer.getData('dragStartX')
-        y:
-      }
+        x: this.state.canvasPos.x + deltaX,
+        y: this.state.canvasPos.y + deltaY
+      },
+      dragData: this.state.dragData
     });
-    */
+
+    this.state.dragData.lastDragX = ev.pageX;
+    this.state.dragData.lastDragY = ev.pageY;
+
+    // We use the already calculated position delta and apply it to all ios.
+    this.props.container.updateComponentConnectionLines(this, deltaX, deltaY);
   }
 
   render() {

@@ -84,13 +84,12 @@ export default class ComponentsContainer extends React.Component {
   }
 
   onCreateConnection(args) {
-    this.log('Create connection...');
     let component1 = this.state.sourceComponent.props.component;
     let component1Io = this.state.sourceIo;
     let component2 = args[0].props.component;
     let component2Io = args[1];
     let component2IoComponent = args[2];
-    let outputComponent, inputComponent;
+    let outputComponent, inputComponent, outputId, inputId;
 
     // We always create the connection from the output to the input.
     // Right now there's no technical reason for this apart from being logic.
@@ -99,17 +98,24 @@ export default class ComponentsContainer extends React.Component {
       component2.connectOutput(component2Io, component1Io);
       outputComponent = component2IoComponent;
       inputComponent = this.state.sourceIoComponent;
+      outputId = component2.id;
+      inputId = this.state.sourceComponent.props.component.id;
     }
     else {
       component1.connectOutput(component1Io, component2Io);
       outputComponent = this.state.sourceIoComponent;
       inputComponent = component2IoComponent;
+      outputId = this.state.sourceComponent.props.component.id;
+      inputId = component2.id;
     }
 
     let newLines = this.state.connectionLines.slice();
+
     newLines.push({
       from: outputComponent,
-      to: inputComponent
+      to: inputComponent,
+      outputId: outputId,
+      inputId: inputId
     });
 
     this.state.sourceIoComponent.setState({
@@ -167,8 +173,7 @@ export default class ComponentsContainer extends React.Component {
 
   onDropComponent(ev) {
     ev.preventDefault();
-    let dragData = ev.dataTransfer.getData('text/plain');
-    console.log(dragData.dragStartX);
+    let dragData = JSON.parse(ev.dataTransfer.getData('text/plain'));
 
     let cursorPosOnDragStart = {
       x: parseFloat(dragData.dragStartX, 10),
@@ -176,7 +181,7 @@ export default class ComponentsContainer extends React.Component {
     };
     let newCanvasPos, component;
 
-    let componentIsOnCanvas = parseInt(dragData.onCanvas, 10);
+    let componentIsOnCanvas = dragData.onCanvas;
 
     // Handle the dropping by either adding the component to the canvas or moving it on the canvas.
     let droppedAt = {
@@ -206,6 +211,7 @@ export default class ComponentsContainer extends React.Component {
     }
     else {
       // Just move the component to the expected position.
+      return;
       component = this.props.settings.emitEvent('get-canvas-component-by-id', dragData.componentId);
       newCanvasPos = {
         x: component.state.canvasPos.x + (droppedAt.x - cursorPosOnDragStart.x),
@@ -215,6 +221,25 @@ export default class ComponentsContainer extends React.Component {
 
     // Update the container's position.
     component.moveReactContainerComponent(newCanvasPos);
+  }
+
+  updateComponentConnectionLines(reactAudioComponent, deltaX, deltaY) {
+    let componentId = reactAudioComponent.props.component.id;
+    let newConnectionLines = this.state.connectionLines.map((line, index) => {
+      // Update the io's coordinates if it belongs on any end to the moved component.
+      if (line.inputId == componentId) {
+        line.to.coordinates.left += deltaX;
+        line.to.coordinates.top += deltaY;
+      }
+      else if (line.outputId == componentId) {
+        line.from.coordinates.left += deltaX;
+        line.from.coordinates.top += deltaY;
+      }
+      return line;
+    });
+    this.setState({
+      connectionLines: newConnectionLines
+    });
   }
 
   getContainerRect() {
@@ -242,6 +267,7 @@ export default class ComponentsContainer extends React.Component {
         emitEvent={this.handleEvent.bind(this)}
         connectableIos={connectableIos}
         settings={this.props.settings}
+        container={this}
       />);
     });
 
