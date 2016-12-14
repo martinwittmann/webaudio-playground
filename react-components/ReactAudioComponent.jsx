@@ -70,9 +70,15 @@ export default class ReactAudioComponent extends React.Component {
   onDragStartComponent(ev) {
     let onCanvas = !this.props.component.inSidebar;
 
-    if (ev.dataTransfer) {
-      // 
+    try {
+      ev.dataTransfer.effectAllowed = 'copy';
+      ev.dataTransfer.dropEffect = 'none';
+      // Firefox does not fire the drag event unless we set some data.
       ev.dataTransfer.setData('text/plain', '');
+    }
+    catch(e) {
+      // According to react-dnd IE does not allow setting a mime type here and
+      // will throw an error.
     }
 
     let dragData = {
@@ -103,10 +109,15 @@ export default class ReactAudioComponent extends React.Component {
       return true;
     }
 
+    if (ev.pageX == 0 || ev.pageY) {
+      // This is case in firefox.
+      // See https://bugzilla.mozilla.org/show_bug.cgi?id=505521
+      ev.pageX = this.props.container.mousePos.x;
+      ev.pageY = this.props.container.mousePos.y;
+    }
+
     let deltaX = ev.pageX - this.state.dragData.lastDragX;
     let deltaY = ev.pageY - this.state.dragData.lastDragY;
-
-    //console.log(ev.pageX, ev.pageY, this.state.dragData.lastDragX, this.state.dragData.lastDragY);
 
     // This is most probably a dirty hack.
     this.state.dragData.lastDragX = ev.pageX;
@@ -190,6 +201,7 @@ export default class ReactAudioComponent extends React.Component {
           handleEvent={this.handleChildEvent.bind(this)}
           connectableIos={this.props.connectableIos}
           settings={this.props.settings}
+          container={this.props.container}
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
@@ -200,7 +212,7 @@ export default class ReactAudioComponent extends React.Component {
           handleEvent={this.handleChildEvent.bind(this)}
           connectableIos={this.props.connectableIos}
           settings={this.props.settings}
-          canvasSelector={this.props.canvasSelector}
+          container={this.props.container}
         />
       </div>
     );

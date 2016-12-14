@@ -52,7 +52,7 @@ export default class App {
       // This == $iosize / 2 (from midi.scss) to center the io connection lines in the io circles.
       ioOffset: 7,
       ioConnectionLineColor: 'rgba(0, 0, 0, 0.4)',
-      isFirefox: this.isFirefox
+      snapSize: 20
     };
 
     let outputs = [];

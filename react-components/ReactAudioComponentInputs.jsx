@@ -7,7 +7,6 @@ export default class ReactAudioComponentInputs extends React.Component {
     this.state = {
       activeIO: false,
       connectable: false,
-      canvasSelector: props.canvasSelector,
       connected: false
     };
   }
@@ -54,6 +53,7 @@ export default class ReactAudioComponentInputs extends React.Component {
 
   render() {
     let inputs = this.props.inputs.map((input, index) => {
+      let connectable = false; // Only while starting a connection: whether or not the connection can be made with this io.
       let cls = ['io', input.ioType, input.type];
       if (input.id == this.state.activeIO) {
         cls.push('connecting');
@@ -62,6 +62,7 @@ export default class ReactAudioComponentInputs extends React.Component {
       if (this.props.connectableIos && this.props.connectableIos.type && this.props.connectableIos.ioType) {
         if (input.type == this.props.connectableIos.type && input.ioType == this.props.connectableIos.ioType) {
           cls.push('connectable');
+          connectable = true;
         }
       }
 
@@ -89,6 +90,13 @@ export default class ReactAudioComponentInputs extends React.Component {
               right: rect.right,
               bottom: rect.bottom,
               left: rect.left
+            };
+            if (connectable) {
+              this.props.container.connectableIos[input.id] = {
+                io: this,
+                left: rect.left,
+                top: rect.top
+              };
             }
           }
         }}

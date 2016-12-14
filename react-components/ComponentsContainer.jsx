@@ -16,6 +16,10 @@ export default class ComponentsContainer extends React.Component {
       connectionLines: [],
       canvasSelector: props.settings.canvasSelector
     };
+
+    // This is used while starting a connection and holds all possible connection
+    // io endpoints and their coordinates to allow snapping into close ios.
+    this.connectableIos = {};
   }
 
   onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {
@@ -145,6 +149,15 @@ export default class ComponentsContainer extends React.Component {
   onDragOverContainer(ev) {
     // For some reason this is necessary for the onDrop event to fire.
     // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
+    //console.log('drag over', ev.pageX, ev.pageY);
+
+    // This dirty hack is necessary since firefox does not (yet) provide mouse
+    // coordinates in the on drag event. So we store them here and use them in
+    // ReactAudioComponent if necessary.
+    this.mousePos = {
+      x: ev.pageX,
+      y: ev.pageY
+    }
     ev.preventDefault();
   }
 
@@ -159,8 +172,8 @@ export default class ComponentsContainer extends React.Component {
         break;
 
       case 'stop-connecting':
-
         this.onStopConnectingComponents(args);
+        break;
     }
   }
 
@@ -268,12 +281,26 @@ export default class ComponentsContainer extends React.Component {
 
       if (this.state.currentMousePos) {
         let containerRect = this.getContainerRect();
+        let rawMouseX = this.state.currentMousePos.x - containerRect.left;
+        let rawMouseY = this.state.currentMousePos.y - containerRect.top;
+
         connectingLine = {
           x1: this.connectingFromIoPos.x - containerRect.left,
           y1: this.connectingFromIoPos.y - containerRect.top,
-          x2: this.state.currentMousePos.x - containerRect.left,
-          y2: this.state.currentMousePos.y - containerRect.top
+          x2: rawMouseX,
+          y2: rawMouseY
         };
+
+        let snapSize = this.props.settings.snapSize;
+
+        // Try snapping to a close connectable io.
+        for (let id in this.connectableIos) {
+          let io = this.connectableIos[id];
+          if (Math.abs(io.left - containerRect.left - rawMouseX) < snapSize && Math.abs(io.top - containerRect.top - rawMouseY) < snapSize) {
+            connectingLine.x2 = io.left - containerRect.left + this.props.settings.ioOffset;
+            connectingLine.y2 = io.top - containerRect.top + this.props.settings.ioOffset;
+          }
+        }
       }
     }
 
