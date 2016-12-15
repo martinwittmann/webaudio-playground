@@ -34,6 +34,58 @@ export default class OscillatorComponent extends AudioComponent {
       name: 'Audio Out',
       audioNode: this.totalGain
     });
+
+    this.options = [
+      {
+        id: 'waveform',
+        label: 'Waveform',
+        type: 'choice',
+        choices: this.getWaveforms.bind(this), // Could be an array or a function.
+        defaultValue: 'sine',
+        value: 'sine',
+        onChange: this.onWaveformChanged.bind(this),
+        exposableAsInput: true,
+        exposableToCanvasUi: true,
+        exposableToUserUi: true
+      },
+      {
+        id: 'volume-source',
+        label: 'Volume source',
+        type: 'choice',
+        choices: [
+          {
+            name: 'From Midi',
+            value: 'from-midi'
+          },
+          {
+            name: 'Fixed',
+            value: 'fixed'
+          }
+        ],
+        defaultValue: 'from-midi',
+        value: 'sine',
+        onChange: this.onVelocitySourceChanged.bind(this),
+        exposableAsInput: false,
+        exposableToCanvasUi: true,
+        exposableToUserUi: false
+      },
+      {
+        id: 'fixed-volume',
+        label: 'Volume',
+        type: 'number',
+        range: [0, 1],
+        defaultValue: .5,
+        value: .5,
+        onChange: this.onFixedVolumeChanged.bind(this),
+        exposableAsInput: false,
+        exposableToCanvasUi: true,
+        exposableToUserUi: true,
+        // Conditions of other settings that must be met to make this option available.
+        conditions: {
+          'volume-source': 'fixed'
+        }
+      }
+    ];
   }
 
   handleFrequencyIn(args) {
@@ -164,5 +216,14 @@ export default class OscillatorComponent extends AudioComponent {
       nodes.osc.disconnect();
       delete that.audioNodes[frequency];
     }, 100);
+  }
+
+  onVelocitySourceChanged(velocitySource) {
+    // TODO: Implementation.
+
+  }
+
+  onFixedVolumeChanged() {
+    // TODO: Implementation.
   }
 }

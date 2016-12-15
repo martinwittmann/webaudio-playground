@@ -35,6 +35,7 @@ export default class ComponentsContainer extends React.Component {
     this.setState({
       selectedComponent: false
     });
+    this.props.emitEventToLayout('component-selected', false);
   }
 
   onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {

@@ -9,3 +9,29 @@
     margin-bottom: 10px;
   }
 }
+
+.component-options {
+  list-style-type: none;
+  list-style-image: none;
+  margin: 0;
+  padding: 0;
+}
+
+.component-option {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  input[type=number] {
+    width: 20%;
+  }
+
+  .input-help {
+    margin-left: 5px;
+  }
+} 
+
+.component-option-label {
+  float: left;
+  width: 35%;
+}

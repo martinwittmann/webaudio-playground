@@ -22,7 +22,6 @@ class ColumnLayout extends React.Component {
   }
 
   onTabButtonClick(ev) {
-    console.log(ev.target.dataset);
     this.setState({
       currentTab: ev.target.dataset.tab
     });

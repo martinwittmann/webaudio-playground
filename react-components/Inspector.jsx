@@ -1,12 +1,42 @@
 import React from 'react';
+import InspectorOption from './InspectorOption.jsx';
 
 export default class Inspector extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  handleEvent(type, args) {
+    
+  }
+
   render() {
     let selection = this.props.selection;
-    let id = selection ? selection.props.component.id : 'none selected';
+    let options;
+
+    if (!selection) {
+       options = 'Select a component to edit it\'s options.';
+    }
+    else {
+      let reactComponent = selection.props.component;
+      options = reactComponent.options.map(option => {
+        return (
+          <li key={option.id}>
+            <InspectorOption
+              option={option}
+              component={reactComponent}
+              emitEvent={this.handleEvent.bind(this)}
+            />
+          </li>
+        );
+      });      
+    }
+
     return (
       <div className="inspector">
-        {id}
+        <ul className="component-options">
+          {options}
+        </ul>
       </div>
     );
   }
