@@ -20,6 +20,7 @@ export default class ComponentsContainer extends React.Component {
     // This is used while starting a connection and holds all possible connection
     // io endpoints and their coordinates to allow snapping into close ios.
     this.connectableIos = {};
+    this.snappedToConnectingIo = false;
   }
 
   onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {
@@ -84,6 +85,7 @@ export default class ComponentsContainer extends React.Component {
         activeIO: false
       });
     }
+    this.snappedToConnectingIo = false;
     document.querySelector(this.state.canvasSelector).removeEventListener('mousemove', this.mouseMoveCallback);
   }
 
@@ -179,7 +181,14 @@ export default class ComponentsContainer extends React.Component {
 
   onMouseUp(ev) {
     if (this.state.isConnectingComponents) {
-      // Only stop connecting if we started.
+      if (this.snappedToConnectingIo) {
+        // Create the connection.
+        let ioData = this.snappedToConnectingIo;
+        let args = [ioData.reactAudioComponent, ioData.io, ioData.ioComponent];
+        this.onCreateConnection(args);
+      }
+
+      // We need to stop creating connections even if we just created one.
       this.onStopConnectingComponents();
     }
   }
@@ -291,12 +300,13 @@ export default class ComponentsContainer extends React.Component {
           y2: rawMouseY
         };
 
-        let snapSize = this.props.settings.snapSize;
 
         // Try snapping to a close connectable io.
+        let snapSize = this.props.settings.snapSize;
         for (let id in this.connectableIos) {
           let io = this.connectableIos[id];
           if (Math.abs(io.left - containerRect.left - rawMouseX) < snapSize && Math.abs(io.top - containerRect.top - rawMouseY) < snapSize) {
+            this.snappedToConnectingIo = io;
             connectingLine.x2 = io.left - containerRect.left + this.props.settings.ioOffset;
             connectingLine.y2 = io.top - containerRect.top + this.props.settings.ioOffset;
           }

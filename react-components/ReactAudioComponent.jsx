@@ -202,6 +202,7 @@ export default class ReactAudioComponent extends React.Component {
           connectableIos={this.props.connectableIos}
           settings={this.props.settings}
           container={this.props.container}
+          reactAudioComponent={this}
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
@@ -213,6 +214,7 @@ export default class ReactAudioComponent extends React.Component {
           connectableIos={this.props.connectableIos}
           settings={this.props.settings}
           container={this.props.container}
+          reactAudioComponent={this}
         />
       </div>
     );

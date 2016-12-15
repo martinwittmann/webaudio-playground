@@ -21,9 +21,12 @@ export default class ReactAudioComponentInputs extends React.Component {
 
   onMouseUp(ev) {
     if (this.state.connectable) {
+      // This should not be neede anymore since we're creating the connection in
+      // ComponentsContainer within the snapping logic.
+
       // Finish creating the connection.
-      let input = this.props.inputs[ev.target.dataset.ioIndex];
-      this.props.handleEvent('create-connection', input, this);
+      //let input = this.props.inputs[ev.target.dataset.ioIndex];
+      //this.props.handleEvent('create-connection', input, this);
     }
     else {
       this.props.handleEvent('stop-connecting', ev);
@@ -93,7 +96,9 @@ export default class ReactAudioComponentInputs extends React.Component {
             };
             if (connectable) {
               this.props.container.connectableIos[input.id] = {
-                io: this,
+                io: input,
+                ioComponent: this,
+                reactAudioComponent: this.props.reactAudioComponent,
                 left: rect.left,
                 top: rect.top
               };
