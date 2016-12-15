@@ -8,6 +8,7 @@ import Oscillator from './Oscillator.jsx';
 import MidiIn from './MidiIn.jsx';
 import Midi2Frequency from './Midi2Frequency.jsx';
 import MidiKeyboard from './MidiKeyboard.jsx';
+import AudioOut from './AudioOut.jsx';
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {
@@ -142,15 +143,8 @@ export default class ReactAudioComponent extends React.Component {
     const { connectDragSource, isDragging } = this.props;
     let component;
     switch (this.props.component.reactComponentType) {
-      case 'Oscillator':
+      case 'AudioOut':
         component = (<Oscillator
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-
-      case 'MidiIn':
-        component = (<MidiIn
           audioComponent={this.props.component}
           onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
         />);
@@ -163,8 +157,22 @@ export default class ReactAudioComponent extends React.Component {
         />);
         break;
 
+      case 'MidiIn':
+        component = (<MidiIn
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
+        break;
+
       case 'MidiKeyboard':
         component = (<MidiKeyboard
+          audioComponent={this.props.component}
+          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
+        />);
+        break;
+        
+      case 'Oscillator':
+        component = (<Oscillator
           audioComponent={this.props.component}
           onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
         />);
