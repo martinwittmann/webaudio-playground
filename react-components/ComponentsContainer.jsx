@@ -14,13 +14,27 @@ export default class ComponentsContainer extends React.Component {
       connectableIoType: false,
       connectableType: false,
       connectionLines: [],
-      canvasSelector: props.settings.canvasSelector
+      canvasSelector: props.settings.canvasSelector,
+      selectedComponent: false
     };
 
     // This is used while starting a connection and holds all possible connection
     // io endpoints and their coordinates to allow snapping into close ios.
     this.connectableIos = {};
     this.snappedToConnectingIo = false;
+  }
+
+  selectComponent(reactAudioComponent) {
+    this.setState({
+      selectedComponent: reactAudioComponent.props.component.id
+    });
+    this.props.emitEventToLayout('component-selected', reactAudioComponent);
+  }
+
+  unselectComponent() {
+    this.setState({
+      selectedComponent: false
+    });
   }
 
   onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {
@@ -193,6 +207,10 @@ export default class ComponentsContainer extends React.Component {
     }
   }
 
+  onClick(ev) {
+    this.unselectComponent();
+  }
+
   onDropComponent(ev) {
     ev.preventDefault();
     //let dragData = JSON.parse(ev.dataTransfer.getData('text/plain'));
@@ -272,6 +290,7 @@ export default class ComponentsContainer extends React.Component {
     }
 
     let components = this.props.settings.components.map(component => {
+      let selected = this.state.selectedComponent && this.state.selectedComponent == component.id;
       return (<ReactAudioComponent
         key={component.id}
         component={component}
@@ -279,6 +298,7 @@ export default class ComponentsContainer extends React.Component {
         connectableIos={connectableIos}
         settings={this.props.settings}
         container={this}
+        selected={selected}
       />);
     });
 
@@ -325,6 +345,7 @@ export default class ComponentsContainer extends React.Component {
         onMouseUp={this.onMouseUp.bind(this)}
         onDrop={this.onDropComponent.bind(this)}
         onDragOver={this.onDragOverContainer.bind(this)}
+        onClick={this.onClick.bind(this)}
       >
         <svg className="components-connections" width="100%" height="100%">
           <ComponentConnectionLines

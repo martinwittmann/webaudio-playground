@@ -21,11 +21,12 @@ html {
   right: 0;
   bottom: 0;
 }
+$sidebar-padding: 10px;
 
 .column {
   width: $column-width;
   border-left: 2px solid rgba(0, 0, 0, 0.3);
-  padding: 10px;
+  padding: $sidebar-padding;
   position: relative;
 
   &:first-child {
@@ -36,4 +37,44 @@ html {
 .column-2 {
   width: 100% - $column-width;
   padding: 0;
+}
+
+.tab-links {
+  list-style-type: none;
+  list-style-image: none;
+  padding: 0 $sidebar-padding;
+  margin: (2 * $sidebar-padding) (-$sidebar-padding) 0;
+  overflow: hidden;
+  position: relative;
+
+  > li {
+    float: left;
+    margin: 0 10px 0 0;
+
+    &.active {
+      border: 1px solid #ccc;
+      position: relative;
+      z-index: 1;
+      border-bottom-color: white;
+    }
+  }
+
+  a {
+    background: none;
+    border: none;
+    padding: 7px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    height: 1px;
+    background: #ccc;
+  }
 }

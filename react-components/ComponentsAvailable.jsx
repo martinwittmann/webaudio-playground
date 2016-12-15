@@ -14,7 +14,6 @@ export default class ComponentsAvailable extends React.Component {
     });
     return (
       <ul className="components-available">
-        <li key="headline">Available components:</li>
         {components}
       </ul>
     );

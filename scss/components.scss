@@ -69,6 +69,10 @@
   -ms-user-select:none;
   -o-user-select: none;
   user-select: none;
+
+  &.selected {
+    border: 3px solid rgba(0, 0, 0, 0.2);
+  }
 }
 
 .audio-component-headline {

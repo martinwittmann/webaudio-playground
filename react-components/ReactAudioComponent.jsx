@@ -139,6 +139,11 @@ export default class ReactAudioComponent extends React.Component {
     this.props.container.updateComponentConnectionLines(this, deltaX, deltaY);
   }
 
+  onClickComponent(ev) {
+    ev.stopPropagation();
+    this.props.container.selectComponent(this);
+  }
+
   render() {
     const { connectDragSource, isDragging } = this.props;
     let component;
@@ -188,10 +193,15 @@ export default class ReactAudioComponent extends React.Component {
       top: Math.round(this.state.canvasPos.y) + 'px'
     };
 
+    let cls = ['audio-component', this.props.component.type];
+    if (this.props.selected) {
+      cls.push('selected');
+    }
+
     return (
       <div
         id={"component-" + this.props.component.id}
-        className={"audio-component " + this.props.component.type}
+        className={cls.join(' ')}
         style={inlineStyles}
         ref={(el) => {
           if (el && !this.props.component.initialBoundingRect) {
@@ -203,6 +213,7 @@ export default class ReactAudioComponent extends React.Component {
         draggable={this.state.canBeDragged}
         onDragStart={this.onDragStartComponent.bind(this)}
         onDrag={this.onDragComponent.bind(this)}
+        onClick={this.onClickComponent.bind(this)}
       >
         <ReactAudioComponentInputs
           inputs={this.state.inputs}
