@@ -71,7 +71,7 @@ export default class ReactAudioComponent extends React.Component {
     let onCanvas = !this.props.component.inSidebar;
 
     try {
-      ev.dataTransfer.effectAllowed = 'copy';
+      ev.dataTransfer.effectAllowed = 'move';
       ev.dataTransfer.dropEffect = 'none';
       // Firefox does not fire the drag event unless we set some data.
       ev.dataTransfer.setData('text/plain', '');

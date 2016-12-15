@@ -303,10 +303,15 @@ export default class ComponentsContainer extends React.Component {
 
         // Try snapping to a close connectable io.
         let snapSize = this.props.settings.snapSize;
+        this.snappedToConnectingIo = false;
         for (let id in this.connectableIos) {
           let io = this.connectableIos[id];
+          io.ioComponent.isSnapped = false;
           if (Math.abs(io.left - containerRect.left - rawMouseX) < snapSize && Math.abs(io.top - containerRect.top - rawMouseY) < snapSize) {
             this.snappedToConnectingIo = io;
+            // We can't call io.ioComponent.setState because that's not allowed 
+            // in a render function in react and will throw an error.
+            io.ioComponent.isSnapped = true;
             connectingLine.x2 = io.left - containerRect.left + this.props.settings.ioOffset;
             connectingLine.y2 = io.top - containerRect.top + this.props.settings.ioOffset;
           }

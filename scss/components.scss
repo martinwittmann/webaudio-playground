@@ -21,6 +21,10 @@
   background: rgba(0, 0, 0, .05);
 }
 
+.connection-line {
+  transition: all 0.3s ease 0s;
+}
+
 .components-container {
 
   .audio-component {
@@ -31,8 +35,9 @@
 
   &.connecting {
 
+    .connection-line,
     .io {
-      opacity: .15;
+      opacity: $non-connectable-opacity;
     }
 
     .io.connecting,
@@ -44,7 +49,7 @@
         // Unfortunately when connecting the :hover pseudo class is not applied
         // since technically the user is dragging the mouse.
         // I solved this via javascript in the io components.
-        //@include connectingIo();
+        @include connectingIo();
       }
     }
   }
@@ -112,7 +117,7 @@ $component-io-offset: ($io-size / -2);
     cursor: pointer;
 
     &.connecting {
-      //@include connectingIo();
+      @include connectingIo();
     }
 
     &:hover {

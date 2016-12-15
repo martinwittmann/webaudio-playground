@@ -58,7 +58,7 @@ export default class ReactAudioComponentInputs extends React.Component {
     let inputs = this.props.inputs.map((input, index) => {
       let connectable = false; // Only while starting a connection: whether or not the connection can be made with this io.
       let cls = ['io', input.ioType, input.type];
-      if (input.id == this.state.activeIO) {
+      if (input.id == this.state.activeIO || this.isSnapped) {
         cls.push('connecting');
       }
 
