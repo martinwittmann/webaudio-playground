@@ -309,7 +309,29 @@ export default class AudioComponent {
 
   connectOutput(output, toInput) {
     this.log('Connecting ' + output.name + ' (' + output.id + ') to ' + toInput.name + ' (' + toInput.id + ')');
-    output.sendDataCallback = toInput.receiveDataCallback;
+    switch (output.type) {
+      case 'midi':
+      case 'frequency':
+        output.sendDataCallback = toInput.receiveDataCallback;
+        break;
+
+      case 'audio':
+        output.audioNode.connect(toInput.destination);
+        break;
+    }
+  }
+
+  disconnectOutput(output) {
+    switch (output.type) {
+      case 'midi':
+      case 'frequency':
+        output.sendDataCallback = false;
+        break;
+
+      case 'audio':
+        // Disconnect the output node.
+        break;
+    }
   }
 
   sendToOutput(index, ...args) {

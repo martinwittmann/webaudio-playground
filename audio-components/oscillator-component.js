@@ -18,7 +18,7 @@ export default class OscillatorComponent extends AudioComponent {
     this.state.gain = .2;
 
     this.totalGain = this.createGainNode(0.8);
-    this.totalGain.connect(this.audioContext.destination);
+    //this.totalGain.connect(this.audioContext.destination);
 
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
 
@@ -29,6 +29,11 @@ export default class OscillatorComponent extends AudioComponent {
       receiveDataCallback: this.handleFrequencyIn.bind(this)
     });
 
+    this.registerOutput({
+      type: 'audio',
+      name: 'Audio Out',
+      audioNode: this.totalGain
+    });
   }
 
   handleFrequencyIn(args) {

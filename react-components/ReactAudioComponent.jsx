@@ -144,7 +144,7 @@ export default class ReactAudioComponent extends React.Component {
     let component;
     switch (this.props.component.reactComponentType) {
       case 'AudioOut':
-        component = (<Oscillator
+        component = (<AudioOut
           audioComponent={this.props.component}
           onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
         />);

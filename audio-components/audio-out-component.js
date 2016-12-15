@@ -7,9 +7,10 @@ export default class AudioOutComponent extends AudioComponent {
     this.type = 'audio-out';
     this.reactComponentType = 'AudioOut';
 
-    this.registerOutput({
+    this.registerInput({
       type: 'audio',
-      name: 'Audio Out'
+      name: 'Audio Out',
+      destination: this.audioContext.destination
     });
   }
 }

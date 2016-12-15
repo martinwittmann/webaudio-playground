@@ -59,7 +59,6 @@ export default class Oscillator extends React.Component {
       </li>),
     */
     let options = [
-
      (<li key="waveform">
         <Select
           className="wafeform-select"
