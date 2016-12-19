@@ -84,12 +84,18 @@ class ColumnLayout extends React.Component {
         break;
 
       case 'expose-as-input-changed':
-        console.log(this.state);
-        console.log(args);
         if (!this.state.selection) {
+          this.log('ColumnLayout::handleEvent(): Received expose-as-input-changed, but this.state.selection is empty.');
           return false;
         }
-        this.state.selection.props.component.optionExposeAsInputChanged();
+
+        //(Un)register the input.
+        this.state.selection.props.component.optionExposeAsInputChanged(args[0], args[1].props.option);
+
+        // Update state and the dom.
+        this.state.selection.setState({
+          inputs: this.state.selection.props.component.getInputs()
+        });
         break;
     }
 

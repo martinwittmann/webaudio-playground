@@ -13,7 +13,7 @@ export default class componentIO {
     //this.log('Connecting ' + this.name + ' (' + this.id + ') to ' + toIo.name + ' (' + toIo.id + ')');
     switch (this.type) {
       case 'midi':
-      case 'frequency':
+      case 'number':
         this.sendDataCallback = toIo.receiveDataCallback;
         break;
 
@@ -32,7 +32,7 @@ export default class componentIO {
   removeConnection(toIo) {
     switch (this.type) {
       case 'midi':
-      case 'frequency':
+      case 'number':
         this.sendDataCallback = false;
         break;
 

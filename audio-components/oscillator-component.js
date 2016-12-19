@@ -24,7 +24,7 @@ export default class OscillatorComponent extends AudioComponent {
 
 
     this.registerInput({
-      type: 'frequency',
+      type: 'number',
       name: 'Frequency In',
       receiveDataCallback: this.handleFrequencyIn.bind(this)
     });
@@ -46,7 +46,8 @@ export default class OscillatorComponent extends AudioComponent {
         onChange: this.onWaveformChanged.bind(this),
         exposableAsInput: true,
         exposableToCanvasUi: true,
-        exposableToUserUi: true
+        exposableToUserUi: true,
+        inputType: 'string',
       },
       {
         id: 'volume-source',

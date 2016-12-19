@@ -14,7 +14,7 @@ export default class Midi2FrequencyComponent extends AudioComponent {
     });
 
     this.registerOutput({
-      type: 'frequency',
+      type: 'number',
       name: 'Frequency out',
     });
   }

@@ -10,8 +10,6 @@ export default class InspectorOption extends React.Component {
     this.state.opened = true;
   }
 
-  handleEvent(type, args) {}
-
   onSelectChange(newValue) {
     // What to do here?
   }

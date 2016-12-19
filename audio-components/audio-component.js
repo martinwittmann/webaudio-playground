@@ -235,7 +235,7 @@ export default class AudioComponent {
     // the same values on all given properties as query.
 
     if ('undefined' == typeof this[type]) {
-      this.log('getIOIndex: Trying to get IO for unknown type ' + type + '.');
+      this.log('getIoIndex: Trying to get IO for unknown type ' + type + '.');
       return -1;
     }
 
@@ -288,55 +288,51 @@ export default class AudioComponent {
     inputData.id = this.id + '--input-' + this.inputs.length;
     inputData.ioType = 'input';
 
-    this.inputs.push(new componentIo(inputData));
+    let newInput = new componentIo(inputData);
+    this.inputs.push(newInput);
     
     if (this.reactComponent) {
       this.reactContainerComponent.setState({
         inputs: this.inputs
       });
     }
+
+    return newInput;
   }
 
   registerOutput(outputData) {
     outputData.id = this.id + '--output-' + this.outputs.length;
     outputData.ioType = 'output';
 
-    this.outputs.push(new componentIo(outputData));
+    let newOutput = new componentIo(outputData);
+    this.outputs.push(newOutput);
 
     if (this.reactComponent) {
       this.reactContainerComponent.setState({
         outputs: this.outputs
       });
     }
+
+    return newOutput;
   }
 
-  unregisterIo(ioId, type) {
-    if ('object' == typeof ioId) {
-      ioId = ioId.id;
-    }
+  unregisterIo(query, type) {
     if (type.substr(-1) != 's') {
       // getIoIndex expects 'inputs' or 'outputs' and for unregisterIo 'input'/'output'
       // make more sense, so we simply add an s if necessary and both versions work.
       type = type + 's';
     }
 
-    let index = this.getIoIndex(type, ioId);
-    if (index > -1) {
-      let io = this.inputs[ioId];
-      io.removeAllConnections();
-      this[type].splice(ioId, 1);
+    let index = this.getIoIndex(type, query);
+    if (-1 === index) {
+      this.log('unregisterIo(): could not find input.');
+      return false;
     }
-  }
 
-/*
-  connectOutput(output, toInput) {
-    output.addConnection(toInput);
+    let io = this[type][index];
+    io.removeAllConnections();
+    this[type].splice(index, 1);
   }
-
-  disconnectOutput(output, input) {
-    output.removeConnection(input);
-  }
-  */
 
   sendToOutput(index, ...args) {
     let output;
@@ -361,23 +357,32 @@ export default class AudioComponent {
     }
   }
 
-  getOptionInput(optionId) {
+  getOptionInputData(option) {
+    let result = {
+      type: option.inputType,
+      name: option.label
+    };
 
+    if ('number' == option.inputType || 'string' == option.inputType) {
+      result.receiveDataCallback = option.onChange;
+    }
+
+    return result;
   }
 
-  optionExposeAsInputChanged(optionId, value) {
-    let existingInput = this.getOptionInput(optionId);
-
-    if ((value && existingInput) || (!value && !existingInput)) {
+  optionExposeAsInputChanged(value, option) {
+    if ((value && option.input) || (!value && !option.input)) {
       // The input is already created/does not exist anymore. Nothing to do.
+      this.log('optionExposeAsInputChanged(): Nothing to do.');
       return false;
     }
 
     if (value) {
-
+      option.input = this.registerInput(this.getOptionInputData(option));
     }
     else {
-      this.unregister
+      this.unregisterIo({id: option.input.id}, 'input');
+      delete option.input;
     }
   }
 
