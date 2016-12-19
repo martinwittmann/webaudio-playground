@@ -31,6 +31,8 @@ export default class AudioComponent {
       connections: []
     };
 
+    this.options = []; // Default empty options which can be overwritten.
+
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
     }
@@ -307,21 +309,29 @@ export default class AudioComponent {
     }
   }
 
-  connectOutput(output, toInput) {
-    this.log('Connecting ' + output.name + ' (' + output.id + ') to ' + toInput.name + ' (' + toInput.id + ')');
-    switch (output.type) {
-      case 'midi':
-      case 'frequency':
-        output.sendDataCallback = toInput.receiveDataCallback;
-        break;
+  unregisterIo(ioId, type) {
+    if ('object' == typeof ioId) {
+      ioId = ioId.id;
+    }
+    if (type.substr(-1) != 's') {
+      // getIoIndex expects 'inputs' or 'outputs' and for unregisterIo 'input'/'output'
+      // make more sense, so we simply add an s if necessary and both versions work.
+      type = type + 's';
+    }
 
-      case 'audio':
-        output.audioNode.connect(toInput.destination);
-        break;
+    let index = this.getIoIndex(type, ioId);
+    if (index > -1) {
+      let io = this.inputs[ioId];
+      io.removeAllConnections();
+      this[type].splice(ioId, 1);
     }
   }
 
-  disconnectOutput(output) {
+  connectOutput(output, toInput) {
+    output.addConnection(toInput);
+  }
+
+  disconnectOutput(output, input) {
     switch (output.type) {
       case 'midi':
       case 'frequency':
@@ -330,6 +340,8 @@ export default class AudioComponent {
 
       case 'audio':
         // Disconnect the output node.
+        output.audioNode.disconnect(input.destination);
+        //output.connectionsI//
         break;
     }
   }
@@ -354,6 +366,26 @@ export default class AudioComponent {
 
     if (output.sendDataCallback) {
       output.sendDataCallback(args);
+    }
+  }
+
+  getOptionInput(optionId) {
+
+  }
+
+  optionExposeAsInputChanged(optionId, value) {
+    let existingInput = this.getOptionInput(optionId);
+
+    if ((value && existingInput) || (!value && !existingInput)) {
+      // The input is already created/does not exist anymore. Nothing to do.
+      return false;
+    }
+
+    if (value) {
+
+    }
+    else {
+      this.unregister
     }
   }
 

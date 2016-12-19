@@ -19,6 +19,8 @@ class ColumnLayout extends React.Component {
       currentTab: 'add-components',
       selection: false
     };
+
+    window.addEventListener('onKeyDown', this.onAppKeyPress.bind(this), true);
   }
 
   onTabButtonClick(ev) {
@@ -27,13 +29,67 @@ class ColumnLayout extends React.Component {
     });
   }
 
+  showNextTab() {
+    let nextTabNode = document.querySelector('.tab-links > .' . this.state.currentTab).nextSibling;
+    this.onTabButtonClick({
+      target: {
+        dataset: {
+          tab: nextTabNode.dataset.tab
+        }
+      }
+    });
+  }
+
+  showPreviousTab() {
+    let nextTabNode = document.querySelector('.tab-links > .' . this.state.currentTab).previousSibling;
+    this.onTabButtonClick({
+      target: {
+        dataset: {
+          tab: nextTabNode.dataset.tab
+        }
+      }
+    });
+  }
+
+  onAppKeyPress(ev) {
+    
+    console.log(ev.keyCode);
+    switch (ev.keyCode) {
+      case 9: // The tab key.
+        if (ev.shiftPressed) {
+          this.showPreviousTab();
+        }
+        else {
+          this.showNextTab();
+        }
+        break;
+    }
+  }
+
   handleEvent(type, ...args) {
 
     switch (type) {
       case 'component-selected':
         this.setState({
-          selection: args[0]
+          selection: args[0],
+          currentTab: 'inspector'
         });
+        break;
+
+      case 'component-unselected':
+        this.setState({
+          selection: false,
+          currentTab: 'add-components'
+        });
+        break;
+
+      case 'expose-as-input-changed':
+        console.log(this.state);
+        console.log(args);
+        if (!this.state.selection) {
+          return false;
+        }
+        this.state.selection.props.component.optionExposeAsInputChanged();
         break;
     }
 
@@ -77,7 +133,7 @@ class ColumnLayout extends React.Component {
       case 'inspector':
         tabContent = (
           <Inspector
-            handleEvent={this.handleEvent.bind(this)}
+            emitEvent={this.handleEvent.bind(this)}
             selection={this.state.selection}
           />
         );
@@ -85,7 +141,9 @@ class ColumnLayout extends React.Component {
     }
 
     return (
-      <ul className="column-layout">
+      <ul
+        className="column-layout"
+      >
         <li className="column column-1">
           <ul className="tab-links">
             {tabLinks}

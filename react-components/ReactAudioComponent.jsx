@@ -140,8 +140,10 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   onClickComponent(ev) {
-    ev.stopPropagation();
-    this.props.container.selectComponent(this);
+    if (!this.props.component.inSidebar) {
+      ev.stopPropagation();
+      this.props.container.selectComponent(this);
+    }
   }
 
   render() {

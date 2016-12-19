@@ -7,7 +7,11 @@ export default class Inspector extends React.Component {
   }
 
   handleEvent(type, args) {
-    
+    switch (type) {
+      case 'expose-as-input-changed':
+        this.props.emitEvent(type, args[0], args[1]);
+        break;
+    }
   }
 
   render() {
