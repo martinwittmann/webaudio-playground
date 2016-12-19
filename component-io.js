@@ -10,7 +10,7 @@ export default class componentIO {
   }
 
   addConnection(toIo) {
-    this.log('Connecting ' + this.name + ' (' + this.id + ') to ' + toIo.name + ' (' + toIo.id + ')');
+    //this.log('Connecting ' + this.name + ' (' + this.id + ') to ' + toIo.name + ' (' + toIo.id + ')');
     switch (this.type) {
       case 'midi':
       case 'frequency':

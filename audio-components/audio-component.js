@@ -130,10 +130,7 @@ export default class AudioComponent {
     }
   }
 
-  onMidiInChanged(ev) {
-    // The raw onChange event from a select from node.
-    let id = ev.target.value;
-
+  onMidiInChanged(id) {
     this.stop(); // Stop everything that's currently playing.
 
     if (this.state.midiIn) {
@@ -145,7 +142,7 @@ export default class AudioComponent {
     // Determine whether there is an input already.
     // This must be done *before* we set the the midiIn because we need the
     // current/old id to be able to find the input.
-    let outputIndex = this.getOutputIndex('midi-in-' + this.state.midiIn);
+    let outputIndex = this.getIoIndex('outputs', {id: 'midi-in-' + this.state.midiIn});
 
     // Set the midi input.
     this.state.midiIn = id;
@@ -233,24 +230,24 @@ export default class AudioComponent {
     return velocity / (127 / this.maxGainPerNote)
   }
 
-  getInputIndex(id) {
-    return this.getIOIndex('inputs', id);
-  }
+  getIoIndex(type, query) {
+    // Query is an object whose properties are being use to find an io which has
+    // the same values on all given properties as query.
 
-  getOutputIndex(id) {
-    return this.getIOIndex('outputs', id);
-  }
-
-  getIOIndex(type, id) {
     if ('undefined' == typeof this[type]) {
       this.log('getIOIndex: Trying to get IO for unknown type ' + type + '.');
       return -1;
     }
 
-    for (let i=0;i<this[type].length;i++) {
-      if (this[type][i].id == id) {
-        return i;
+    ioLoop: for (let i=0;i<this[type].length;i++) {
+      let io = this[type][i];
+      queryLoop: for (let key in query) {
+        if (query[key] != io[key]) {
+          continue ioLoop;
+        }
       }
+
+      return i;
     }
 
     return -1;

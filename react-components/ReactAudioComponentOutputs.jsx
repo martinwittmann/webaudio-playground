@@ -18,27 +18,6 @@ export default class ReactAudioComponentOutputs extends React.Component {
     });
   }
 
-  onMouseUp(ev) {
-    /*
-    if (this.state.connectable) {
-      // This should not be needed anymore since we're creating the connection in
-      // ComponentsContainer within the snapping logic.
-
-      // Finish creating the connection.
-      //let output = this.props.outputs[ev.target.dataset.ioIndex];
-      //this.props.handleEvent('create-connection', output, this);
-    }
-    else {
-      this.props.handleEvent('stop-connecting', ev);
-    }
-
-    this.setState({
-      activeIO: false,
-      connectable: false
-    });
-    */
-  }
-
   onMouseEnter(ev) {
     if (ev.target.className.match(/connectable/)) {
       ev.target.className += ' hover';
@@ -80,7 +59,6 @@ export default class ReactAudioComponentOutputs extends React.Component {
         id={output.id}
         className={cls.join(' ')}
         onMouseDown={this.onMouseDown.bind(this)}
-        onMouseUp={this.onMouseUp.bind(this)}
         onMouseEnter={this.onMouseEnter.bind(this)}
         onMouseLeave={this.onMouseLeave.bind(this)}
         data-io-index={index}
