@@ -1,15 +1,11 @@
 export default class componentIO {
   constructor(data) {
     this.connections = [];
-    this.type = data.type;
-    this.name = data.name;
 
-    if ('undefined' != data.receiveDatCallback) {
-      this.receiveDatCallback = data.receiveDatCallback;
-    }
-    
-    if ('undefined' != data.audioNode) {
-      this.audioNode = data.audioNode;
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        this[key] = data[key];
+      }
     }
   }
 
@@ -45,7 +41,7 @@ export default class componentIO {
         this.audioNode.disconnect(toIo.destination);
         break;
     }
-    
+
 
     // Remove the connection to toIo from this.
     let toIoIndex = this.getConnectionIndex(toIo);
@@ -80,5 +76,11 @@ export default class componentIO {
     }
 
     return -1;
+  }
+
+  log(msg) {
+    if (console && console.log) {
+      console.log(msg);
+    }
   }
 }

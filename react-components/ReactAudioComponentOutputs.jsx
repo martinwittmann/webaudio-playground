@@ -19,8 +19,9 @@ export default class ReactAudioComponentOutputs extends React.Component {
   }
 
   onMouseUp(ev) {
+    /*
     if (this.state.connectable) {
-      // This should not be neede anymore since we're creating the connection in
+      // This should not be needed anymore since we're creating the connection in
       // ComponentsContainer within the snapping logic.
 
       // Finish creating the connection.
@@ -35,6 +36,7 @@ export default class ReactAudioComponentOutputs extends React.Component {
       activeIO: false,
       connectable: false
     });
+    */
   }
 
   onMouseEnter(ev) {

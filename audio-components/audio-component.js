@@ -1,3 +1,5 @@
+import componentIo from '../component-io.js';
+
 export default class AudioComponent {
   constructor(app, componentId, userTitle) {
     this.app = app;
@@ -285,10 +287,11 @@ export default class AudioComponent {
     return this.outputs;
   }
 
-  registerInput(input) {
-    input.id = this.id + '--input-' + this.inputs.length;
-    input.ioType = 'input';
-    this.inputs.push(input);
+  registerInput(inputData) {
+    inputData.id = this.id + '--input-' + this.inputs.length;
+    inputData.ioType = 'input';
+
+    this.inputs.push(new componentIo(inputData));
     
     if (this.reactComponent) {
       this.reactContainerComponent.setState({
@@ -297,10 +300,11 @@ export default class AudioComponent {
     }
   }
 
-  registerOutput(output) {
-    output.id = this.id + '--output-' + this.outputs.length;
-    output.ioType = 'output';
-    this.outputs.push(output);
+  registerOutput(outputData) {
+    outputData.id = this.id + '--output-' + this.outputs.length;
+    outputData.ioType = 'output';
+
+    this.outputs.push(new componentIo(outputData));
 
     if (this.reactComponent) {
       this.reactContainerComponent.setState({
@@ -327,24 +331,15 @@ export default class AudioComponent {
     }
   }
 
+/*
   connectOutput(output, toInput) {
     output.addConnection(toInput);
   }
 
   disconnectOutput(output, input) {
-    switch (output.type) {
-      case 'midi':
-      case 'frequency':
-        output.sendDataCallback = false;
-        break;
-
-      case 'audio':
-        // Disconnect the output node.
-        output.audioNode.disconnect(input.destination);
-        //output.connectionsI//
-        break;
-    }
+    output.removeConnection(input);
   }
+  */
 
   sendToOutput(index, ...args) {
     let output;

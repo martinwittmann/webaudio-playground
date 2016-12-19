@@ -116,14 +116,18 @@ export default class ComponentsContainer extends React.Component {
     // Right now there's no technical reason for this apart from being logic.
     // We need to check component2Io since this is where the mouseUp event fired.
     if ('output' == component2Io.ioType) {
-      component2.connectOutput(component2Io, component1Io);
+      //component2.connectOutput(component2Io, component1Io);
+      component2Io.addConnection(component1Io);
+
       outputComponent = component2IoComponent;
       inputComponent = this.state.sourceIoComponent;
       outputId = component2.id;
       inputId = this.state.sourceComponent.props.component.id;
     }
     else {
-      component1.connectOutput(component1Io, component2Io);
+      //component1.connectOutput(component1Io, component2Io);
+      component1Io.addConnection(component2Io);
+
       outputComponent = this.state.sourceIoComponent;
       inputComponent = component2IoComponent;
       outputId = this.state.sourceComponent.props.component.id;
