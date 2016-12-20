@@ -1,6 +1,11 @@
 import React from 'react';
-import Select from './ui-components/Select.jsx';
 import InspectorOptionDetails from './InspectorOptionDetails.jsx';
+
+// Import all UI components.
+import Select from './ui-components/Select.jsx';
+import Radios from './ui-components/Radios.jsx';
+import Checkbox from './ui-components/Checkbox.jsx';
+import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
 
 export default class InspectorOption extends React.Component {
   constructor(props) {
@@ -46,18 +51,6 @@ export default class InspectorOption extends React.Component {
       case 'expose-as-input-changed':
         this.props.emitEvent(type, args[0], this);
         break;
-
-      case 'expose-to-canvas-ui-changed':
-        this.props.emitEvent(type, args[0], this);
-        break;
-
-      case 'expose-to-user-ui-changed':
-        this.props.emitEvent(type, args[0], this);
-        break;
-
-      case 'canvas-ui-input-type-changed':
-        this.props.emitEvent(type, args[0]);
-        break;
     }
   }
 
@@ -80,8 +73,9 @@ export default class InspectorOption extends React.Component {
         // Shown as checkbox in the inspector.
         item = (
           <Checkbox
-            label={this.getChoices(this.state)}
+            label={this.props.option.label}
             onChange={this.onSelectChange.bind(this)}
+            value={this.state.value}
           />
         );
         break;

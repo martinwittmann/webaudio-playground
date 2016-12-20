@@ -11,21 +11,30 @@ export default class Radios extends React.Component {
     let value = this.props.defaultValue;
     let radios = this.props.options.map(option => {
       return (
-        <radio
+        <li
           key={option.value}
-          value={option.value}
-          label={option.name}
-        />
+        >
+          <input type="radio"
+            id={this.props.option.id + '--' + option.value}
+            name={this.props.option.id}
+            value={option.value}
+          />
+          <label
+            htmlFor={this.props.option.id + '--' + option.value}
+          >
+            {option.name}
+          </label>
+        </li>
       );
     });
     return (
-      <radiogroup
-        className={this.props.className}
+      <ul
+        className={'radio-list ' + this.props.className}
         value={this.props.value}
         onChange={this.onChange.bind(this)}
       >
       {radios}
-      </radiogroup>
+      </ul>
     );
   }
 }

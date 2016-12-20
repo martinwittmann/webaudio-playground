@@ -90,35 +90,6 @@ class ColumnLayout extends React.Component {
           currentTab: 'add-components'
         });
         break;
-
-      case 'expose-as-input-changed':
-        if (!this.state.selection) {
-          this.log('ColumnLayout::handleEvent(): Received expose-as-input-changed, but this.state.selection is empty.');
-          return false;
-        }
-
-        //(Un)register the input.
-        this.state.selection.props.component.optionExposeAsInputChanged(args[0], args[1].props.option);
-
-        // Update state and the dom.
-        this.state.selection.setState({
-          inputs: this.state.selection.props.component.getInputs()
-        });
-        break;
-
-      case 'expose-to-canvas-ui-changed':
-        if (!this.state.selection) {
-          this.log('ColumnLayout::handleEvent(): Received expose-to-canvas-ui-changed, but this.state.selection is empty.');
-          return false;
-        }
-        break;
-
-      case 'canvas-ui-input-type-changed':
-        if (!this.state.selection) {
-          this.log('ColumnLayout::handleEvent(): Received canvas-ui-input-type-changed, but this.state.selection is empty.');
-          return false;
-        }
-        break;
     }
 
     this.props.settings.emitEvent(type, args);

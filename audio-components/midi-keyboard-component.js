@@ -16,8 +16,8 @@ export default class MidiKeyboardComponent extends AudioComponent {
 
     this.options = [
       {
-        id: 'keaybord',
-        label: 'Show Keyboard',
+        id: 'keybord',
+        label: 'Keyboard',
         type: 'boolean',
         value: true,
         onChange: this.onShowKeyboardChanged.bind(this),

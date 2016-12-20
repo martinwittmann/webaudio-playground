@@ -18,14 +18,23 @@ export default class InspectorOptionDetails extends React.Component {
     this.setState({
       exposeAsInput: {
         exposable: this.state.exposeAsInput.exposable,
-        value: ev.target.checked,
+        value: !!ev.target.checked,
         inputType: this.state.exposeAsInput.inputType
       }
     });
-    this.props.emitEventToOption('expose-as-input-changed', ev.target.checked);
+
+    //(Un)register the input.
+    this.props.component.optionExposeAsInputChanged(!!ev.target.checked, this.props.option);
+
+    // Update state and the dom.
+    this.setState({
+      inputs: this.props.component.getInputs()
+    });
   }
 
   showOnCanvasUiChanged(ev) {
+    this.props.option.value = ev.target.checked;
+
     this.setState({
       exposeToCanvasUi: {
         exposable: this.state.exposeToCanvasUi.exposable,
@@ -34,10 +43,9 @@ export default class InspectorOptionDetails extends React.Component {
       }
     });
 
-    this.props.component.setState({
-      options: this.props.component.state.options
+    this.props.component.reactComponent.setState({
+      options: this.props.component.options
     });
-    //this.props.emitEventToOption('expose-to-canvas-ui-changed', ev.target.checked);
   }
 
   showOnUserUiChanged(ev) {
@@ -48,16 +56,13 @@ export default class InspectorOptionDetails extends React.Component {
         inputType: this.state.exposeToUserUi.inputType
       }
     });
-    this.props.emitEventToOption('expose-to-user-ui-changed', ev.target.checked);
   }
 
   onCanvasUiInputTypeChanged(newInputType) {
-    this.props.option.canvasUiInputType = newInputType;
-    console.log(this.props.option.canvasUiInputType);
-    console.log(this.props.component);
+    this.props.option.exposeToCanvasUi.inputType = newInputType;
 
     this.props.component.reactComponent.setState({
-      options: this.props.component.state.options
+      options: this.props.component.options
     });
   }
 
@@ -66,16 +71,25 @@ export default class InspectorOptionDetails extends React.Component {
     let canvasUiSettings;
 
     if (true === this.state.exposeToCanvasUi.value) {
-      canvasUiSettings = (
-        <div className="component-option-canvas-ui-settings">
-          <label className="component-option-canvas-ui-settings-label">as</label>
-          <Select
-            value={this.state.exposeToCanvasUi.inputType}
-            options={this.props.component.getPossibleUiComponentsForOption(this.props.option)}
-            onChange={this.onCanvasUiInputTypeChanged.bind(this)}
-          />
-        </div>
-      );
+      switch (this.props.option.type) {
+        case 'choice':
+          canvasUiSettings = (
+            <div className="component-option-canvas-ui-settings">
+              <label className="component-option-canvas-ui-settings-label">as</label>
+              <Select
+                value={this.state.exposeToCanvasUi.inputType}
+                options={this.props.component.getPossibleUiComponentsForOption(this.props.option)}
+                onChange={this.onCanvasUiInputTypeChanged.bind(this)}
+              />
+            </div>
+          );
+          break;
+
+        case 'boolean':
+          // Since this is a boolean option, we don't need an additional input
+          // and use the 'Expose...' input directly.
+          break;
+      }
     }
 
     return (
