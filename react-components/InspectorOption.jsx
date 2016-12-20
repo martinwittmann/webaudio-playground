@@ -6,6 +6,7 @@ export default class InspectorOption extends React.Component {
   constructor(props) {
     super(props);
 
+    // This is probably a bad idea, but it works for now.
     this.state = props.option;
     this.state.opened = true;
   }
@@ -70,6 +71,16 @@ export default class InspectorOption extends React.Component {
         item = (
           <Select
             options={this.getChoices(this.state)}
+            onChange={this.onSelectChange.bind(this)}
+          />
+        );
+        break;
+
+      case 'boolean':
+        // Shown as checkbox in the inspector.
+        item = (
+          <Checkbox
+            label={this.getChoices(this.state)}
             onChange={this.onSelectChange.bind(this)}
           />
         );

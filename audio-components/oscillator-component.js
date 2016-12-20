@@ -11,11 +11,11 @@ export default class OscillatorComponent extends AudioComponent {
     this.audioNodes = {};
 
     // Initialize state for this component type.
-    this.state.input = 'fixed';
-    this.state.active = false;
-    this.state.frequency = 440;
-    this.state.waveform = 'sine';
-    this.state.gain = .2;
+    this.input = 'fixed';
+    this.active = false;
+    this.frequency = 440;
+    this.waveform = 'sine';
+    this.gain = .2;
 
     this.totalGain = this.createGainNode(0.8);
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
@@ -39,7 +39,6 @@ export default class OscillatorComponent extends AudioComponent {
         label: 'Waveform',
         type: 'choice',
         choices: this.getWaveforms.bind(this), // Could be an array or a function.
-        defaultValue: 'sine',
         value: 'sine',
         onChange: this.onWaveformChanged.bind(this),
         exposeAsInput: {
@@ -56,7 +55,6 @@ export default class OscillatorComponent extends AudioComponent {
           value: false,
           inputType: 'Select'
         },
-        inputType: 'string'
       },
       {
         id: 'volume-source',
@@ -72,8 +70,7 @@ export default class OscillatorComponent extends AudioComponent {
             value: 'fixed'
           }
         ],
-        defaultValue: 'from-midi',
-        value: 'sine',
+        value: 'from-midi',
         onChange: this.onVelocitySourceChanged.bind(this),
         exposeAsInput: {
           exposable: false
@@ -91,7 +88,6 @@ export default class OscillatorComponent extends AudioComponent {
         label: 'Volume',
         type: 'number',
         range: [0, 1],
-        defaultValue: .5,
         value: .5,
         onChange: this.onFixedVolumeChanged.bind(this),
         exposeAsInput: {

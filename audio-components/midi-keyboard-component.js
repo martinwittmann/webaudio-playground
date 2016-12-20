@@ -12,7 +12,31 @@ export default class MidiKeyboardComponent extends AudioComponent {
       name: 'Midi Out'
     });
 
-    this.state.veloctiy = 127;
+    this.veloctiy = 127;
+
+    this.options = [
+      {
+        id: 'keaybord',
+        label: 'Show Keyboard',
+        type: 'boolean',
+        value: true,
+        onChange: this.onShowKeyboardChanged.bind(this),
+        exposeAsInput: {
+          exposable: false,
+          value: false
+        },
+        exposeToCanvasUi: {
+          exposable: true,
+          value: true,
+          inputType: 'Keyboard'
+        },
+        exposeToUserUi: {
+          exposable: true,
+          value: false,
+          inputType: 'Keyboard'
+        }
+      }
+    ];
   }
 
   createMidiMessage(type, note) {
@@ -33,7 +57,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
     }
 
     message.push(note);
-    message.push(this.state.veloctiy);
+    message.push(this.veloctiy);
     return message;
   }
 
@@ -45,5 +69,9 @@ export default class MidiKeyboardComponent extends AudioComponent {
       // a valid midi input was selected, which is handled by sendToOutput.
       this.sendToOutput(0, message);
     }
+  }
+
+  onShowKeyboardChanged(ev) {
+
   }
 }

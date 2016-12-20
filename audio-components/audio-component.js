@@ -25,14 +25,11 @@ export default class AudioComponent {
     // handleMidiEvent gets called it calls the corresponding callback stored here.
     this.callbacks = {}
 
-    this.state = {
-      canvasPos: {
-        x: 0,
-        y: 0
-      },
-      connections: []
+    this.canvasPos = {
+      x: 0,
+      y: 0
     };
-
+    this.connections = [];
     this.options = []; // Default empty options which can be overwritten.
 
     if (!this.audioContext) {
@@ -46,9 +43,26 @@ export default class AudioComponent {
     this.stop();
   }
 
-  moveReactContainerComponent(pos) {
-    this.state.canvasPos = pos;
-    this.reactContainerComponent.setState({
+  initState() {
+    let state = {
+      inputs: this.getInputs(),
+      outputs: this.getOutputs(),
+      canvasPos: {
+        x: this.canvasPos.x,
+        y: this.canvasPos.y
+      },
+      canBeDragged: true,
+      options: this.options,
+      midiIn: false,
+      midiInputs: []
+    };
+
+    return state;
+  }
+
+  moveReactComponent(pos) {
+    this.canvasPos = pos;
+    this.reactComponent.setState({
       canvasPos: pos
     });
   }
@@ -167,11 +181,9 @@ export default class AudioComponent {
 
     if (this.reactComponent) {
       this.reactComponent.setState({
-        midiIn: id,
+        midiIn: id
       });
     }
-    // NOTE: We don't need to call setState for reactContainerComponent since
-    //       registerInput/registerOutput call this already.
   }
 
   stop() {
@@ -292,7 +304,7 @@ export default class AudioComponent {
     this.inputs.push(newInput);
     
     if (this.reactComponent) {
-      this.reactContainerComponent.setState({
+      this.reactComponent.setState({
         inputs: this.inputs
       });
     }
@@ -308,7 +320,7 @@ export default class AudioComponent {
     this.outputs.push(newOutput);
 
     if (this.reactComponent) {
-      this.reactContainerComponent.setState({
+      this.reactComponent.setState({
         outputs: this.outputs
       });
     }

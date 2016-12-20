@@ -53,8 +53,11 @@ export default class InspectorOptionDetails extends React.Component {
 
   onCanvasUiInputTypeChanged(newInputType) {
     this.props.option.canvasUiInputType = newInputType;
+    console.log(this.props.option.canvasUiInputType);
+    console.log(this.props.component);
+
     this.props.component.reactComponent.setState({
-      options: this.props.options
+      options: this.props.component.state.options
     });
   }
 

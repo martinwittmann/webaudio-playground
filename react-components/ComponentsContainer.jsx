@@ -250,7 +250,7 @@ export default class ComponentsContainer extends React.Component {
 
       component.inSidebar = false; // Mark the component to be shown on the canvas.
 
-      component.moveReactContainerComponent({
+      component.moveReactComponent({
         x: droppedAt.x - containerRect.left - posInCompOnDragStart.x,
         y: droppedAt.y - containerRect.top - posInCompOnDragStart.y
       });

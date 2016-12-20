@@ -4,29 +4,25 @@ import ReactAudioComponentInputs from './ReactAudioComponentInputs.jsx';
 import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.jsx';
 import ReactAudioComponentCanvasUi from './ReactAudioComponentCanvasUi.jsx';
 
+/*
 // React components for our audio components.
 import Oscillator from './Oscillator.jsx';
 import MidiIn from './MidiIn.jsx';
 import Midi2Frequency from './Midi2Frequency.jsx';
 import MidiKeyboard from './MidiKeyboard.jsx';
 import AudioOut from './AudioOut.jsx';
+*/
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {
     super(props);
-    props.component.reactContainerComponent = this;
+    props.component.reactComponent = this;
 
-    this.state = {
-      inputs: props.component.getInputs(),
-      outputs: props.component.getOutputs(),
-      canvasPos: {
-        x: props.component.state.canvasPos.x,
-        y: props.component.state.canvasPos.y
-      },
-      canBeDragged: true,
-      connectableIos: props.connectableIos,
-      options: props.component.options
-    };
+    if (props.component.initState) {
+      this.state = props.component.initState();
+    }
+
+    this.state.connectableIos = props.connectableIos;
   }
 
   handleChildEvent(type, ...args) {
@@ -150,6 +146,7 @@ export default class ReactAudioComponent extends React.Component {
 
   render() {
     const { connectDragSource, isDragging } = this.props;
+    /*
     let component;
     switch (this.props.component.reactComponentType) {
       case 'AudioOut':
@@ -191,6 +188,7 @@ export default class ReactAudioComponent extends React.Component {
         this.log('ReactAudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
         return false;
     }
+    */
 
     let inlineStyles = {
       left: Math.round(this.state.canvasPos.x) + 'px',
@@ -229,7 +227,6 @@ export default class ReactAudioComponent extends React.Component {
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
-          {component}
           <ReactAudioComponentCanvasUi component={this.props.component} />
         </div>
         <ReactAudioComponentOutputs
