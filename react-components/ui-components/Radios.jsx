@@ -7,9 +7,9 @@ export default class Radios extends React.Component {
       this.props.onChange(ev.target.value);
     }
 
-    // This is needed for onChange when displayed inside a component.
-    if(this.props.option && this.props.option.onChange) {
-      this.props.option.onChange(ev.target.value);
+    // Set the option and update/rerender everything that needs it.
+    if(this.props.option && this.props.option.setValue) {
+      this.props.option.setValue(ev.target.value);
     }
   }
 

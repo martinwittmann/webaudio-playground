@@ -19,7 +19,6 @@ export default class MidiKeyboardComponent extends AudioComponent {
       label: 'Keyboard',
       type: 'boolean',
       value: true,
-      onChange: this.onShowKeyboardChanged.bind(this),
       exposeAsInput: {
         exposable: false,
         value: false
@@ -34,7 +33,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
         value: false,
         inputType: 'Keyboard'
       }
-    }));
+    }, this.onShowKeyboardChanged.bind(this)));
   }
 
   createMidiMessage(type, note) {

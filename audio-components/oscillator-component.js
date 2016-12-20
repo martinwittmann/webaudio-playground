@@ -32,13 +32,13 @@ export default class OscillatorComponent extends AudioComponent {
       audioNode: this.totalGain
     });
 
+    // Set up available options:
     this.options.push(new audioComponentOption({
       id: 'waveform',
       label: 'Waveform',
       type: 'choice',
       choices: this.getWaveforms.bind(this), // Could be an array or a function.
       value: 'sine',
-      onChange: this.onWaveformChanged.bind(this),
       exposeAsInput: {
         exposable: true,
         value: false
@@ -53,7 +53,7 @@ export default class OscillatorComponent extends AudioComponent {
         value: false,
         inputType: 'Select'
       },
-    }));
+    }, this.onWaveformChanged.bind(this)));
 
     this.options.push(new audioComponentOption({
       id: 'volume-source',
@@ -70,7 +70,6 @@ export default class OscillatorComponent extends AudioComponent {
         }
       ],
       value: 'from-midi',
-      onChange: this.onVelocitySourceChanged.bind(this),
       exposeAsInput: {
         exposable: false
       },
@@ -81,7 +80,7 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToUserUi: {
         exposable: false
       }
-    }));
+    }, this.onVelocitySourceChanged.bind(this)));
 
     this.options.push(new audioComponentOption({
       id: 'fixed-volume',
@@ -89,7 +88,6 @@ export default class OscillatorComponent extends AudioComponent {
       type: 'number',
       range: [0, 1],
       value: .5,
-      onChange: this.onFixedVolumeChanged.bind(this),
       exposeAsInput: {
         exposable: false
       },
@@ -105,7 +103,7 @@ export default class OscillatorComponent extends AudioComponent {
       conditions: {
         'volume-source': 'fixed'
       }
-    }));
+    }, this.onFixedVolumeChanged.bind(this)));
   }
 
   handleFrequencyIn(args) {

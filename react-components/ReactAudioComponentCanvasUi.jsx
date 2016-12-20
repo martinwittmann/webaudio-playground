@@ -4,6 +4,37 @@ import Radios from './ui-components/Radios.jsx';
 import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      optionValues: {}
+    };
+    this.optionChangedCallback = this.optionChanged.bind(this)
+
+    props.component.options.map(option => {
+      this.state.optionValues[option.id] = option.getValue();
+      option.registerChangeCallback(this.optionChangedCallback);
+    });
+    console.log('constructor');
+  }
+
+  optionChanged(newValue, option) {
+    let newOptionValues = this.state.optionValues;
+    newOptionValues[option.id] = newValue;
+    console.log('ccc');
+
+    this.setState({
+      optionValues: newOptionValues
+    });
+  }
+
+  componentWillUnmout() {
+    props.component.options.map(option => {
+      option.UnregisterChangeCallback(this.optionChangedCallback);
+    });
+  }
+
   render() {
     let options = this.props.component.options;
     let optionsHtml;
@@ -16,37 +47,22 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
 
         switch (option.exposeToCanvasUi.inputType) {
           case 'Select':
-            let selectOptions = [];
-            if ('function' == typeof option.choices) {
-              selectOptions = option.choices();
-            }
-            else {
-              selectOptions = option.choices;
-            }
-
             return (
               <li key={option.id}>
                 <Select
                   option={option}
-                  options={selectOptions}
+                  options={option.getChoices()}
+                  value={option.value}
                 />
               </li>
             );
 
           case 'Radios':
-            let radioOptions = [];
-            if ('function' == typeof option.choices) {
-              radioOptions = option.choices();
-            }
-            else {
-              radioOptions = option.choices;
-            }
-
             return (
               <li key={option.id}>
                 <Radios
                   option={option}
-                  options={radioOptions}
+                  options={option.getChoices()}
                   value={option.value}
                 />
               </li>
@@ -77,7 +93,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     }
 
     return (
-      <ul className="audio-component-canvas-ui">
+      <ul className="audio-component-canvas-ui" ref="">
         {optionsHtml}
       </ul>
     );

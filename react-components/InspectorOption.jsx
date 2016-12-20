@@ -12,23 +12,27 @@ export default class InspectorOption extends React.Component {
     super(props);
 
     // This is probably a bad idea, but it works for now.
-    this.state = props.option;
-    this.state.opened = true;
+    //this.state = props.option;
+
+    this.state = {
+      opened: true,
+      value: props.option.getValue()
+    };
+
+    props.option.registerChangeCallback(this.onSelectChanged.bind(this));
   }
 
   onSelectChange(newValue) {
-    // What to do here?
-    // - Update the corresponding value in the audio component class.
-    this.props.option.onChange(newValue);
+    // This is the onChange event of the select dom node.
+    // NOTE: We only call the set method of the option. This handles calling all
+    //       necessary components.
+    this.props.option.setValue(newValue);
+  }
 
-    this.props.component.waveform = newValue;
-
-    this.props.component.reactComponent.setState({
-      waveform: newValue
-    });
-
+  onSelectChanged(newValue) {
+    // This is the callback which gets called from option.set().
     this.setState({
-      waveform: newValue
+      value: newValue
     });
   }
 
@@ -36,19 +40,6 @@ export default class InspectorOption extends React.Component {
     this.setState({
       value: ev.target.value
     });
-  }
-
-  getChoices(option) {
-    if ('function' == typeof option.choices) {
-      return option.choices();
-    }
-    else if (Array.isArray(option.choices)) {
-      return option.choices;
-    }
-    else {
-      console.log('InspectorOption::getChoices: called with invalid type: ' + typeof option.choices + '.');
-      return false;
-    }
   }
 
   toggleDetails() {
@@ -69,14 +60,14 @@ export default class InspectorOption extends React.Component {
     let item;
     let help = false;
 
-    switch (this.state.type) {
+    switch (this.props.option.getType()) {
       case 'choice':
         // In the inspector we always show choices as selects.
         item = (
           <Select
-            options={this.getChoices(this.state)}
+            options={this.props.option.getChoices()}
             onChange={this.onSelectChange.bind(this)}
-            value={this.props.component.waveform}
+            value={this.state.value}
           />
         );
         break;
@@ -96,15 +87,15 @@ export default class InspectorOption extends React.Component {
         item = (
           <input
             type="number"
-            min={this.state.range[0]}
-            max={this.state.range[1]}
+            min={this.props.option.range[0]}
+            max={this.props.option.range[1]}
             step="0.01"
             onChange={this.onNumberChange.bind(this)}
             value={this.state.value}
           />
         );
         help = (
-          <span className="input-help">[{this.state.range[0]}-{this.state.range[1]}]</span>
+          <span className="input-help">[{this.props.option.range[0]}-{this.props.option.range[1]}]</span>
         );
         break;
     }
@@ -117,7 +108,7 @@ export default class InspectorOption extends React.Component {
         <a
           className="component-option-label"
           onClick={this.toggleDetails.bind(this)}
-        >{this.state.label}:</a>
+        >{this.props.option.label}:</a>
         <div className="component-option-item">
           {item}
         </div>
