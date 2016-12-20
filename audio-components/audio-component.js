@@ -391,7 +391,8 @@ export default class AudioComponent {
       case 'choice':
         return [
           {
-            name: 'Select',
+            // Select looks like a 'Please select' message and is confusing.
+            name: 'Dropdown',
             value: 'Select'
           },
           {

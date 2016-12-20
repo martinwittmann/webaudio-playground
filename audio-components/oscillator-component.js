@@ -42,14 +42,19 @@ export default class OscillatorComponent extends AudioComponent {
         defaultValue: 'sine',
         value: 'sine',
         onChange: this.onWaveformChanged.bind(this),
-        exposeAsInput: { // This can be an object as shown or simply false.
+        exposeAsInput: {
+          exposable: true,
           value: false
         },
         exposeToCanvasUi: {
-          value: true
+          exposable: true,
+          value: true,
+          inputType: 'Select'
         },
-        exposableToUserUi: {
-          value: false
+        exposeToUserUi: {
+          exposable: true,
+          value: false,
+          inputType: 'Select'
         },
         inputType: 'string'
       },
@@ -70,9 +75,16 @@ export default class OscillatorComponent extends AudioComponent {
         defaultValue: 'from-midi',
         value: 'sine',
         onChange: this.onVelocitySourceChanged.bind(this),
-        exposableAsInput: false,
-        exposableToCanvasUi: true,
-        exposableToUserUi: false
+        exposeAsInput: {
+          exposable: false
+        },
+        exposeToCanvasUi: {
+          exposable: true,
+          value: false
+        },
+        exposeToUserUi: {
+          exposable: false
+        }
       },
       {
         id: 'fixed-volume',
@@ -82,9 +94,17 @@ export default class OscillatorComponent extends AudioComponent {
         defaultValue: .5,
         value: .5,
         onChange: this.onFixedVolumeChanged.bind(this),
-        exposableAsInput: false,
-        exposableToCanvasUi: true,
-        exposableToUserUi: true,
+        exposeAsInput: {
+          exposable: false
+        },
+        exposeToCanvasUi: {
+          exposable: true,
+          value: false
+        },
+        exposeToUserUi: {
+          exposable: true,
+          value: false
+        },
         // Conditions of other settings that must be met to make this option available.
         conditions: {
           'volume-source': 'fixed'

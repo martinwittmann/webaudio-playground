@@ -8,29 +8,45 @@ export default class InspectorOptionDetails extends React.Component {
     this.state = {
       id: props.option.id,
       canvasUiInputType: props.option.canvasUiInputType,
-      exposableAsInput: props.option.exposableAsInput,
-      exposableToCanvasUi: props.option.exposableToCanvasUi,
-      exposableToUserUi: props.option.exposableToUserUi
+      exposeAsInput: props.option.exposeAsInput,
+      exposeToCanvasUi: props.option.exposeToCanvasUi,
+      exposeToUserUi: props.option.exposeToUserUi,
     };
   }
 
   exposeAsInputChanged(ev) {
     this.setState({
-      exposeAsInput: ev.target.checked
+      exposeAsInput: {
+        exposable: this.state.exposeAsInput.exposable,
+        value: ev.target.checked,
+        inputType: this.state.exposeAsInput.inputType
+      }
     });
     this.props.emitEventToOption('expose-as-input-changed', ev.target.checked);
   }
 
   showOnCanvasUiChanged(ev) {
     this.setState({
-      exposableToCanvasUi: ev.target.checked
+      exposeToCanvasUi: {
+        exposable: this.state.exposeToCanvasUi.exposable,
+        value: ev.target.checked,
+        inputType: this.state.exposeToCanvasUi.inputType
+      }
     });
-    this.props.emitEventToOption('expose-to-canvas-ui-changed', ev.target.checked);
+
+    this.props.component.setState({
+      options: this.props.component.state.options
+    });
+    //this.props.emitEventToOption('expose-to-canvas-ui-changed', ev.target.checked);
   }
 
   showOnUserUiChanged(ev) {
     this.setState({
-      exposableToUserUi: ev.target.checked
+      exposeToUserUi: {
+        exposable: this.state.exposeToUserUi.exposable,
+        value: ev.target.checked,
+        inputType: this.state.exposeToUserUi.inputType
+      }
     });
     this.props.emitEventToOption('expose-to-user-ui-changed', ev.target.checked);
   }
@@ -46,13 +62,12 @@ export default class InspectorOptionDetails extends React.Component {
     let item;
     let canvasUiSettings;
 
-    console.log(this.state);
-    if (this.state.exposableToCanvasUi) {
+    if (true === this.state.exposeToCanvasUi.value) {
       canvasUiSettings = (
         <div className="component-option-canvas-ui-settings">
-          <label>Canvas Ui Input Type</label>
+          <label className="component-option-canvas-ui-settings-label">as</label>
           <Select
-            defaultValue={this.state.canvasUiInputType}
+            value={this.state.exposeToCanvasUi.inputType}
             options={this.props.component.getPossibleUiComponentsForOption(this.props.option)}
             onChange={this.onCanvasUiInputTypeChanged.bind(this)}
           />
@@ -68,7 +83,8 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.exposeAsInputChanged.bind(this)}
             title="Expose input for this option"
-            disabled={!this.state.exposableAsInput}
+            disabled={!this.state.exposeAsInput.exposable}
+            checked={this.state.exposeAsInput.value}
           />
           <label htmlFor={this.state.id + '--input'}>Expose as Input</label>
         </li>
@@ -78,7 +94,8 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.showOnCanvasUiChanged.bind(this)}
             title="Show on Canvas Ui"
-            disabled={!this.state.exposableToCanvasUi}
+            disabled={!this.state.exposeToCanvasUi.exposable}
+            checked={this.state.exposeToCanvasUi.value}
           />
           <label htmlFor={this.state.id + '--canvas-ui'}>Expose on Canvas Ui</label>
           {canvasUiSettings}
@@ -89,7 +106,8 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.showOnUserUiChanged.bind(this)}
             title="Show on User Ui"
-            disabled={!this.state.exposableToUserUi}
+            disabled={!this.state.exposeToUserUi.exposable}
+            checked={this.state.exposeToUserUi.value}
           />
           <label htmlFor={this.state.id + '--user-ui'}>Expose on User Ui</label>
         </li>
