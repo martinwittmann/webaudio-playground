@@ -11,6 +11,14 @@ export default class Inspector extends React.Component {
       case 'expose-as-input-changed':
         this.props.emitEvent(type, args[0], args[1]);
         break;
+
+      case 'expose-to-canvas-ui-changed':
+        this.props.emitEvent(type, args[0], args[1]);
+        break;
+
+      case 'expose-to-user-ui-changed':
+        this.props.emitEvent(type, args[0], args[1]);
+        break;
     }
   }
 

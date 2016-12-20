@@ -13,15 +13,16 @@ export default class InspectorOptionDetails extends React.Component {
   }
 
   showOnCanvasUiChanged(ev) {
-
+    this.props.emitEventToOption('expose-to-canvas-ui-changed', ev.target.checked);
   }
 
   showOnUserUiChanged(ev) {
-
+    this.props.emitEventToOption('expose-to-user-ui-changed', ev.target.checked);
   }
 
   render() {
     let item;
+    console.log(this.state, this.state.id);
 
     return (
       <ul className="component-option-details">
@@ -31,7 +32,7 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.exposeAsInputChanged.bind(this)}
             title="Expose input for this option"
-            disabled={this.state.exposablAsInput}
+            disabled={!this.state.exposableAsInput}
           />
           <label htmlFor={this.state.id + '--input'}>Expose as Input</label>
         </li>
@@ -41,7 +42,7 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.showOnCanvasUiChanged.bind(this)}
             title="Show on Canvas Ui"
-            disabled={this.state.exposableToCanvasUi}
+            disabled={!this.state.exposableToCanvasUi}
           />
           <label htmlFor={this.state.id + '--canvas-ui'}>Expose on Canvas Ui</label>
         </li>
@@ -51,7 +52,7 @@ export default class InspectorOptionDetails extends React.Component {
             type="checkbox"
             onChange={this.showOnUserUiChanged.bind(this)}
             title="Show on User Ui"
-            disabled={this.state.exposableToUserUi}
+            disabled={!this.state.exposableToUserUi}
           />
           <label htmlFor={this.state.id + '--user-ui'}>Expose on User Ui</label>
         </li>

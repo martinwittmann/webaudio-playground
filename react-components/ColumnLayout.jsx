@@ -20,7 +20,7 @@ class ColumnLayout extends React.Component {
       selection: false
     };
 
-    window.addEventListener('onKeyDown', this.onAppKeyPress.bind(this), true);
+    window.addEventListener('keydown', this.onAppKeyPress.bind(this), true);
   }
 
   onTabButtonClick(ev) {
@@ -30,7 +30,12 @@ class ColumnLayout extends React.Component {
   }
 
   showNextTab() {
-    let nextTabNode = document.querySelector('.tab-links > .' . this.state.currentTab).nextSibling;
+    let currentTab = document.querySelector('.tab-links > .' + this.state.currentTab);
+    let nextTabNode = currentTab.nextSibling;
+    if (!nextTabNode) {
+      nextTabNode = currentTab.parentNode.firstChild;
+    }
+
     this.onTabButtonClick({
       target: {
         dataset: {
@@ -41,19 +46,22 @@ class ColumnLayout extends React.Component {
   }
 
   showPreviousTab() {
-    let nextTabNode = document.querySelector('.tab-links > .' . this.state.currentTab).previousSibling;
+    let currentTab = document.querySelector('.tab-links > .' + this.state.currentTab);
+    let previousTabNode = currentTab.previousSibling;
+    if (!previousTabNode) {
+      previousTabNode = currentTab.parentNode.lastChild;
+    }
+
     this.onTabButtonClick({
       target: {
         dataset: {
-          tab: nextTabNode.dataset.tab
+          tab: previousTabNode.dataset.tab
         }
       }
     });
   }
 
   onAppKeyPress(ev) {
-    
-    console.log(ev.keyCode);
     switch (ev.keyCode) {
       case 9: // The tab key.
         if (ev.shiftPressed) {
@@ -115,13 +123,13 @@ class ColumnLayout extends React.Component {
       }
     ];
     let tabLinks = tabLinkData.map(link => {
-      let cls = ['tab', 'add-components'];
+      let cls = ['tab', link.id];
       if (this.state.currentTab == link.id) {
         cls.push('active');
       }
 
       return (
-        <li key={link.id} className={cls.join(' ')}>
+        <li key={link.id} className={cls.join(' ')} data-tab={link.id}>
           <a onClick={this.onTabButtonClick.bind(this)} data-tab={link.id}>{link.title}</a>
         </li>
       );

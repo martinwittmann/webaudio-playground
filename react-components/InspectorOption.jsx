@@ -12,20 +12,13 @@ export default class InspectorOption extends React.Component {
 
   onSelectChange(newValue) {
     // What to do here?
+    // - Update the corresponding value in the audio component class.
   }
 
   onNumberChange(ev) {
     this.setState({
       value: ev.target.value
     });
-  }
-
-  showOnCanvasUiChanged(ev) {
-
-  }
-
-  showOnUserUiChanged(ev) {
-
   }
 
   getChoices(option) {
@@ -50,6 +43,14 @@ export default class InspectorOption extends React.Component {
   handleChildEvent(type, ...args) {
     switch (type) {
       case 'expose-as-input-changed':
+        this.props.emitEvent(type, args[0], this);
+        break;
+
+      case 'expose-to-canvas-ui-changed':
+        this.props.emitEvent(type, args[0], this);
+        break;
+
+      case 'expose-to-user-ui-changed':
         this.props.emitEvent(type, args[0], this);
         break;
     }
