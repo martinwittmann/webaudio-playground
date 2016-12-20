@@ -2,6 +2,7 @@ import React from 'react';
 
 import ReactAudioComponentInputs from './ReactAudioComponentInputs.jsx';
 import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.jsx';
+import ReactAudioComponentCanvasUi from './ReactAudioComponentCanvasUi.jsx';
 
 // React components for our audio components.
 import Oscillator from './Oscillator.jsx';
@@ -23,7 +24,8 @@ export default class ReactAudioComponent extends React.Component {
         y: props.component.state.canvasPos.y
       },
       canBeDragged: true,
-      connectableIos: props.connectableIos
+      connectableIos: props.connectableIos,
+      options: props.component.options
     };
   }
 
@@ -228,6 +230,7 @@ export default class ReactAudioComponent extends React.Component {
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
           {component}
+          <ReactAudioComponentCanvasUi component={this.props.component} />
         </div>
         <ReactAudioComponentOutputs
           outputs={this.state.outputs}

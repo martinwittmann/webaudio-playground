@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from './Select.jsx';
+import Select from './ui-components/Select.jsx';
 
 export default class Oscillator extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ export default class Oscillator extends React.Component {
     let options = [
      (<li key="waveform">
         <Select
-          className="wafeform-select"
+          className="waveform-select"
           defaultValue={this.state.waveform}
           options={this.props.audioComponent.getWaveforms()}
           onChange={this.onWaveformChanged.bind(this)}

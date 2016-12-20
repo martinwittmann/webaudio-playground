@@ -18,8 +18,6 @@ export default class OscillatorComponent extends AudioComponent {
     this.state.gain = .2;
 
     this.totalGain = this.createGainNode(0.8);
-    //this.totalGain.connect(this.audioContext.destination);
-
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
 
 
@@ -44,10 +42,16 @@ export default class OscillatorComponent extends AudioComponent {
         defaultValue: 'sine',
         value: 'sine',
         onChange: this.onWaveformChanged.bind(this),
-        exposableAsInput: true,
-        exposableToCanvasUi: true,
-        exposableToUserUi: true,
-        inputType: 'string',
+        exposeAsInput: { // This can be an object as shown or simply false.
+          value: false
+        },
+        exposeToCanvasUi: {
+          value: true
+        },
+        exposableToUserUi: {
+          value: false
+        },
+        inputType: 'string'
       },
       {
         id: 'volume-source',

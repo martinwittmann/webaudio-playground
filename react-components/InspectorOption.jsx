@@ -1,5 +1,5 @@
 import React from 'react';
-import Select from './Select.jsx';
+import Select from './ui-components/Select.jsx';
 import InspectorOptionDetails from './InspectorOptionDetails.jsx';
 
 export default class InspectorOption extends React.Component {
@@ -53,6 +53,10 @@ export default class InspectorOption extends React.Component {
       case 'expose-to-user-ui-changed':
         this.props.emitEvent(type, args[0], this);
         break;
+
+      case 'canvas-ui-input-type-changed':
+        this.props.emitEvent(type, args[0]);
+        break;
     }
   }
 
@@ -103,6 +107,7 @@ export default class InspectorOption extends React.Component {
         <div className="component-help">{help}</div>
         <InspectorOptionDetails
           option={this.props.option}
+          component={this.props.component}
           emitEventToOption={this.handleChildEvent.bind(this)}
         />
       </div>

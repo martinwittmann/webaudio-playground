@@ -386,6 +386,40 @@ export default class AudioComponent {
     }
   }
 
+  getPossibleUiComponentsForOption(option) {
+    switch (option.type) {
+      case 'choice':
+        return [
+          {
+            name: 'Select',
+            value: 'Select'
+          },
+          {
+            name: 'Radios',
+            value: 'Radios'
+          }
+        ];
+
+      case 'number':
+        return [
+          {
+            name: 'NumberInput',
+            value: 'NumberInput'
+          }
+        ];
+
+      case 'string':
+      default:
+        return [
+          {
+            name: 'TextInput',
+            value: 'TextInput'
+          }
+        ];
+
+    }
+  }
+
   log(msg) {
     console.log(msg);
   }
