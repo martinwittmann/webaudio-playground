@@ -24,7 +24,7 @@ export default class Radios extends React.Component {
             id={this.props.option.id + '--' + option.value}
             name={this.props.option.id}
             value={option.value}
-            defaultChecked={option.value == this.props.value}
+            checked={option.value == this.props.value}
             onChange={this.onChange.bind(this)}
           />
           <label

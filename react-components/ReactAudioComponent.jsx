@@ -4,14 +4,6 @@ import ReactAudioComponentInputs from './ReactAudioComponentInputs.jsx';
 import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.jsx';
 import ReactAudioComponentCanvasUi from './ReactAudioComponentCanvasUi.jsx';
 
-/*
-// React components for our audio components.
-import Oscillator from './Oscillator.jsx';
-import MidiIn from './MidiIn.jsx';
-import Midi2Frequency from './Midi2Frequency.jsx';
-import MidiKeyboard from './MidiKeyboard.jsx';
-import AudioOut from './AudioOut.jsx';
-*/
 
 export default class ReactAudioComponent extends React.Component {
   constructor(props) {

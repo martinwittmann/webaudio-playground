@@ -16,22 +16,20 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
       this.state.optionValues[option.id] = option.getValue();
       option.registerChangeCallback(this.optionChangedCallback);
     });
-    console.log('constructor');
   }
 
   optionChanged(newValue, option) {
     let newOptionValues = this.state.optionValues;
     newOptionValues[option.id] = newValue;
-    console.log('ccc');
 
     this.setState({
       optionValues: newOptionValues
     });
   }
 
-  componentWillUnmout() {
-    props.component.options.map(option => {
-      option.UnregisterChangeCallback(this.optionChangedCallback);
+  componentWillUnmount() {
+    this.props.component.options.map(option => {
+      option.unregisterChangeCallback(this.optionChangedCallback);
     });
   }
 
@@ -52,7 +50,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 <Select
                   option={option}
                   options={option.getChoices()}
-                  value={option.value}
+                  value={this.state.optionValues[option.id]}
                 />
               </li>
             );
@@ -63,7 +61,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 <Radios
                   option={option}
                   options={option.getChoices()}
-                  value={option.value}
+                  value={this.state.optionValues[option.id]}
                 />
               </li>
             );
