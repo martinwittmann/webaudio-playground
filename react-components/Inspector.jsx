@@ -18,7 +18,7 @@ export default class Inspector extends React.Component {
     }
     else {
       let component = selection.props.component;
-      options = component.options.getOptions().map(option => {
+      options = component.options.map(option => {
         return (
           <li key={option.id}>
             <InspectorOption

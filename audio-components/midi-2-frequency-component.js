@@ -5,7 +5,6 @@ export default class Midi2FrequencyComponent extends AudioComponent {
     super(app, id, 'Midi to Frequency');
 
     this.type = 'midi-2-frequency';
-    this.reactComponentType = 'Midi2Frequency';
 
     this.registerInput({
       type: 'midi',

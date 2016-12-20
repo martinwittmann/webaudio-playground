@@ -1,11 +1,11 @@
 import AudioComponent from './audio-component.js';
+import audioComponentOption from '../component-option.js';
 
 export default class MidiKeyboardComponent extends AudioComponent {
   constructor(app, id) {
     super(app, id, 'Midi Keyboard');
-
+    
     this.type = 'midi-keyboard';
-    this.reactComponentType = 'MidiKeyboard';
 
     this.registerOutput({
       type: 'midi',
@@ -14,7 +14,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
 
     this.veloctiy = 127;
 
-    this.options.addOption({
+    this.options.push(new audioComponentOption({
       id: 'keybord',
       label: 'Keyboard',
       type: 'boolean',
@@ -34,7 +34,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
         value: false,
         inputType: 'Keyboard'
       }
-    });
+    }));
   }
 
   createMidiMessage(type, note) {

@@ -1,12 +1,11 @@
 import AudioComponent from './audio-component.js';
+import audioComponentOption from '../component-option.js';
 
 export default class OscillatorComponent extends AudioComponent {
   constructor(app, id) {
     super(app, id, 'Oscillator');
 
     this.type = 'oscillator';
-    this.reactComponentType = 'Oscillator';
-
     this.maxGainPerNote = 0.4;
     this.audioNodes = {};
 
@@ -33,7 +32,7 @@ export default class OscillatorComponent extends AudioComponent {
       audioNode: this.totalGain
     });
 
-    this.options.addOption({
+    this.options.push(new audioComponentOption({
       id: 'waveform',
       label: 'Waveform',
       type: 'choice',
@@ -54,9 +53,9 @@ export default class OscillatorComponent extends AudioComponent {
         value: false,
         inputType: 'Select'
       },
-    });
+    }));
 
-    this.options.addOption({
+    this.options.push(new audioComponentOption({
       id: 'volume-source',
       label: 'Volume source',
       type: 'choice',
@@ -82,9 +81,9 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToUserUi: {
         exposable: false
       }
-    });
+    }));
 
-    this.options.addOption({
+    this.options.push(new audioComponentOption({
       id: 'fixed-volume',
       label: 'Volume',
       type: 'number',
@@ -106,7 +105,7 @@ export default class OscillatorComponent extends AudioComponent {
       conditions: {
         'volume-source': 'fixed'
       }
-    });
+    }));
   }
 
   handleFrequencyIn(args) {

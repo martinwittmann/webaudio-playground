@@ -1,5 +1,5 @@
 import componentIo from '../component-io.js';
-import audioComponentOptions from '../component-options.js';
+import audioComponentOption from '../component-option.js';
 
 export default class AudioComponent {
   constructor(app, componentId, userTitle) {
@@ -31,7 +31,7 @@ export default class AudioComponent {
       y: 0
     };
     this.connections = [];
-    this.options = new audioComponentOptions();
+    this.options = [];
 
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');

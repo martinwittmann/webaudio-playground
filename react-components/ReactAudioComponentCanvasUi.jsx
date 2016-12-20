@@ -5,7 +5,7 @@ import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
   render() {
-    let options = this.props.component.options.getOptions();
+    let options = this.props.component.options;
     let optionsHtml;
 
     if (options) {

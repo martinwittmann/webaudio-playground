@@ -146,49 +146,6 @@ export default class ReactAudioComponent extends React.Component {
 
   render() {
     const { connectDragSource, isDragging } = this.props;
-    /*
-    let component;
-    switch (this.props.component.reactComponentType) {
-      case 'AudioOut':
-        component = (<AudioOut
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-
-      case 'Midi2Frequency':
-        component = (<Midi2Frequency
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-
-      case 'MidiIn':
-        component = (<MidiIn
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-
-      case 'MidiKeyboard':
-        component = (<MidiKeyboard
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-        
-      case 'Oscillator':
-        component = (<Oscillator
-          audioComponent={this.props.component}
-          onChildEvent={this.props.component.onChildEvent.bind(this.props.component)}
-        />);
-        break;
-
-      default:
-        this.log('ReactAudioComponent::render(): No corresponding reactComponentType was found for component ' + this.props.component.type);
-        return false;
-    }
-    */
 
     let inlineStyles = {
       left: Math.round(this.state.canvasPos.x) + 'px',
