@@ -17,13 +17,13 @@ export default class Inspector extends React.Component {
        options = 'Select a component to edit it\'s options.';
     }
     else {
-      let reactComponent = selection.props.component;
-      options = reactComponent.options.map(option => {
+      let component = selection.props.component;
+      options = component.options.getOptions().map(option => {
         return (
           <li key={option.id}>
             <InspectorOption
               option={option}
-              component={reactComponent}
+              component={component}
               emitEvent={this.handleEvent.bind(this)}
             />
           </li>

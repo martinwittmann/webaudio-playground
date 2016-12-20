@@ -19,6 +19,17 @@ export default class InspectorOption extends React.Component {
   onSelectChange(newValue) {
     // What to do here?
     // - Update the corresponding value in the audio component class.
+    this.props.option.onChange(newValue);
+
+    this.props.component.waveform = newValue;
+
+    this.props.component.reactComponent.setState({
+      waveform: newValue
+    });
+
+    this.setState({
+      waveform: newValue
+    });
   }
 
   onNumberChange(ev) {
@@ -65,6 +76,7 @@ export default class InspectorOption extends React.Component {
           <Select
             options={this.getChoices(this.state)}
             onChange={this.onSelectChange.bind(this)}
+            value={this.props.component.waveform}
           />
         );
         break;
@@ -74,7 +86,7 @@ export default class InspectorOption extends React.Component {
         item = (
           <Checkbox
             label={this.props.option.label}
-            onChange={this.onSelectChange.bind(this)}
+            onChange={this.onCheckboxtChange.bind(this)}
             value={this.state.value}
           />
         );

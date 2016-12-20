@@ -5,11 +5,15 @@ import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
   render() {
-    let options = this.props.component.options;
+    let options = this.props.component.options.getOptions();
     let optionsHtml;
 
     if (options) {
       optionsHtml = options.map(option => {
+        if (!option.exposeToCanvasUi.value) {
+          return false;
+        }
+
         switch (option.exposeToCanvasUi.inputType) {
           case 'Select':
             let selectOptions = [];
@@ -23,6 +27,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             return (
               <li key={option.id}>
                 <Select
+                  option={option}
                   options={selectOptions}
                 />
               </li>
@@ -36,13 +41,13 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             else {
               radioOptions = option.choices;
             }
-            console.log(radioOptions);
 
             return (
               <li key={option.id}>
                 <Radios
                   option={option}
                   options={radioOptions}
+                  value={option.value}
                 />
               </li>
             );

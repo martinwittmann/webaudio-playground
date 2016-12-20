@@ -2,8 +2,14 @@ import React from 'react';
 
 export default class Radios extends React.Component {
   onChange(ev) {
+    // This is needed for the onChange in the inspector.
     if ('undefined' != typeof this.props.onChange) {
       this.props.onChange(ev.target.value);
+    }
+
+    // This is needed for onChange when displayed inside a component.
+    if(this.props.option && this.props.option.onChange) {
+      this.props.option.onChange(ev.target.value);
     }
   }
 
@@ -18,6 +24,8 @@ export default class Radios extends React.Component {
             id={this.props.option.id + '--' + option.value}
             name={this.props.option.id}
             value={option.value}
+            defaultChecked={option.value == this.props.value}
+            onChange={this.onChange.bind(this)}
           />
           <label
             htmlFor={this.props.option.id + '--' + option.value}
@@ -31,7 +39,6 @@ export default class Radios extends React.Component {
       <ul
         className={'radio-list ' + this.props.className}
         value={this.props.value}
-        onChange={this.onChange.bind(this)}
       >
       {radios}
       </ul>

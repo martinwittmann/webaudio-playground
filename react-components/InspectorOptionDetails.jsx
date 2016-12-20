@@ -33,7 +33,7 @@ export default class InspectorOptionDetails extends React.Component {
   }
 
   showOnCanvasUiChanged(ev) {
-    this.props.option.value = ev.target.checked;
+    this.props.option.exposeToCanvasUi.value = ev.target.checked;
 
     this.setState({
       exposeToCanvasUi: {
@@ -63,6 +63,13 @@ export default class InspectorOptionDetails extends React.Component {
 
     this.props.component.reactComponent.setState({
       options: this.props.component.options
+    });
+
+    let exposeToCanvasUiSettings = this.state.exposeToCanvasUi;
+    exposeToCanvasUiSettings.inputType = newInputType;
+
+    this.setState({
+      exposeToCanvasUi: exposeToCanvasUiSettings
     });
   }
 

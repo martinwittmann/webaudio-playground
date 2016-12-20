@@ -14,29 +14,27 @@ export default class MidiKeyboardComponent extends AudioComponent {
 
     this.veloctiy = 127;
 
-    this.options = [
-      {
-        id: 'keybord',
-        label: 'Keyboard',
-        type: 'boolean',
+    this.options.addOption({
+      id: 'keybord',
+      label: 'Keyboard',
+      type: 'boolean',
+      value: true,
+      onChange: this.onShowKeyboardChanged.bind(this),
+      exposeAsInput: {
+        exposable: false,
+        value: false
+      },
+      exposeToCanvasUi: {
+        exposable: true,
         value: true,
-        onChange: this.onShowKeyboardChanged.bind(this),
-        exposeAsInput: {
-          exposable: false,
-          value: false
-        },
-        exposeToCanvasUi: {
-          exposable: true,
-          value: true,
-          inputType: 'Keyboard'
-        },
-        exposeToUserUi: {
-          exposable: true,
-          value: false,
-          inputType: 'Keyboard'
-        }
+        inputType: 'Keyboard'
+      },
+      exposeToUserUi: {
+        exposable: true,
+        value: false,
+        inputType: 'Keyboard'
       }
-    ];
+    });
   }
 
   createMidiMessage(type, note) {

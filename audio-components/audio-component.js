@@ -1,4 +1,5 @@
 import componentIo from '../component-io.js';
+import audioComponentOptions from '../component-options.js';
 
 export default class AudioComponent {
   constructor(app, componentId, userTitle) {
@@ -30,7 +31,7 @@ export default class AudioComponent {
       y: 0
     };
     this.connections = [];
-    this.options = []; // Default empty options which can be overwritten.
+    this.options = new audioComponentOptions();
 
     if (!this.audioContext) {
       this.debug('A valid audioContext is needed to create this AudioComponent.');
@@ -80,12 +81,14 @@ export default class AudioComponent {
     return osc;
   }
 
+  /*
   onChildEvent(type, ...args) {
     let eventName = 'on' + type.substr(0, 1).toUpperCase() + type.substr(1);
     if ('undefined' != typeof this[eventName]) {
       this[eventName].apply(this, args);
     }
   }
+  */
 
   isNoteOff(status, data2) {
     return ((status & 0xF0) == 0x80) || ((status & 0xF0) == 0x90 && data2 == 0);

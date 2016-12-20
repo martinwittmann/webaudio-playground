@@ -213,7 +213,7 @@ export default class ComponentsContainer extends React.Component {
   }
 
   onClick(ev) {
-    this.unselectComponent();
+    //this.unselectComponent();
   }
 
   onDropComponent(ev) {
