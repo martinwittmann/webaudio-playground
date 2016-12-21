@@ -18,6 +18,15 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     });
   }
 
+  onChange(value, option) {
+    // This gets uplifted from child components.
+    if(!option || !option.setValue) {
+      console.log('ReactAudioComponentCanvasUi::onChange(): invalid option parameter: ', option);
+      return false;
+    }
+    option.setValue(value);
+  }
+
   optionChanged(newValue, option) {
     let newOptionValues = this.state.optionValues;
     newOptionValues[option.id] = newValue;
@@ -51,6 +60,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                   option={option}
                   options={option.getChoices()}
                   value={this.state.optionValues[option.id]}
+                  onChange={this.onChange.bind(this)}
                 />
               </li>
             );
@@ -62,6 +72,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                   option={option}
                   options={option.getChoices()}
                   value={this.state.optionValues[option.id]}
+                  onChange={this.onChange.bind(this)}
                 />
               </li>
             );
@@ -78,6 +89,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 <KeyboardOctave
                   startNote={60}
                   emitEvent={this.props.component.createAndSendMidiMessage.bind(this.props.component)}
+                  onChange={this.onChange.bind(this)}
                 />
               </li>
             );

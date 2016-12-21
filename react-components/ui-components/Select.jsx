@@ -2,14 +2,8 @@ import React from 'react';
 
 export default class Select extends React.Component {
   onChange(ev) {
-    // This is needed for the onChange in the inspector.
-    if ('undefined' != typeof this.props.onChange) {
-      this.props.onChange(ev.target.value);
-    }
-
-    // This is needed for setValue when displayed inside a component.
-    if(this.props.option && this.props.option.setValue) {
-      this.props.option.setValue(ev.target.value);
+    if ('function' == typeof this.props.onChange) {
+      this.props.onChange(ev.target.value, this.props.option);
     }
   }
 
