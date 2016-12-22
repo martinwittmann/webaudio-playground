@@ -12,6 +12,9 @@ export default class InspectorOptionDetails extends React.Component {
       exposeToCanvasUi: props.option.exposeToCanvasUi,
       exposeToUserUi: props.option.exposeToUserUi,
     };
+
+    this.onCanvasUiInputTypeChanged = this.onCanvasUiInputTypeChanged.bind(this);
+    props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged);
   }
 
   exposeAsInputChanged(ev) {
@@ -27,7 +30,7 @@ export default class InspectorOptionDetails extends React.Component {
     this.props.component.optionExposeAsInputChanged(!!ev.target.checked, this.props.option);
 
     // Update state and the dom.
-    this.setState({
+    this.props.component.reactComponent.setState({
       inputs: this.props.component.getInputs()
     });
   }
@@ -58,12 +61,17 @@ export default class InspectorOptionDetails extends React.Component {
     });
   }
 
-  onCanvasUiInputTypeChanged(newInputType) {
-    this.props.option.exposeToCanvasUi.inputType = newInputType;
+  onChangeCanvasUiInputType(newInputType) {
+    // The onChange event handler of the input type dom elemen.
+    this.props.option.setCanvasUiInputType(newInputType);
+  }
 
-    this.props.component.reactComponent.setState({
-      options: this.props.component.options
-    });
+  onCanvasUiInputTypeChanged(optionValue, option) {
+    // The callback that gets called from component-option when something changes.
+    let newInputType = option.exposeToCanvasUi.inputType;
+    if (newInputType == this.state.exposeToCanvasUi.inputType) {
+      return;
+    }
 
     let exposeToCanvasUiSettings = this.state.exposeToCanvasUi;
     exposeToCanvasUiSettings.inputType = newInputType;
@@ -86,7 +94,7 @@ export default class InspectorOptionDetails extends React.Component {
               <Select
                 value={this.state.exposeToCanvasUi.inputType}
                 options={this.props.component.getPossibleUiComponentsForOption(this.props.option)}
-                onChange={this.onCanvasUiInputTypeChanged.bind(this)}
+                onChange={this.onChangeCanvasUiInputType.bind(this)}
               />
             </div>
           );

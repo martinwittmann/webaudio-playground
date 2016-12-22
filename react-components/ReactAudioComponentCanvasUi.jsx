@@ -11,15 +11,10 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
       optionValues: {}
     };
     this.optionChangedCallback = this.optionChanged.bind(this)
-
-    props.component.options.map(option => {
-      this.state.optionValues[option.id] = option.getValue();
-      option.registerChangeCallback(this.optionChangedCallback);
-    });
   }
 
   onChange(value, option) {
-    // This gets uplifted from child components.
+    // This gets uplifted from child component's dom element onChange event.
     if(!option || !option.setValue) {
       console.log('ReactAudioComponentCanvasUi::onChange(): invalid option parameter: ', option);
       return false;
@@ -28,12 +23,26 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
   }
 
   optionChanged(newValue, option) {
+    console.log(this.props.component);
+
     let newOptionValues = this.state.optionValues;
     newOptionValues[option.id] = newValue;
+    console.log('optionchanged');
 
     this.setState({
       optionValues: newOptionValues
     });
+  }
+
+  componentWillMount() {
+    console.log('will mount: ' + this.props.component.id);
+    // Only register to the option changed callback if the component is shown in the canvas.
+    if (!this.props.component.inSidebar) {
+      this.props.component.options.map(option => {
+        this.state.optionValues[option.id] = option.getValue();
+        option.registerChangeCallback(this.optionChangedCallback);
+      });
+    }
   }
 
   componentWillUnmount() {

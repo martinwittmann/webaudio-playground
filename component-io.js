@@ -23,7 +23,7 @@ export default class componentIO {
     }
 
     this.connections.push(toIo);
-    // NOTE: We add both objects here even for the connected object we we don't
+    // NOTE: We add both objects here even for the connected object so we we don't
     //       need to call/implement toIo.addConnection and find a way to prevent
     //       infinite recursion. They're both of the same class/type so that's ok I guess.
     toIo.connections.push(this);

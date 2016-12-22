@@ -37,7 +37,16 @@ export default class audioComponentOption {
     // Notify all subscribed callbacks.
     this.onChangeCallbacks.map(callback => {
       callback(value, this);
-    })
+    });
+  }
+
+  setCanvasUiInputType(newInputType) {
+    this.exposeToCanvasUi.inputType = newInputType;
+
+    // Notify all subscribed callbacks.
+    this.onChangeCallbacks.map(callback => {
+      callback(this.value, this);
+    });
   }
 
   getValue() {

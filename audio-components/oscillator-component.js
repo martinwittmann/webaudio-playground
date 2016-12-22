@@ -75,7 +75,8 @@ export default class OscillatorComponent extends AudioComponent {
       },
       exposeToCanvasUi: {
         exposable: true,
-        value: false
+        value: false,
+        inputType: 'Select'
       },
       exposeToUserUi: {
         exposable: false
