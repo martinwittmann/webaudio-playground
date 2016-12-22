@@ -95,13 +95,22 @@ export default class ReactAudioComponent extends React.Component {
     }
   }
 
+  onMouseDown(ev) {
+    // We need to update the mousePos before dragging, since this is stored
+    // globally for all components.
+    if (!this.props.component.inSidebar) {
+      this.props.container.mousePos.x = ev.pageX;
+      this.props.container.mousePos.y = ev.pageY;
+    }
+  }
+
   onDragComponent(ev) {
     if (!this.state.dragData.onCanvas) {
       return true;
     }
 
-    if (ev.pageX == 0 || ev.pageY) {
-      // This is case in firefox.
+    if (ev.pageX == 0 || ev.pageY == 0) {
+      // This is the case in firefox.
       // See https://bugzilla.mozilla.org/show_bug.cgi?id=505521
       ev.pageX = this.props.container.mousePos.x;
       ev.pageY = this.props.container.mousePos.y;
@@ -165,6 +174,7 @@ export default class ReactAudioComponent extends React.Component {
         onDragStart={this.onDragStartComponent.bind(this)}
         onDrag={this.onDragComponent.bind(this)}
         onClick={this.onClickComponent.bind(this)}
+        onMouseDown={this.onMouseDown.bind(this)}
       >
         <ReactAudioComponentInputs
           inputs={this.state.inputs}

@@ -10,7 +10,6 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     this.state = {
       optionValues: {}
     };
-    this.optionChangedCallback = this.optionChanged.bind(this)
   }
 
   onChange(value, option) {
@@ -23,11 +22,8 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
   }
 
   optionChanged(newValue, option) {
-    console.log(this.props.component);
-
     let newOptionValues = this.state.optionValues;
     newOptionValues[option.id] = newValue;
-    console.log('optionchanged');
 
     this.setState({
       optionValues: newOptionValues
@@ -35,9 +31,9 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
   }
 
   componentWillMount() {
-    console.log('will mount: ' + this.props.component.id);
     // Only register to the option changed callback if the component is shown in the canvas.
     if (!this.props.component.inSidebar) {
+      this.optionChangedCallback = this.optionChanged.bind(this)
       this.props.component.options.map(option => {
         this.state.optionValues[option.id] = option.getValue();
         option.registerChangeCallback(this.optionChangedCallback);

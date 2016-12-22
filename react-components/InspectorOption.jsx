@@ -11,18 +11,14 @@ export default class InspectorOption extends React.Component {
   constructor(props) {
     super(props);
 
-    // This is probably a bad idea, but it works for now.
-    //this.state = props.option;
-
     this.state = {
       opened: true,
       value: props.option.getValue()
     };
-
-    this.onSelectChanged = this.onSelectChanged.bind(this);
   }
 
   componentWillMount() {
+    this.onSelectChanged = this.onSelectChanged.bind(this);
     this.props.option.registerChangeCallback(this.onSelectChanged);
   }
 

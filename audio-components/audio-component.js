@@ -81,15 +81,6 @@ export default class AudioComponent {
     return osc;
   }
 
-  /*
-  onChildEvent(type, ...args) {
-    let eventName = 'on' + type.substr(0, 1).toUpperCase() + type.substr(1);
-    if ('undefined' != typeof this[eventName]) {
-      this[eventName].apply(this, args);
-    }
-  }
-  */
-
   isNoteOff(status, data2) {
     return ((status & 0xF0) == 0x80) || ((status & 0xF0) == 0x90 && data2 == 0);
   }

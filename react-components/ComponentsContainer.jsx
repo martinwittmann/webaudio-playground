@@ -156,6 +156,7 @@ export default class ComponentsContainer extends React.Component {
     });
   }
 
+  // This only gets added after starting a connection and is removed afterwards.
   onMouseMove(ev) {
     if (this.state.isConnectingComponents) {
       this.setState({
@@ -168,17 +169,16 @@ export default class ComponentsContainer extends React.Component {
   }
 
   onDragOverContainer(ev) {
-    // For some reason this is necessary for the onDrop event to fire.
-    // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
-    //console.log('drag over', ev.pageX, ev.pageY);
-
     // This dirty hack is necessary since firefox does not (yet) provide mouse
     // coordinates in the on drag event. So we store them here and use them in
     // ReactAudioComponent if necessary.
     this.mousePos = {
       x: ev.pageX,
       y: ev.pageY
-    }
+    };
+
+    // For some reason this is necessary for the onDrop event to fire.
+    // See: http://stackoverflow.com/questions/8414154/html5-drop-event-doesnt-work-unless-dragover-is-handled
     ev.preventDefault();
   }
 

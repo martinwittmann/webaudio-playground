@@ -12,12 +12,11 @@ export default class InspectorOptionDetails extends React.Component {
       exposeToCanvasUi: props.option.exposeToCanvasUi,
       exposeToUserUi: props.option.exposeToUserUi,
     };
-
-    this.onCanvasUiInputTypeChanged = this.onCanvasUiInputTypeChanged.bind(this);
   }
 
   componentWillMount() {
     if (!this.props.component.inSidebar) {
+      this.onCanvasUiInputTypeChanged = this.onCanvasUiInputTypeChanged.bind(this);
       this.props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged);
     }
   }
