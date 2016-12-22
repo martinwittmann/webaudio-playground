@@ -28,23 +28,27 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     this.setState({
       optionValues: newOptionValues
     });
+
+    let reactComponent = this.props.component.reactComponent;
+    reactComponent.props.container.updateComponentConnectionLines(reactComponent, 0, 0);
   }
 
   componentWillMount() {
     // Only register to the option changed callback if the component is shown in the canvas.
     if (!this.props.component.inSidebar) {
-      this.optionChangedCallback = this.optionChanged.bind(this)
       this.props.component.options.map(option => {
         this.state.optionValues[option.id] = option.getValue();
-        option.registerChangeCallback(this.optionChangedCallback);
+        option.registerChangeCallback(this.optionChanged, this);
       });
     }
   }
 
   componentWillUnmount() {
-    this.props.component.options.map(option => {
-      option.unregisterChangeCallback(this.optionChangedCallback);
-    });
+    if (!this.props.component.inSidebar) {
+      this.props.component.options.map(option => {
+        option.unregisterChangeCallback(this.optionChanged);
+      });
+    }
   }
 
   render() {

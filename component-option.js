@@ -1,8 +1,9 @@
 export default class audioComponentOption {
-  constructor(data, changeCallback) {
+  constructor(data, changeCallback, callbackThis) {
     this.onChangeCallbacks = [];
 
     this.id = data.id;
+    this.componentId = callbackThis.id;
     this.label = data.label;
     this.type = data.type;
     this.choices = data.choices;
@@ -14,14 +15,22 @@ export default class audioComponentOption {
     this.range = data.range;
 
     if ('function' ==  typeof changeCallback) {
-      this.registerChangeCallback(changeCallback);
+      this.registerChangeCallback(changeCallback, callbackThis);
     }
   }
 
-  registerChangeCallback(callback) {
+  registerChangeCallback(callback, callbackThis) {
     if ('function' == typeof callback) {
-      this.onChangeCallbacks.push(callback);
+      if ('waveform' == this.id)
+      this.onChangeCallbacks.push({
+        callback: callback,
+        bindTo: callbackThis
+      });
       return this.onChangeCallbacks.length - 1;
+    }
+    else {
+      console.log('registerChangeCallback called with invalid callback', callback);
+      console.trace();
     }
 
     return false;
@@ -29,15 +38,20 @@ export default class audioComponentOption {
 
   unregisterChangeCallback(index) {
     if ('function' == typeof index) {
-      index = this.onChangeCallbacks.indexOf(index);
+      var callback = index;
+      index = -1;
+
+      for (let i=0;i<this.onChangeCallbacks.length;i++) {
+        if (this.onChangeCallbacks[i].callback == callback) {
+          index = i;
+          break;
+        }
+      }
     }
 
-    if (index < 0) {
-      console.log('unregisterChangeCallback(): Invalid index ' + index);
-      return false;
+    if (index > -1) {
+      this.onChangeCallbacks.splice(index, 1);
     }
-
-    this.onChangeCallbacks.splice(index, 1);
   }
 
   setValue(value) {
@@ -45,7 +59,7 @@ export default class audioComponentOption {
 
     // Notify all subscribed callbacks.
     this.onChangeCallbacks.map(callback => {
-      callback(value, this);
+      callback.callback.apply(callback.bindTo, [value, this]);
     });
   }
 
@@ -54,7 +68,7 @@ export default class audioComponentOption {
 
     // Notify all subscribed callbacks.
     this.onChangeCallbacks.map(callback => {
-      callback(this.value, this);
+      callback.callback.apply(callback.bindTo, [this.value, this]);
     });
   }
 

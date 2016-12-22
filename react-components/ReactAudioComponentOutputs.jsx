@@ -12,7 +12,7 @@ export default class ReactAudioComponentOutputs extends React.Component {
   }
 
   onMouseDown(ev) {
-    this.props.handleEvent('start-connecting', ev, this, this.props.outputs[ev.target.dataset.ioIndex], {x: ev.pageX, y: ev.pageY});
+    this.props.handleEvent('start-connecting', ev, this, this.props.outputs[ev.target.dataset.ioIndex]);
     this.setState({
       activeIO: ev.target.id,
     });
@@ -34,11 +34,26 @@ export default class ReactAudioComponentOutputs extends React.Component {
     });
   }
 
+  updateCoordinates() {
+    let rect = this.domNode.getBoundingClientRect();
+    // We can't store the DOMrect directly since we need to change these
+    // values if a component gets dragged around.
+
+    this.coordinates = {
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      left: rect.left
+    };
+
+    return this.coordinates;
+  }
+
   render() {
     let outputs = this.props.outputs.map((output, index) => {
       let connectable = false; // Only while starting a connection: whether or not the connection can be made with this io.
       let cls = ['io', output.ioType, output.type];
-      if (output.id == this.state.activeIO) {
+      if (output.id == this.state.activeIO || this.isSnapped) {
         cls.push('connecting');
       }
 
@@ -64,15 +79,9 @@ export default class ReactAudioComponentOutputs extends React.Component {
         data-io-index={index}
         ref={(el) => {
           if (el) {
-            let rect = el.getBoundingClientRect();
-            // We can't store the DOMrect directly since we need to change these
-            // values if a component gets dragged around.
-            this.coordinates = {
-              top: rect.top,
-              right: rect.right,
-              bottom: rect.bottom,
-              left: rect.left
-            }
+            this.domNode = el;
+            let rect = this.updateCoordinates();
+
             if (connectable) {
               this.props.container.connectableIos[output.id] = {
                 io: output,

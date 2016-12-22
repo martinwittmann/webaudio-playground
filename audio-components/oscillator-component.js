@@ -53,7 +53,7 @@ export default class OscillatorComponent extends AudioComponent {
         value: false,
         inputType: 'Select'
       },
-    }, this.onWaveformChanged.bind(this)));
+    }, this.onWaveformChanged, this));
 
     this.options.push(new audioComponentOption({
       id: 'volume-source',
@@ -81,7 +81,7 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToUserUi: {
         exposable: false
       }
-    }, this.onVelocitySourceChanged.bind(this)));
+    }, this.onVelocitySourceChanged, this));
 
     this.options.push(new audioComponentOption({
       id: 'fixed-volume',
@@ -104,7 +104,7 @@ export default class OscillatorComponent extends AudioComponent {
       conditions: {
         'volume-source': 'fixed'
       }
-    }, this.onFixedVolumeChanged.bind(this)));
+    }, this.onFixedVolumeChanged, this));
   }
 
   handleFrequencyIn(args) {
@@ -144,6 +144,10 @@ export default class OscillatorComponent extends AudioComponent {
   }
 
   onWaveformChanged(newWaveform) {
+    if (this.waveforms.indexOf(newWaveform) < 0) {
+      this.log('onWaveformChanged(): Invalid waveform ' + newWaveform + '.');
+      return false;
+    }
     this.waveform = newWaveform;
     Object.keys(this.audioNodes).map(key => {
       let nodes = this.audioNodes[key];

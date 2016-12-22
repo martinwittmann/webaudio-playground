@@ -61,13 +61,6 @@ export default class AudioComponent {
     return state;
   }
 
-  moveReactComponent(pos) {
-    this.canvasPos = pos;
-    this.reactComponent.setState({
-      canvasPos: pos
-    });
-  }
-
   createGainNode(volume) {
     let gain = this.audioContext.createGain();
     gain.gain.value = volume;

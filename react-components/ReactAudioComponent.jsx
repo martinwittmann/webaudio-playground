@@ -145,6 +145,16 @@ export default class ReactAudioComponent extends React.Component {
     }
   }
 
+  moveOnCanvas(pos) {
+    this.props.component.canvasPos = pos;
+    this.props.component.inSidebar = false;
+    
+    this.setState({
+      canvasPos: pos
+    });
+  }
+
+
   render() {
     const { connectDragSource, isDragging } = this.props;
 

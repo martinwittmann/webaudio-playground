@@ -8,13 +8,21 @@ export default class KeyboardOctave extends React.Component {
   }
 
   onMouseDown(ev) {
+    this.keyPressed = true;
     this.props.emitEvent('note-on', parseInt(ev.target.dataset.key, 10));
     ev.preventDefault();
   }
 
   onMouseUp(ev) {
+    this.keyPressed = false;
     this.props.emitEvent('note-off', parseInt(ev.target.dataset.key, 10));
-    ev.preventDefault();
+  }
+
+  onMouseLeave(ev) {
+    if (this.keyPressed) {
+      // Stop the playing note.
+      this.onMouseUp(ev);
+    }
   }
 
   render() {
@@ -32,6 +40,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >C{octave}</li>);
       cls.push('additionalC');
     }
@@ -46,6 +55,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >C{octave}</li>
         <li
           key={startNote + 1}
@@ -55,6 +65,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Cis{octave}</li>
         <li
           key={startNote + 2}
@@ -64,6 +75,8 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >D{octave}</li>
         <li
           key={startNote + 3}
@@ -73,6 +86,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Dis{octave}</li>
         <li
           key={startNote + 4}
@@ -82,6 +96,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >E{octave}</li>
         <li
           key={startNote + 5}
@@ -91,6 +106,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >F{octave}</li>
         <li
           key={startNote + 6}
@@ -100,6 +116,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Fis{octave}</li>
         <li
           key={startNote + 7}
@@ -109,6 +126,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
             onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >G{octave}</li>
         <li
           key={startNote + 8}
@@ -118,6 +136,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Gis{octave}</li>
         <li
           key={startNote + 9}
@@ -127,6 +146,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >A{octave}</li>
         <li
           key={startNote + 10}
@@ -136,6 +156,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Ais{octave}</li>
         <li
           key={startNote + 11}
@@ -145,6 +166,7 @@ export default class KeyboardOctave extends React.Component {
           onClick={this.onClick.bind(this)}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseUp={this.onMouseUp.bind(this)}
+          onMouseLeave={this.onMouseLeave.bind(this)}
         >Ais{octave}</li>
         {additionalC}
       </ul>

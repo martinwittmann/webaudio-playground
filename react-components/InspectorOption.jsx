@@ -18,15 +18,14 @@ export default class InspectorOption extends React.Component {
   }
 
   componentWillMount() {
-    this.onSelectChanged = this.onSelectChanged.bind(this);
-    this.props.option.registerChangeCallback(this.onSelectChanged);
+    this.props.option.registerChangeCallback(this.onSelectChanged, this);
   }
 
   componentWillUnmount() {
     this.props.option.unregisterChangeCallback(this.onSelectChanged);
   }
 
-  onSelectChange(newValue) {
+  onChange(newValue) {
     // This is the onChange event of the select dom node.
     // NOTE: We only call the set method of the option. This handles calling all
     //       necessary components.
@@ -70,7 +69,7 @@ export default class InspectorOption extends React.Component {
         item = (
           <Select
             options={this.props.option.getChoices()}
-            onChange={this.onSelectChange.bind(this)}
+            onChange={this.onChange.bind(this)}
             value={this.state.value}
           />
         );
@@ -81,7 +80,7 @@ export default class InspectorOption extends React.Component {
         item = (
           <Checkbox
             label={this.props.option.label}
-            onChange={this.onCheckboxtChange.bind(this)}
+            onChange={this.onChange.bind(this)}
             value={this.state.value}
           />
         );
@@ -94,7 +93,7 @@ export default class InspectorOption extends React.Component {
             min={this.props.option.range[0]}
             max={this.props.option.range[1]}
             step="0.01"
-            onChange={this.onNumberChange.bind(this)}
+            onChange={this.onChange.bind(this)}
             value={this.state.value}
           />
         );

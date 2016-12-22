@@ -16,8 +16,7 @@ export default class InspectorOptionDetails extends React.Component {
 
   componentWillMount() {
     if (!this.props.component.inSidebar) {
-      this.onCanvasUiInputTypeChanged = this.onCanvasUiInputTypeChanged.bind(this);
-      this.props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged);
+      this.props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged, this);
     }
   }
 
