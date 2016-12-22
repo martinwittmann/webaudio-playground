@@ -14,7 +14,16 @@ export default class InspectorOptionDetails extends React.Component {
     };
 
     this.onCanvasUiInputTypeChanged = this.onCanvasUiInputTypeChanged.bind(this);
-    props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged);
+  }
+
+  componentWillMount() {
+    if (!this.props.component.inSidebar) {
+      this.props.option.registerChangeCallback(this.onCanvasUiInputTypeChanged);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.option.unregisterChangeCallback(this.onCanvasUiInputTypeChanged);
   }
 
   exposeAsInputChanged(ev) {
@@ -69,10 +78,6 @@ export default class InspectorOptionDetails extends React.Component {
   onCanvasUiInputTypeChanged(optionValue, option) {
     // The callback that gets called from component-option when something changes.
     let newInputType = option.exposeToCanvasUi.inputType;
-    if (newInputType == this.state.exposeToCanvasUi.inputType) {
-      return;
-    }
-
     let exposeToCanvasUiSettings = this.state.exposeToCanvasUi;
     exposeToCanvasUiSettings.inputType = newInputType;
 

@@ -13,8 +13,8 @@ export default class audioComponentOption {
     this.exposeToUserUi = data.exposeToUserUi;
     this.range = data.range;
 
-    if ('function' == changeCallback) {
-      this.registerChangeCallback(callback);
+    if ('function' ==  typeof changeCallback) {
+      this.registerChangeCallback(changeCallback);
     }
   }
 
@@ -28,6 +28,15 @@ export default class audioComponentOption {
   }
 
   unregisterChangeCallback(index) {
+    if ('function' == typeof index) {
+      index = this.onChangeCallbacks.indexOf(index);
+    }
+
+    if (index < 0) {
+      console.log('unregisterChangeCallback(): Invalid index ' + index);
+      return false;
+    }
+
     this.onChangeCallbacks.splice(index, 1);
   }
 

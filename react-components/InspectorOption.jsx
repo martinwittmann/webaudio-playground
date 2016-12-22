@@ -20,7 +20,10 @@ export default class InspectorOption extends React.Component {
     };
 
     this.onSelectChanged = this.onSelectChanged.bind(this);
-    props.option.registerChangeCallback(this.onSelectChanged);
+  }
+
+  componentWillMount() {
+    this.props.option.registerChangeCallback(this.onSelectChanged);
   }
 
   componentWillUnmount() {
