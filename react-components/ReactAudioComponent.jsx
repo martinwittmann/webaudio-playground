@@ -13,8 +13,6 @@ export default class ReactAudioComponent extends React.Component {
     if (props.component.initState) {
       this.state = props.component.initState();
     }
-
-    this.state.connectableIos = props.connectableIos;
   }
 
   handleChildEvent(type, ...args) {
@@ -35,7 +33,7 @@ export default class ReactAudioComponent extends React.Component {
         break;
 
       case 'create-connection':
-        this.props.emitEvent('create-connection', this, args[0], args[1]);
+        this.props.emitEvent('create-connection', args[0], args[1]);
         break;
 
       case 'stop-connecting':
@@ -198,7 +196,6 @@ export default class ReactAudioComponent extends React.Component {
         <ReactAudioComponentInputs
           inputs={this.state.inputs}
           handleEvent={this.handleChildEvent.bind(this)}
-          connectableIos={this.props.connectableIos}
           settings={this.props.settings}
           container={this.props.container}
           reactAudioComponent={this}
@@ -210,7 +207,6 @@ export default class ReactAudioComponent extends React.Component {
         <ReactAudioComponentOutputs
           outputs={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
-          connectableIos={this.props.connectableIos}
           settings={this.props.settings}
           container={this.props.container}
           reactAudioComponent={this}

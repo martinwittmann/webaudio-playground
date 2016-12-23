@@ -44,13 +44,6 @@ export default class ReactAudioComponentInputs extends React.Component {
         cls.push('connecting');
       }
 
-      if (this.props.connectableIos && this.props.connectableIos.type && this.props.connectableIos.ioType) {
-        if (input.type == this.props.connectableIos.type && input.ioType == this.props.connectableIos.ioType) {
-          cls.push('connectable');
-          connectable = true;
-        }
-      }
-
       if (this.state.connected) {
         cls.push('connected');
       }
@@ -81,7 +74,6 @@ export default class ReactAudioComponentInputs extends React.Component {
               this.props.container.connectableIos[input.id] = {
                 io: input,
                 ioComponent: this,
-                reactAudioComponent: this.props.reactAudioComponent,
                 left: rect.left,
                 top: rect.top
               };
