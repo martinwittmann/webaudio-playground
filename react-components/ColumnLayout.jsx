@@ -213,6 +213,7 @@ class ColumnLayout extends React.Component {
     let components = React.createElement(ComponentsContainer, {
       settings: this.props.settings,
       connectionLinesComponent: connectionLines,
+      connectableIos: connectableIos,
       emitEventToLayout: this.props.emitEventToLayout
     });
 

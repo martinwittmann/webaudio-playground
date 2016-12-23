@@ -270,15 +270,13 @@ export default class ComponentsContainer extends React.Component {
 
   render() {
     let components = this.props.settings.components.map(component => {
-      let selected = this.state.selectedComponent && this.state.selectedComponent == component.id;
       return (<ReactAudioComponent
         key={component.id}
         component={component}
         emitEvent={this.handleEvent.bind(this)}
-        connectableIos={connectableIos}
+        connectableIos={this.props.connectableIos}
         settings={this.props.settings}
         container={this}
-        selected={selected}
       />);
     });
 

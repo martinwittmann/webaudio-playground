@@ -9,12 +9,13 @@ export default class ComponentConnectionLines extends React.Component {
     let lines = false;
     let canvas = document.querySelector(this.props.settings.canvasSelector);
 
-    if (!canvas) {
-      return false;
-    }
+    if (Array.isArray(this.props.lines) && this.props.lines.length > 0) {
+      if (!canvas) {
+        console.log('No canvas domNode for audio components found. Cannot render connection lines without canvas.getBoundingClientRect().');
+        return false;
+      }
+      let canvasRect = canvas.getBoundingClientRect();
 
-    let canvasRect = canvas.getBoundingClientRect();
-    if (this.props.lines) {
       lines = this.props.lines.map(line => {
         return (
           <line key={line.outputId + '--' + line.inputId}

@@ -173,7 +173,7 @@ export default class ReactAudioComponent extends React.Component {
     };
 
     let cls = ['audio-component', this.props.component.type];
-    if (this.props.selected) {
+    if (this.props.settings.selectedComponentId == this.props.component.id) {
       cls.push('selected');
     }
 
