@@ -42,6 +42,11 @@ export default class ComponentConnectionLines extends React.Component {
       ));
 
     }
-    return (<g className="connection-lines">{lines}</g>);
+    return (
+      <svg className="components-connections" width="100%" height="100%">
+        <g className="connection-lines">{lines}</g>
+      </svg>
+    );
+
   }
 }

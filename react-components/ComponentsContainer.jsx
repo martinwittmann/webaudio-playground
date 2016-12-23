@@ -1,27 +1,9 @@
 import React from 'react';
 import ReactAudioComponent from './ReactAudioComponent.jsx';
-import ComponentConnectionLines from './ComponentConnectionLines.jsx';
 
 export default class ComponentsContainer extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isConnectingComponents: false,
-      sourceComponent: false,
-      sourceIoComponent: false,
-      sourceIo: false,
-      connectableIoType: false,
-      connectableType: false,
-      connectionLines: [],
-      canvasSelector: props.settings.canvasSelector,
-      selectedComponent: false
-    };
-
-    // This is used while starting a connection and holds all possible connection
-    // io endpoints and their coordinates to allow snapping into close ios.
-    this.connectableIos = {};
-    this.snappedToConnectingIo = false;
   }
 
   selectComponent(reactAudioComponent) {
@@ -287,16 +269,6 @@ export default class ComponentsContainer extends React.Component {
   }
 
   render() {
-    const { x, y, connectDropTarget, isOver } = this.props;
-
-    let connectableIos = {};
-    if (this.state.connectableIoType) {
-      connectableIos.ioType = this.state.connectableIoType;
-    }
-    if (this.state.connectableType) {
-      connectableIos.type = this.state.connectableType;
-    }
-
     let components = this.props.settings.components.map(component => {
       let selected = this.state.selectedComponent && this.state.selectedComponent == component.id;
       return (<ReactAudioComponent
@@ -310,42 +282,7 @@ export default class ComponentsContainer extends React.Component {
       />);
     });
 
-    let connectingLine = false;
     let cls = [this.props.settings.canvasSelector.replace(/\./, '')];
-
-    if (this.state.isConnectingComponents) {
-      cls.push('connecting');
-
-      if (this.state.currentMousePos) {
-        let containerRect = this.getContainerRect();
-        let rawMouseX = this.state.currentMousePos.x - containerRect.left;
-        let rawMouseY = this.state.currentMousePos.y - containerRect.top;
-
-        connectingLine = {
-          x1: this.connectingFromIoPos.x - containerRect.left,
-          y1: this.connectingFromIoPos.y - containerRect.top,
-          x2: rawMouseX,
-          y2: rawMouseY
-        };
-
-
-        // Try snapping to a close connectable io.
-        let snapSize = this.props.settings.snapSize;
-        this.snappedToConnectingIo = false;
-        for (let id in this.connectableIos) {
-          let io = this.connectableIos[id];
-          io.ioComponent.isSnapped = false;
-          if (Math.abs(io.left - containerRect.left - rawMouseX) < snapSize && Math.abs(io.top - containerRect.top - rawMouseY) < snapSize) {
-            this.snappedToConnectingIo = io;
-            // We can't call io.ioComponent.setState because that's not allowed 
-            // in a render function in react and will throw an error.
-            io.ioComponent.isSnapped = true;
-            connectingLine.x2 = io.left - containerRect.left + this.props.settings.ioOffset;
-            connectingLine.y2 = io.top - containerRect.top + this.props.settings.ioOffset;
-          }
-        }
-      }
-    }
 
     return (
       <div
@@ -355,13 +292,6 @@ export default class ComponentsContainer extends React.Component {
         onDragOver={this.onDragOverContainer.bind(this)}
         onClick={this.onClick.bind(this)}
       >
-        <svg className="components-connections" width="100%" height="100%">
-          <ComponentConnectionLines
-            lines={this.state.connectionLines}
-            settings={this.props.settings}
-            connectingLine={connectingLine}
-          />
-        </svg>
         {components}
       </div>
     );

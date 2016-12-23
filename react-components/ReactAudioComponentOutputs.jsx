@@ -76,7 +76,6 @@ export default class ReactAudioComponentOutputs extends React.Component {
               bottom: rect.bottom,
               left: rect.left
             };
-            console.log(rect);
 
             if (connectable) {
               this.props.container.connectableIos[output.id] = {

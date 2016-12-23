@@ -10,14 +10,14 @@ export default class Inspector extends React.Component {
   }
 
   render() {
-    let selection = this.props.selection;
+    let selectedComponent = this.props.selectedComponent;
     let options;
 
-    if (!selection) {
+    if (!selectedComponent) {
        options = 'Select a component to edit it\'s options.';
     }
     else {
-      let component = selection.props.component;
+      let component = selectedComponent.props.component;
       options = component.options.map(option => {
         return (
           <li key={option.id}>
