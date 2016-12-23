@@ -29,6 +29,9 @@ export default class ComponentConnectionLines extends React.Component {
           />);
       });
     }
+    else {
+      lines = [];
+    }
 
     if (this.props.connectingLine) {
       lines.push((

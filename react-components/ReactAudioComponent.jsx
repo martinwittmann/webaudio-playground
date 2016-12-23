@@ -156,7 +156,7 @@ export default class ReactAudioComponent extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.props.inSidebar) {
-      this.props.container.updateComponentConnectionLines(this, 0, 0);    
+      //this.props.container.updateComponentConnectionLines(this, 0, 0);    
     }
   }
 
