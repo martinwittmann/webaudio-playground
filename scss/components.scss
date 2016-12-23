@@ -226,3 +226,26 @@ $octave-width: 7 * $key-width;
   list-style-type: none;
   list-style-image: none;
 }
+
+.connectable-io {
+  opacity: 1;
+
+  &.hover,
+  &:hover {
+    // Unfortunately when connecting the :hover pseudo class is not applied
+    // since technically the user is dragging the mouse.
+    // I solved this via javascript in the io components.
+    @include connectingIo();
+  }
+}
+
+$types: 'input' 'output';
+$io-types: 'midi' 'number' 'string' 'audio';
+
+@each $type in $types {
+  @each $io-type in $io-types {
+    .connect-to--#{$type}-#{$io-type} .io.#{$type}.#{$io-type} {
+      @extend .connectable-io;
+    }
+  }
+}

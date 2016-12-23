@@ -135,20 +135,14 @@ class ColumnLayout extends React.Component {
     this.connectFromComponent = reactComponent;
     this.connectFromIoComponent = ioComponent;
     this.connectFromIo = io;
-    this.connectableIoType = 'output' == io.ioType ? 'output' : 'input';
-    this.connectableType = io.type;
 
     this.setState({
-      isConnectingComponents: true
+      // We store parts of the css class we add to the container.
+      isConnectingComponents: ('output' == io.ioType ? 'input' : 'output') + '-' + io.type
     });
   }
 
   onStopConnectingComponents() {
-    this.connectFromComponent = false;
-    this.connectFromIo = false;
-    this.connectableIoType = false;
-    this.connectableType = false;
-
     // Remove the classes for marking connectable ios on the container and remove
     // the connectingLine.
     this.setState({
@@ -173,6 +167,9 @@ class ColumnLayout extends React.Component {
 
     this.snappedToConnectingIo = false;
     document.querySelector(this.canvasSelector).removeEventListener('mousemove', this.mouseMoveCallback);
+
+    this.connectFromComponent = false;
+    this.connectFromIo = false;
   }
 
   onCreateConnection(args) {
@@ -358,7 +355,7 @@ class ColumnLayout extends React.Component {
     }
   }
 
-  updateComponentConnectionLines(reactAudioComponent, deltaX, deltaY) {
+  updateComponentConnectionLines(reactAudioComponent, deltaX = 0, deltaY = 0) {
     let componentId = reactAudioComponent.props.component.id;
 
     let newConnectionLines = this.state.connectionLines.map((line, index) => {
@@ -438,8 +435,7 @@ class ColumnLayout extends React.Component {
     let cls = [this.props.settings.canvasSelector.replace(/\./, '')];
 
     if (this.state.isConnectingComponents) {
-      cls.push('connecting');
-
+      cls.push('connecting', 'connect-to--' + this.state.isConnectingComponents);
     }
 
     let connectionLines = React.createElement(ComponentConnectionLines, {

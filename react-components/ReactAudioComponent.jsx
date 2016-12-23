@@ -1,7 +1,6 @@
 import React from 'react';
 
-import ReactAudioComponentInputs from './ReactAudioComponentInputs.jsx';
-import ReactAudioComponentOutputs from './ReactAudioComponentOutputs.jsx';
+import ReactAudioComponentIos from './ReactAudioComponentIos.jsx';
 import ReactAudioComponentCanvasUi from './ReactAudioComponentCanvasUi.jsx';
 
 
@@ -193,8 +192,8 @@ export default class ReactAudioComponent extends React.Component {
         onClick={this.onClickComponent.bind(this)}
         onMouseDown={this.onMouseDown.bind(this)}
       >
-        <ReactAudioComponentInputs
-          inputs={this.state.inputs}
+        <ReactAudioComponentIos
+          ios={this.state.inputs}
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
           container={this.props.container}
@@ -204,8 +203,8 @@ export default class ReactAudioComponent extends React.Component {
         <div className="audio-component-content">
           <ReactAudioComponentCanvasUi component={this.props.component} />
         </div>
-        <ReactAudioComponentOutputs
-          outputs={this.state.outputs}
+        <ReactAudioComponentIos
+          ios={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
           container={this.props.container}
