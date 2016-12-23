@@ -38,7 +38,7 @@ export default class ComponentsContainer extends React.Component {
     this.props.emitEventToLayout('component-unselected');
   }
 
-  onStartConnectingComponents([sourceComponent, sourceIoComponent, io, mousePos]) {
+  onStartConnectingComponents([sourceComponent, sourceIoComponent, io]) {
     let connectableIoType;
     if ('output' == io.ioType) {
       connectableIoType = 'input';
@@ -52,8 +52,8 @@ export default class ComponentsContainer extends React.Component {
     }
 
     this.connectingFromIoPos = {
-      x: sourceIoComponent.coordinates.left + this.props.settings.ioOffset,
-      y: sourceIoComponent.coordinates.top + this.props.settings.ioOffset
+      x: sourceIoComponent.coordinates[io.id].left + this.props.settings.ioOffset,
+      y: sourceIoComponent.coordinates[io.id].top + this.props.settings.ioOffset
     };
 
     this.setState({
@@ -116,22 +116,20 @@ export default class ComponentsContainer extends React.Component {
     // Right now there's no technical reason for this apart from being logic.
     // We need to check component2Io since this is where the mouseUp event fired.
     if ('output' == component2Io.ioType) {
-      //component2.connectOutput(component2Io, component1Io);
       component2Io.addConnection(component1Io);
 
       outputComponent = component2IoComponent;
       inputComponent = this.state.sourceIoComponent;
-      outputId = component2.id;
-      inputId = this.state.sourceComponent.props.component.id;
+      outputId = component2Io.id;
+      inputId = component1Io.id;
     }
     else {
-      //component1.connectOutput(component1Io, component2Io);
       component1Io.addConnection(component2Io);
 
       outputComponent = this.state.sourceIoComponent;
       inputComponent = component2IoComponent;
-      outputId = this.state.sourceComponent.props.component.id;
-      inputId = component2.id;
+      outputId = component1Io.id;
+      inputId = component2Io.id;
     }
 
     let newLines = this.state.connectionLines.slice();
@@ -259,18 +257,23 @@ export default class ComponentsContainer extends React.Component {
 
   updateComponentConnectionLines(reactAudioComponent, deltaX, deltaY) {
     let componentId = reactAudioComponent.props.component.id;
+
     let newConnectionLines = this.state.connectionLines.map((line, index) => {
       // Update the io's coordinates if it belongs on any end to the moved component.
-      if (line.inputId == componentId) {
-        line.to.coordinates.left += deltaX;
-        line.to.coordinates.top += deltaY;
+      let outputComponentId = line.from.props.reactAudioComponent.props.component.id;
+      let inputComponentId = line.to.props.reactAudioComponent.props.component.id;
+
+      if (inputComponentId == componentId) {
+        line.to.coordinates[line.inputId].left += deltaX;
+        line.to.coordinates[line.inputId].top += deltaY;
       }
-      else if (line.outputId == componentId) {
-        line.from.coordinates.left += deltaX;
-        line.from.coordinates.top += deltaY;
+      else if (outputComponentId == componentId) {
+        line.from.coordinates[line.outputId].left += deltaX;
+        line.from.coordinates[line.outputId].top += deltaY;
       }
       return line;
     });
+
     this.setState({
       connectionLines: newConnectionLines
     });

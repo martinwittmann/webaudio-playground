@@ -9,6 +9,8 @@ export default class ReactAudioComponentInputs extends React.Component {
       connectable: false,
       connected: false
     };
+
+    this.coordinates = {};
   }
 
   onMouseDown(ev) {
@@ -32,21 +34,6 @@ export default class ReactAudioComponentInputs extends React.Component {
     this.setState({
       connectable: false
     });
-  }
-
-  updateCoordinates() {
-    let rect = this.domNode.getBoundingClientRect();
-    // We can't store the DOMrect directly since we need to change these
-    // values if a component gets dragged around.
-
-    this.coordinates = {
-      top: rect.top,
-      right: rect.right,
-      bottom: rect.bottom,
-      left: rect.left
-    };
-
-    return this.coordinates;
   }
 
   render() {
@@ -79,8 +66,16 @@ export default class ReactAudioComponentInputs extends React.Component {
         data-io-index={index}
         ref={(el) => {
           if (el) {
-            this.domNode = el;
-            let rect = this.updateCoordinates();
+            let rect = el.getBoundingClientRect();
+            // We can't store the DOMrect directly since we need to change these
+            // values if a component gets dragged around.
+
+            this.coordinates[input.id] = {
+              top: rect.top,
+              right: rect.right,
+              bottom: rect.bottom,
+              left: rect.left
+            };
 
             if (connectable) {
               this.props.container.connectableIos[input.id] = {

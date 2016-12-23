@@ -29,8 +29,9 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
       optionValues: newOptionValues
     });
 
-    let reactComponent = this.props.component.reactComponent;
-    reactComponent.props.container.updateComponentConnectionLines(reactComponent, 0, 0);
+    // Set the positions of all ios and the rerender all connectionlines accordingly.
+    //let reactComponent = this.props.component.reactComponent;
+    //reactComponent.props.container.updateComponentConnectionLines(reactComponent, 0, 0);
   }
 
   componentWillMount() {

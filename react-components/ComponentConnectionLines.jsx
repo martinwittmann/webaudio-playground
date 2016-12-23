@@ -19,10 +19,10 @@ export default class ComponentConnectionLines extends React.Component {
         return (
           <line key={line.outputId + '--' + line.inputId}
             className="connection-line"
-            x1={line.from.coordinates.left - canvasRect.left + this.props.settings.ioOffset}
-            y1={line.from.coordinates.top - canvasRect.top + this.props.settings.ioOffset}
-            x2={line.to.coordinates.left - canvasRect.left + this.props.settings.ioOffset}
-            y2={line.to.coordinates.top - canvasRect.top + this.props.settings.ioOffset}
+            x1={line.from.coordinates[line.outputId].left - canvasRect.left + this.props.settings.ioOffset}
+            y1={line.from.coordinates[line.outputId].top - canvasRect.top + this.props.settings.ioOffset}
+            x2={line.to.coordinates[line.inputId].left - canvasRect.left + this.props.settings.ioOffset}
+            y2={line.to.coordinates[line.inputId].top - canvasRect.top + this.props.settings.ioOffset}
             strokeWidth="2"
             stroke={this.props.settings.ioConnectionLineColor}
           />);

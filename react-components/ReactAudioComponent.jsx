@@ -139,6 +139,7 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   onClickComponent(ev) {
+    console.log(this.props);
     if (!this.props.component.inSidebar) {
       ev.stopPropagation();
       this.props.container.selectComponent(this);
@@ -154,9 +155,20 @@ export default class ReactAudioComponent extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.inSidebar) {
+      this.props.container.updateComponentConnectionLines(this, 0, 0);    
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextProps == this.props, nextProps == this.props);
+    return true;
+  }
 
   render() {
     const { connectDragSource, isDragging } = this.props;
+    console.log(this.props);
 
     let inlineStyles = {
       left: Math.round(this.state.canvasPos.x) + 'px',
