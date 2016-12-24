@@ -11,7 +11,7 @@ export default class componentIO {
 
   addConnection(toIo) {
     //this.log('Connecting ' + this.name + ' (' + this.id + ') to ' + toIo.name + ' (' + toIo.id + ')');
-    switch (this.type) {
+    switch (this.dataType) {
       case 'midi':
       case 'number':
         this.sendDataCallback = toIo.receiveDataCallback;
@@ -30,7 +30,7 @@ export default class componentIO {
   }
 
   removeConnection(toIo) {
-    switch (this.type) {
+    switch (this.dataType) {
       case 'midi':
       case 'number':
         this.sendDataCallback = false;

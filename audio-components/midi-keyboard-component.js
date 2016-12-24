@@ -8,7 +8,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
     this.type = 'midi-keyboard';
 
     this.registerOutput({
-      type: 'midi',
+      dataType: 'midi',
       name: 'Midi Out'
     });
 

@@ -7,13 +7,13 @@ export default class Midi2FrequencyComponent extends AudioComponent {
     this.type = 'midi-2-frequency';
 
     this.registerInput({
-      type: 'midi',
+      dataType: 'midi',
       name: 'Midi In',
       receiveDataCallback: this.handleMidiInput.bind(this),
     });
 
     this.registerOutput({
-      type: 'number',
+      dataType: 'number',
       name: 'Frequency out',
     });
   }

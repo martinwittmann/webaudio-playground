@@ -39,10 +39,10 @@ export default class ReactAudioComponentIos extends React.Component {
   render() {
     let ioType;
     let ios = this.props.ios.map((io, index) => {
-      let connectable = false; // Only while starting a connection: whether or not the connection can be made with this io.
-      let cls = ['io', io.ioType, io.type];
+      io.reactComponent = this;
+      let cls = ['io', io.ioType, io.dataType];
       ioType = io.ioType;
-      if (io.id == this.state.activeIO || this.isSnapped) {
+      if (io.id == this.state.activeIO || io.id == io.isSnapped) {
         cls.push('connecting');
       }
 
@@ -65,21 +65,12 @@ export default class ReactAudioComponentIos extends React.Component {
             // We can't store the DOMrect directly since we need to change these
             // values if a component gets dragged around.
 
-            this.coordinates[io.id] = {
+            io.coordinates = {
               top: rect.top,
               right: rect.right,
               bottom: rect.bottom,
               left: rect.left
             };
-
-            if (connectable) {
-              this.props.container.connectableIos[io.id] = {
-                io: io,
-                ioComponent: this,
-                left: rect.left,
-                top: rect.top
-              };
-            }
           }
         }}
       ></li>)

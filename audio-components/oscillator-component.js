@@ -21,13 +21,13 @@ export default class OscillatorComponent extends AudioComponent {
 
 
     this.registerInput({
-      type: 'number',
+      dataType: 'number',
       name: 'Frequency In',
       receiveDataCallback: this.handleFrequencyIn.bind(this)
     });
 
     this.registerOutput({
-      type: 'audio',
+      dataType: 'audio',
       name: 'Audio Out',
       audioNode: this.totalGain
     });

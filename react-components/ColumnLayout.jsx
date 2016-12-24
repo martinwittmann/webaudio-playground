@@ -21,10 +21,7 @@ class ColumnLayout extends React.Component {
     };
 
     this.canvasSelector = props.settings.canvasSelector;
-
-    // This is used while starting a connection and holds all possible connection
-    // io endpoints and their coordinates to allow snapping to close ios.
-    this.connectableIos = {};
+    this.connectableIos = [];
     this.snappedToConnectingIo = false;
 
     window.addEventListener('keydown', this.onAppKeyPress.bind(this), true);
@@ -121,11 +118,12 @@ class ColumnLayout extends React.Component {
 */
   onStartConnectingComponents([reactComponent, ioComponent, io]) {
     let ioOffset = this.props.settings.ioOffset;
+    let ioType = 'output' == io.ioType ? 'input' : 'output';
 
-    // The absolute coordinages of the io's center we're starting the connection from.
+    // The absolute coordinates of the io's center we're starting the connection from.
     this.lineFromPos = {
-      x: ioComponent.coordinates[io.id].left + ioOffset,
-      y: ioComponent.coordinates[io.id].top + ioOffset
+      x: io.coordinates.left + ioOffset,
+      y: io.coordinates.top + ioOffset
     };
 
     // Add the even handler for mouse move.
@@ -136,13 +134,30 @@ class ColumnLayout extends React.Component {
     this.connectFromIoComponent = ioComponent;
     this.connectFromIo = io;
 
+    // Get all connectable ios of all components.
+    this.connectableIos = this.props.settings.components.reduce((ios, component) => {
+      let connectableOutputs = component.outputs.filter(output => {
+        let result = output.dataType == io.dataType && output.ioType == ioType;
+        return result;
+      });
+
+      let connectableInputs = component.inputs.filter(input => {
+        let result = input.dataType == io.dataType && input.ioType == ioType;
+        return result;
+      });
+
+      return ios.concat(connectableInputs).concat(connectableOutputs);
+    }, []);
+
     this.setState({
       // We store parts of the css class we add to the container.
-      isConnectingComponents: ('output' == io.ioType ? 'input' : 'output') + '-' + io.type
+      isConnectingComponents: ioType + '-' + io.dataType
     });
   }
 
   onStopConnectingComponents() {
+    this.connectableIos = [];
+
     // Remove the classes for marking connectable ios on the container and remove
     // the connectingLine.
     this.setState({
@@ -172,31 +187,47 @@ class ColumnLayout extends React.Component {
     this.connectFromIo = false;
   }
 
-  onCreateConnection(args) {
+  onCreateConnection(connectToIo) {
     let component1Io = this.connectFromIo;
     let component2Io = args[0];
     let component2IoComponent = args[1];
     let outputComponent, inputComponent, outputId, inputId;
+    console.log(args);
+
+    let outputIo, inputIo;
 
     // We always create the connection from the output to the input.
     // Right now there's no technical reason for this apart from being logic.
     // We need to check component2Io since this is where the mouseUp event fired.
-    if ('output' == component2Io.ioType) {
+    if ('output' == connectToIo.ioType) {
+      outputIo = connectToIo;
+      inputIo = this.connectFromIo;
+
+/*
+
+
       component2Io.addConnection(component1Io);
 
       outputComponent = component2IoComponent;
       inputComponent = this.connectFromIoComponent;
       outputId = component2Io.id;
       inputId = component1Io.id;
+      */
     }
     else {
+      outputIo = this.connectFromIo;
+      inputIo = connectToIo;
+      /*
       component1Io.addConnection(component2Io);
 
       outputComponent = this.connectFromIoComponent;
       inputComponent = component2IoComponent;
       outputId = component1Io.id;
       inputId = component2Io.id;
+      */
     }
+
+    outputIo.addConnection(inputIo);
 
     let newLines = this.state.connectionLines.slice();
 
@@ -227,6 +258,7 @@ class ColumnLayout extends React.Component {
         y: ev.pageY
     };
 
+    let ioOffset = this.props.settings.ioOffset;
     let cRect = this.getContainerRect();
     let rawMouseX = this.currentMousePos.x - cRect.left;
     let rawMouseY = this.currentMousePos.y - cRect.top;
@@ -239,27 +271,26 @@ class ColumnLayout extends React.Component {
     };
 
     // Try snapping to a close connectable io.
-    let snapSize = this.props.settings.snapSize;
     // This is used when stopping creating a connection. If this is an io we will
     // connect to it.
     this.snappedToConnectingIo = false;
 
     // connectableIos is set in ReactAudioComponentInputs/Outputs.
-    for (let id in this.connectableIos) {
-      let io = this.connectableIos[id];
-      io.ioComponent.isSnapped = false;
-      let xInSnapRange = Math.abs(io.left - cRect.left - rawMouseX) < snapSize;
-      let yInSnapRange = Math.abs(io.left - cRect.left - rawMouseY) < snapSize;
+    this.connectableIos.map(io => {
+      let snapSize = this.props.settings.snapSize;
+      io.isSnapped = false;
+      let xInSnapRange = Math.abs(io.coordinates.left - cRect.left - rawMouseX) < snapSize;
+      let yInSnapRange = Math.abs(io.coordinates.top - cRect.top - rawMouseY) < snapSize;
 
       if (xInSnapRange && yInSnapRange) {
         this.snappedToConnectingIo = io;
         // We can't call io.ioComponent.setState because that's not allowed 
         // in a render function in react and will throw an error.
-        io.ioComponent.isSnapped = true;
-        connectingLine.x2 = io.left - cRect.left + ioOffset;
-        connectingLine.y2 = io.top - cRect.top + ioOffset;
+        io.isSnapped = true;
+        connectingLine.x2 = io.coordinates.left - cRect.left + ioOffset;
+        connectingLine.y2 = io.coordinates.top - cRect.top + ioOffset;
       }
-    }
+    });
 
     this.setState({
       connectingLine: connectingLine
@@ -285,6 +316,9 @@ class ColumnLayout extends React.Component {
       case 'start-connecting':
         this.onStartConnectingComponents(args);
         break;
+        /*
+
+        These should not be necessary.
 
       case 'create-connection':
         this.onCreateConnection(args);
@@ -293,6 +327,7 @@ class ColumnLayout extends React.Component {
       case 'stop-connecting':
         this.onStopConnectingComponents(args);
         break;
+        */
     }
   }
 
@@ -300,9 +335,7 @@ class ColumnLayout extends React.Component {
     if (this.state.isConnectingComponents) {
       if (this.snappedToConnectingIo) {
         // Create the connection.
-        let ioData = this.snappedToConnectingIo;
-        let args = [ioData.io, ioData.ioComponent];
-        this.onCreateConnection(args);
+        this.onCreateConnection(this.snappedToConnectingIo);
       }
 
       // We need to stop creating connections even if we just created one.

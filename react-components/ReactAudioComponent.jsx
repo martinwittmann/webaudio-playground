@@ -30,6 +30,8 @@ export default class ReactAudioComponent extends React.Component {
         let io = args[2];
         this.props.emitEvent('start-connecting', this, sourceIoComponent, io, { x: ev.pageX, y: ev.pageY});
         break;
+        /*
+        // These should not be necessary.
 
       case 'create-connection':
         this.props.emitEvent('create-connection', args[0], args[1]);
@@ -43,6 +45,7 @@ export default class ReactAudioComponent extends React.Component {
           canBeDragged: true
         });
         this.props.emitEvent('stop-connecting');
+        */
     }
   }
 
