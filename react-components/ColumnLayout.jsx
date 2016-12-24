@@ -112,11 +112,9 @@ class ColumnLayout extends React.Component {
   }
 
 /*
-* reactComponent: The ReactAudioComponent the user is starting the connection from.
-* ioComponent: The ReactAudioComponent[Inputs/Outputs] the connection is started from.
 * io: The componentIO object of the actual input/output the connection is started from.
 */
-  onStartConnectingComponents([reactComponent, ioComponent, io]) {
+  onStartConnectingComponents(io) {
     let ioOffset = this.props.settings.ioOffset;
     let ioType = 'output' == io.ioType ? 'input' : 'output';
 
@@ -126,15 +124,14 @@ class ColumnLayout extends React.Component {
       y: io.coordinates.top + ioOffset
     };
 
-    // Add the even handler for mouse move.
+    // Add the event handler for mouse move.
     this.mouseMoveCallback = this.onMouseMove.bind(this);
     document.querySelector(this.canvasSelector).addEventListener('mousemove', this.mouseMoveCallback);
 
-    this.connectFromComponent = reactComponent;
-    this.connectFromIoComponent = ioComponent;
     this.connectFromIo = io;
 
-    // Get all connectable ios of all components.
+
+    // Store all connectable ios of all components.
     this.connectableIos = this.props.settings.components.reduce((ios, component) => {
       let connectableOutputs = component.outputs.filter(output => {
         let result = output.dataType == io.dataType && output.ioType == ioType;
@@ -165,35 +162,28 @@ class ColumnLayout extends React.Component {
       connectingLine: false
     });
 
+    // Remove the class for the connecting io.
+    if (this.connectFromIo.reactComponent) {
+      this.connectFromIo.reactComponent.setState({
+        activeIO: false
+      });
+    }
+
     // Allow the component to be moved around again.
-    if (this.connectFromComponent) {
-      this.connectFromComponent.setState({
+    if (this.connectFromIo) {
+      this.connectFromIo.reactComponent.props.reactAudioComponent.setState({
         canBeDragged: true
       });
     }
 
-    // Remove the class for the connecting io.
-    if (this.connectFromIoComponent) {
-      this.connectFromIoComponent.setState({
-        activeIO: false
-      });
-      this.connectFromIoComponent = false;
-    }
-
+    // Reset snapping and stop listening to onMouseMove.
     this.snappedToConnectingIo = false;
     document.querySelector(this.canvasSelector).removeEventListener('mousemove', this.mouseMoveCallback);
 
-    this.connectFromComponent = false;
     this.connectFromIo = false;
   }
 
   onCreateConnection(connectToIo) {
-    let component1Io = this.connectFromIo;
-    let component2Io = args[0];
-    let component2IoComponent = args[1];
-    let outputComponent, inputComponent, outputId, inputId;
-    console.log(args);
-
     let outputIo, inputIo;
 
     // We always create the connection from the output to the input.
@@ -202,47 +192,26 @@ class ColumnLayout extends React.Component {
     if ('output' == connectToIo.ioType) {
       outputIo = connectToIo;
       inputIo = this.connectFromIo;
-
-/*
-
-
-      component2Io.addConnection(component1Io);
-
-      outputComponent = component2IoComponent;
-      inputComponent = this.connectFromIoComponent;
-      outputId = component2Io.id;
-      inputId = component1Io.id;
-      */
     }
     else {
       outputIo = this.connectFromIo;
       inputIo = connectToIo;
-      /*
-      component1Io.addConnection(component2Io);
-
-      outputComponent = this.connectFromIoComponent;
-      inputComponent = component2IoComponent;
-      outputId = component1Io.id;
-      inputId = component2Io.id;
-      */
     }
-
     outputIo.addConnection(inputIo);
+
 
     let newLines = this.state.connectionLines.slice();
 
     newLines.push({
-      from: outputComponent,
-      to: inputComponent,
-      outputId: outputId,
-      inputId: inputId
+      from: outputIo,
+      to: inputIo
     });
 
-    this.connectFromIoComponent.setState({
+    outputIo.reactComponent.setState({
       connected: true
     });
 
-    component2IoComponent.setState({
+    inputIo.reactComponent.setState({
       connected: true
     });
 
@@ -314,20 +283,8 @@ class ColumnLayout extends React.Component {
   handleEvent(type, ...args) {
     switch (type) {
       case 'start-connecting':
-        this.onStartConnectingComponents(args);
+        this.onStartConnectingComponents(args[0]);
         break;
-        /*
-
-        These should not be necessary.
-
-      case 'create-connection':
-        this.onCreateConnection(args);
-        break;
-
-      case 'stop-connecting':
-        this.onStopConnectingComponents(args);
-        break;
-        */
     }
   }
 
@@ -389,6 +346,9 @@ class ColumnLayout extends React.Component {
   }
 
   updateComponentConnectionLines(reactAudioComponent, deltaX = 0, deltaY = 0) {
+    console.log('TODO: updateComponentConnectionLines');
+    return;
+    /*
     let componentId = reactAudioComponent.props.component.id;
 
     let newConnectionLines = this.state.connectionLines.map((line, index) => {
@@ -410,6 +370,7 @@ class ColumnLayout extends React.Component {
     this.setState({
       connectionLines: newConnectionLines
     });
+    */
   }
 
   getContainerRect() {

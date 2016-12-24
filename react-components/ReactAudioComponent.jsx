@@ -15,37 +15,15 @@ export default class ReactAudioComponent extends React.Component {
   }
 
   handleChildEvent(type, ...args) {
-    let outputData, ev;
     switch (type) {
       case 'start-connecting':
-        ev = args[0];
-        ev.preventDefault();
-        outputData = this.parseOutputIdAttribute(ev.target.getAttribute('id'));
-
         this.setState({
           canBeDragged: false
         });
         
-        let sourceIoComponent = args[1];
-        let io = args[2];
-        this.props.emitEvent('start-connecting', this, sourceIoComponent, io, { x: ev.pageX, y: ev.pageY});
+        let io = args[0];
+        this.props.emitEvent('start-connecting', io);
         break;
-        /*
-        // These should not be necessary.
-
-      case 'create-connection':
-        this.props.emitEvent('create-connection', args[0], args[1]);
-        break;
-
-      case 'stop-connecting':
-        ev = args[0];
-        ev.preventDefault();
-
-        this.setState({
-          canBeDragged: true
-        });
-        this.props.emitEvent('stop-connecting');
-        */
     }
   }
 
@@ -199,7 +177,6 @@ export default class ReactAudioComponent extends React.Component {
           ios={this.state.inputs}
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
-          container={this.props.container}
           reactAudioComponent={this}
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
@@ -210,7 +187,6 @@ export default class ReactAudioComponent extends React.Component {
           ios={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
-          container={this.props.container}
           reactAudioComponent={this}
         />
       </div>

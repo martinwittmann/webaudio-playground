@@ -8,6 +8,7 @@ export default class ComponentConnectionLines extends React.Component {
   render() {
     let lines = false;
     let canvas = document.querySelector(this.props.settings.canvasSelector);
+    let ioOffset = this.props.settings.ioOffset;
 
     if (Array.isArray(this.props.lines) && this.props.lines.length > 0) {
       if (!canvas) {
@@ -17,13 +18,15 @@ export default class ComponentConnectionLines extends React.Component {
       let canvasRect = canvas.getBoundingClientRect();
 
       lines = this.props.lines.map(line => {
+        // line.from is the output's componentIO.
+        // line.to is the input's componentIO.
         return (
-          <line key={line.outputId + '--' + line.inputId}
+          <line key={line.from.id + '--' + line.to.id}
             className="connection-line"
-            x1={line.from.coordinates[line.outputId].left - canvasRect.left + this.props.settings.ioOffset}
-            y1={line.from.coordinates[line.outputId].top - canvasRect.top + this.props.settings.ioOffset}
-            x2={line.to.coordinates[line.inputId].left - canvasRect.left + this.props.settings.ioOffset}
-            y2={line.to.coordinates[line.inputId].top - canvasRect.top + this.props.settings.ioOffset}
+            x1={line.from.coordinates.left - canvasRect.left + ioOffset}
+            y1={line.from.coordinates.top - canvasRect.top + ioOffset}
+            x2={line.to.coordinates.left - canvasRect.left + ioOffset}
+            y2={line.to.coordinates.top - canvasRect.top + ioOffset}
             strokeWidth="2"
             stroke={this.props.settings.ioConnectionLineColor}
           />);

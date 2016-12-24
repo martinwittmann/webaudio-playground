@@ -14,7 +14,9 @@ export default class ReactAudioComponentIos extends React.Component {
   }
 
   onMouseDown(ev) {
-    this.props.handleEvent('start-connecting', ev, this, this.props.ios[ev.target.dataset.ioIndex]);
+    ev.preventDefault();
+    this.props.handleEvent('start-connecting', this.props.ios[ev.target.dataset.ioIndex]);
+    
     this.setState({
       activeIO: ev.target.id
     });
