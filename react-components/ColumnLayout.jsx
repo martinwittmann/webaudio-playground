@@ -16,13 +16,17 @@ class ColumnLayout extends React.Component {
     this.state = {
       currentTab: 'add-components',
       isConnectingComponents: false,
-      connectionLines: [],
       selectedComponent: false
     };
 
+    this.connectionLines = [];
     this.canvasSelector = props.settings.canvasSelector;
     this.connectableIos = [];
     this.snappedToConnectingIo = false;
+
+    this.childComponents = {
+      connectionLines: false
+    };
 
     window.addEventListener('keydown', this.onAppKeyPress.bind(this), true);
   }
@@ -158,7 +162,10 @@ class ColumnLayout extends React.Component {
     // Remove the classes for marking connectable ios on the container and remove
     // the connectingLine.
     this.setState({
-      isConnectingComponents: false,
+      isConnectingComponents: false
+    });
+
+    this.childComponents.connectionLines.setState({
       connectingLine: false
     });
 
@@ -200,9 +207,7 @@ class ColumnLayout extends React.Component {
     outputIo.addConnection(inputIo);
 
 
-    let newLines = this.state.connectionLines.slice();
-
-    newLines.push({
+    this.connectionLines.push({
       from: outputIo,
       to: inputIo
     });
@@ -215,8 +220,10 @@ class ColumnLayout extends React.Component {
       connected: true
     });
 
-    this.setState({
-      connectionLines: newLines
+    // Update the connection lines.    
+    console.log(this);
+    this.childComponents.connectionLines.setState({
+      lines: this.connectionLines
     });
   }
 
@@ -261,7 +268,7 @@ class ColumnLayout extends React.Component {
       }
     });
 
-    this.setState({
+    this.childComponents.connectionLines.setState({
       connectingLine: connectingLine
     });
   }
@@ -345,32 +352,26 @@ class ColumnLayout extends React.Component {
     }
   }
 
-  updateComponentConnectionLines(reactAudioComponent, deltaX = 0, deltaY = 0) {
-    console.log('TODO: updateComponentConnectionLines');
-    return;
-    /*
+  moveComponentConnectionLines(reactAudioComponent, deltaX = 0, deltaY = 0) {
     let componentId = reactAudioComponent.props.component.id;
 
-    let newConnectionLines = this.state.connectionLines.map((line, index) => {
+    let newConnectionLines = this.connectionLines.map((line, index) => {
       // Update the io's coordinates if it belongs on any end to the moved component.
-      let outputComponentId = line.from.props.reactAudioComponent.props.component.id;
-      let inputComponentId = line.to.props.reactAudioComponent.props.component.id;
 
-      if (inputComponentId == componentId) {
+      if (line.to.id == componentId) {
         line.to.coordinates[line.inputId].left += deltaX;
         line.to.coordinates[line.inputId].top += deltaY;
       }
-      else if (outputComponentId == componentId) {
+      else if (line.from.id == componentId) {
         line.from.coordinates[line.outputId].left += deltaX;
         line.from.coordinates[line.outputId].top += deltaY;
       }
       return line;
     });
 
-    this.setState({
+    this.childComponents.connectionLines.setState({
       connectionLines: newConnectionLines
     });
-    */
   }
 
   getContainerRect() {
@@ -432,11 +433,12 @@ class ColumnLayout extends React.Component {
       cls.push('connecting', 'connect-to--' + this.state.isConnectingComponents);
     }
 
-    let connectionLines = React.createElement(ComponentConnectionLines, {
-      lines: this.state.connectionLines,
-      settings: this.props.settings,
-      connectingLine: this.state.connectingLine
-    });
+    let connectionLines = (<ComponentConnectionLines
+      lines={this.state.connectionLines}
+      settings={this.props.settings}
+      connectingLine={this.state.connectingLine}
+      container={this}
+    />);
 
     let components = this.props.settings.components.map(component => {
       return (<ReactAudioComponent

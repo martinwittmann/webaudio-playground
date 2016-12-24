@@ -30,8 +30,10 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     });
 
     // Set the positions of all ios and the rerender all connectionlines accordingly.
-    //let reactComponent = this.props.component.reactComponent;
-    //reactComponent.props.container.updateComponentConnectionLines(reactComponent, 0, 0);
+    let container = this.props.component.reactComponent.props.container;
+    container.childComponents.connectionLines.setState({
+      lines: container.connectionLines
+    });
   }
 
   componentWillMount() {

@@ -3,6 +3,13 @@ import React from 'react';
 export default class ComponentConnectionLines extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      lines: props.lines,
+      connectingLine: props.connectingLine
+    };
+
+    props.container.childComponents.connectionLines = this;
   }
 
   render() {
@@ -10,14 +17,14 @@ export default class ComponentConnectionLines extends React.Component {
     let canvas = document.querySelector(this.props.settings.canvasSelector);
     let ioOffset = this.props.settings.ioOffset;
 
-    if (Array.isArray(this.props.lines) && this.props.lines.length > 0) {
+    if (Array.isArray(this.state.lines) && this.state.lines.length > 0) {
       if (!canvas) {
         console.log('No canvas domNode for audio components found. Cannot render connection lines without canvas.getBoundingClientRect().');
         return false;
       }
       let canvasRect = canvas.getBoundingClientRect();
 
-      lines = this.props.lines.map(line => {
+      lines = this.state.lines.map(line => {
         // line.from is the output's componentIO.
         // line.to is the input's componentIO.
         return (
@@ -36,13 +43,13 @@ export default class ComponentConnectionLines extends React.Component {
       lines = [];
     }
 
-    if (this.props.connectingLine) {
+    if (this.state.connectingLine) {
       lines.push((
         <line key="connecting-line"
-          x1={this.props.connectingLine.x1}
-          y1={this.props.connectingLine.y1}
-          x2={this.props.connectingLine.x2}
-          y2={this.props.connectingLine.y2}
+          x1={this.state.connectingLine.x1}
+          y1={this.state.connectingLine.y1}
+          x2={this.state.connectingLine.x2}
+          y2={this.state.connectingLine.y2}
           strokeWidth="2"
           stroke={this.props.settings.ioConnectionLineColor}
         />

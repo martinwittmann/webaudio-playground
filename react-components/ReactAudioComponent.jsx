@@ -113,7 +113,7 @@ export default class ReactAudioComponent extends React.Component {
     this.state.dragData.lastDragY = ev.pageY;
 
     // We use the already calculated position delta and apply it to all ios.
-    this.props.container.updateComponentConnectionLines(this, deltaX, deltaY);
+    this.props.container.moveComponentConnectionLines(this, deltaX, deltaY);
   }
 
   onClickComponent(ev) {
@@ -130,12 +130,6 @@ export default class ReactAudioComponent extends React.Component {
     this.setState({
       canvasPos: pos
     });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (!this.props.inSidebar) {
-      //this.props.container.updateComponentConnectionLines(this, 0, 0);    
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
