@@ -83,15 +83,7 @@ class ColumnLayout extends React.Component {
   }
 
   handleEvent(type, ...args) {
-
     switch (type) {
-      case 'component-selected':
-        this.setState({
-          selectedComponent: args[0],
-          currentTab: 'inspector'
-        });
-        break;
-
       case 'component-unselected':
         this.setState({
           selectedComponent: false,
@@ -105,13 +97,15 @@ class ColumnLayout extends React.Component {
 
   selectComponent(reactAudioComponent) {
     this.setState({
-      selectedComponent: reactAudioComponent.props.component.id
+      selectedComponent: reactAudioComponent,
+      currentTab: 'inspector'
     });
   }
 
   unselectComponent() {
     this.setState({
-      selectedComponent: false
+      selectedComponent: false,
+      currentTab: 'add-components'
     });
   }
 

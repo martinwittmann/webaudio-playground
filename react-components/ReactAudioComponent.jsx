@@ -132,8 +132,12 @@ export default class ReactAudioComponent extends React.Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
+  componentDidMount() {
+    if (this.props.container) {
+      this.props.container.childComponents.connectionLines.setState({
+        lines: this.props.container.connectionLines
+      });
+    }
   }
 
   render() {
@@ -145,9 +149,11 @@ export default class ReactAudioComponent extends React.Component {
     };
 
     let cls = ['audio-component', this.props.component.type];
-    if (this.props.settings.selectedComponentId == this.props.component.id) {
+    if (this.props.container && this.props.container.state.selectedComponent == this) {
       cls.push('selected');
     }
+
+    console.log('render');
 
     return (
       <div
