@@ -21,11 +21,10 @@ export default class componentsRegistry {
 
     // Register components:
     
-    // 1. Create and import the audio-component derived class
-    // 2. Call this.registerComponentType for the new type
-    // 3. Create the corresponding react component
+    // 1. Create and import the audio-component derived class.
+    // 2. Add a unique id and the class name to componentTypes below.
+    // 3. Create the corresponding react component.
     // 4. Import the react component in the ReactAudioComponent.jsx component.
-    // 5. Add render code in ReactAudioComponent.jsx::render()
 
     let componentTypes = {
       'audio-out': AudioOutComponent,

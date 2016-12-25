@@ -25,6 +25,7 @@ export default class MidiKeyboard extends React.Component {
 
   render() {
     // This should be the c'.
+
     return (
       <div className="keyboard-content octaves-2">
         <KeyboardOctave startNote={60} emitEvent={this.handleEvent.bind(this)} />

@@ -440,7 +440,9 @@ export default class AudioComponent {
 
   addOption(optionData, changeCallback, changeCallbackThis) {
     this.options.push(new audioComponentOption(optionData, (value, option) => {
-      changeCallback.apply(changeCallbackThis, [value, option]);
+      if (changeCallback) {
+        changeCallback.apply(changeCallbackThis, [value, option]);
+      }
     }));
   }
 

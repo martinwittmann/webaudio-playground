@@ -104,13 +104,14 @@ export default class InspectorOption extends React.Component {
         break;
 
       case 'none':
+      case 'keyboard':
         // We allow setting options to type none if the only thing a user can do
         // is to toggle the option detail settings.
         item = false;
         break;
 
       default:
-        console.log('InspectorOption::render(): inknown option type ' + this.props.option.getType());
+        console.log('InspectorOption::render(): unknown option type ' + this.props.option.getType());
         return false;
     }
 

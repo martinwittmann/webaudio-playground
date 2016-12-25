@@ -111,16 +111,24 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             break;
 
           case 'Keyboard':
+            let keyboardOctaves = [];
+            let startNote = 60;
+            for (let i=0;i<option.settings.octaves;i++) {
+              keyboardOctaves.push((
+                <KeyboardOctave
+                  key={i}
+                  startNote={startNote + 12 * i}
+                  emitEvent={this.props.component.createAndSendMidiMessage.bind(this.props.component)}
+                />
+              ));
+            }
+
             return (
               <li
                 key={option.id}
-                className="keyboard-content octaves-1"
+                className={'keyboard-content octaves-' + option.settings.octaves}
               >
-                <KeyboardOctave
-                  startNote={60}
-                  emitEvent={this.props.component.createAndSendMidiMessage.bind(this.props.component)}
-                  onChange={this.onChange.bind(this)}
-                />
+                {keyboardOctaves}
               </li>
             );
             break;

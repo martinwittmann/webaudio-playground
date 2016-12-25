@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from './ui-components/Select.jsx';
+import NumberInput from './ui-components/NumberInput.jsx';
 
 export default class InspectorOptionDetails extends React.Component {
   constructor(props) {
@@ -84,6 +85,10 @@ export default class InspectorOptionDetails extends React.Component {
     });
   }
 
+  onOptionSettingChanged(newValue, option, settingName) {
+    option.updateSetting(settingName, newValue);
+  }
+
   render() {
     let item;
     let canvasUiSettings;
@@ -106,6 +111,22 @@ export default class InspectorOptionDetails extends React.Component {
         case 'boolean':
           // Since this is a boolean option, we don't need an additional input
           // and use the 'Expose...' input directly.
+          break;
+
+        case 'keyboard':
+          canvasUiSettings = (
+            <div className="component-option-canvas-ui-settings">
+              <label className="component-option-canvas-ui-settings-label">Octaves</label>
+              <NumberInput
+                defaultValue={this.props.option.settings.octaves}
+                min="1"
+                max="8"
+                onChange={value => {
+                  this.onOptionSettingChanged(value, this.props.option, 'octaves');
+                }}
+              />
+            </div>
+          );
           break;
       }
     }

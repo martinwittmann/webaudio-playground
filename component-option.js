@@ -12,6 +12,7 @@
     this.exposeToCanvasUi = data.exposeToCanvasUi;
     this.exposeToUserUi = data.exposeToUserUi;
     this.range = data.range;
+    this.settings = data.settings;
 
     if ('function' ==  typeof changeCallback) {
       this.registerChangeCallback(changeCallback, changeCallbackThis);
@@ -58,17 +59,15 @@
 
   setValue(value) {
     this.value = value;
-
-    // Notify all subscribed callbacks.
-    this.onChangeCallbacks.map(callback => {
-      callback.callback.apply(callback.bindTo, [value, this]);
-    });
+    this.notifyChangeCallbacks();
   }
 
   setCanvasUiInputType(newInputType) {
     this.exposeToCanvasUi.inputType = newInputType;
+    this.notifyChangeCallbacks();
+  }
 
-    // Notify all subscribed callbacks.
+  notifyChangeCallbacks() {
     this.onChangeCallbacks.map(callback => {
       callback.callback.apply(callback.bindTo, [this.value, this]);
     });
@@ -80,6 +79,15 @@
 
   getType() {
     return this.type;
+  }
+
+  updateSetting(setting, value) {
+    if ('undefined' == typeof this.settings[setting]) {
+      return false;
+    }
+
+    this.settings[setting] = value;
+    this.notifyChangeCallbacks();
   }
 
   getChoices() {
