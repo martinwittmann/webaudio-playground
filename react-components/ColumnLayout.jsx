@@ -215,7 +215,6 @@ class ColumnLayout extends React.Component {
     });
 
     // Update the connection lines.    
-    console.log(this);
     this.childComponents.connectionLines.setState({
       lines: this.connectionLines
     });

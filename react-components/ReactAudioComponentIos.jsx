@@ -10,6 +10,7 @@ export default class ReactAudioComponentIos extends React.Component {
       connected: false
     };
 
+    props.reactAudioComponent.childComponents[props.ioType] = this;
     this.coordinates = {};
   }
 
@@ -38,6 +39,31 @@ export default class ReactAudioComponentIos extends React.Component {
     });
   }
 
+  updateAllIoCoordinates() {
+    this.props.ios.map(io => {
+      if (io.domNode) {
+        console.log(io.id, io.coordinates, this.getIoClientRect(io.domNode), io.domNode);
+        io.coordinates = this.getIoClientRect(io.domNode);
+      }
+      else {
+        console.log('updateAllIoCoordinates(): Could not find domNode for io ' + io.id);
+      }
+    });
+  }
+
+  getIoClientRect(domNode) {
+    if (!domNode || !domNode.getBoundingClientRect) {
+      return false;
+    }
+    let rect = domNode.getBoundingClientRect();
+    return {
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      left: rect.left
+    };
+  }
+
   render() {
     let ioType;
     let ios = this.props.ios.map((io, index) => {
@@ -63,16 +89,8 @@ export default class ReactAudioComponentIos extends React.Component {
         data-io-index={index}
         ref={(el) => {
           if (el) {
-            let rect = el.getBoundingClientRect();
-            // We can't store the DOMrect directly since we need to change these
-            // values if a component gets dragged around.
-
-            io.coordinates = {
-              top: rect.top,
-              right: rect.right,
-              bottom: rect.bottom,
-              left: rect.left
-            };
+            io.domNode = el;
+            io.coordinates = this.getIoClientRect(el);
           }
         }}
       ></li>)

@@ -28,12 +28,6 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     this.setState({
       optionValues: newOptionValues
     });
-
-    // Set the positions of all ios and the rerender all connectionlines accordingly.
-    let container = this.props.component.reactComponent.props.container;
-    container.childComponents.connectionLines.setState({
-      lines: container.connectionLines
-    });
   }
 
   componentWillMount() {
@@ -52,6 +46,19 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
         option.unregisterChangeCallback(this.optionChanged);
       });
     }
+  }
+
+  componentDidUpdate() {
+    if (this.props.component.inSidebar) {
+      return false;
+    }
+
+    let reactComponent = this.props.component.reactComponent;
+    let container = reactComponent.props.container;
+
+    reactComponent.childComponents.inputs.updateAllIoCoordinates();
+    reactComponent.childComponents.outputs.updateAllIoCoordinates();
+    container.moveComponentConnectionLines(reactComponent);
   }
 
   render() {

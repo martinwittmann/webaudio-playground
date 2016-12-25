@@ -9,45 +9,11 @@ export default class ReactAudioComponent extends React.Component {
     super(props);
     props.component.reactComponent = this;
     this.myId = Math.ceil(Math.random() * 10000);
-
-    //console.log('constructing ' + this.myId, props);
+    this.childComponents = {};
 
     if (props.component.initState) {
       this.state = props.component.initState();
     }
-  }
-
-/*
-  componentWillMount() {
-    if (!this.props.component.inSidebar) {
-      this.props.component.options.map(option => {
-        option.registerChangeCallback(this.componentOptionChanged, this);
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.component.inSidebar) {
-      this.props.component.options.map(option => {
-        option.registerChangeCallback(this.componentOptionChanged, this);
-      });
-    }
-  }
-  */
-
-  /*
-  componentDidMount() {
-    if (this.props.container) {
-      this.props.container.childComponents.connectionLines.setState({
-        lines: this.props.container.connectionLines
-      });
-    }
-  }
-*/
-
-  componentOptionChanged(value, option) {
-    // Trigger updating the connection lines.
-    this.props.container.moveComponentConnectionLines(this);
   }
 
   handleChildEvent(type, ...args) {
@@ -204,16 +170,20 @@ export default class ReactAudioComponent extends React.Component {
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
           reactAudioComponent={this}
+          ioType='inputs'
         />
         <h2 className="audio-component-headline">{this.props.component.title}</h2>
         <div className="audio-component-content">
-          <ReactAudioComponentCanvasUi component={this.props.component} />
+          <ReactAudioComponentCanvasUi
+            component={this.props.component}
+          />
         </div>
         <ReactAudioComponentIos
           ios={this.state.outputs}
           handleEvent={this.handleChildEvent.bind(this)}
           settings={this.props.settings}
           reactAudioComponent={this}
+          ioType='outputs'
         />
       </div>
     );
