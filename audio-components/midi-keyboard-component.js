@@ -17,7 +17,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
     this.addOption({
       id: 'keyboard',
       label: 'Keyboard',
-      type: 'boolean',
+      type: 'none',
       value: true,
       exposeAsInput: {
         exposable: false,
@@ -33,7 +33,30 @@ export default class MidiKeyboardComponent extends AudioComponent {
         value: false,
         inputType: 'Keyboard'
       }
-    }, this.onShowKeyboardChanged, this);
+    });
+
+    this.addOption({
+      id: 'octaves',
+      label: 'Octaves',
+      type: 'number',
+      range: [1, 8],
+      stepSize: 1,
+      value: 1,
+      exposeAsInput: {
+        exposable: false,
+        value: false
+      },
+      exposeToCanvasUi: {
+        exposable: true,
+        value: false,
+        inputType: 'NumberInput'
+      },
+      exposeToUserUi: {
+        exposable: true,
+        value: false,
+        inputType: 'NumberInput'
+      }
+    }, this.onNumOctavesChanged, this);
   }
 
   createMidiMessage(type, note) {
@@ -68,7 +91,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
     }
   }
 
-  onShowKeyboardChanged(ev) {
+  onNumOctavesChanged(newValue, option) {
 
   }
 }

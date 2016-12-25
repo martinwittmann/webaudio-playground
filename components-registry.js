@@ -27,35 +27,21 @@ export default class componentsRegistry {
     // 4. Import the react component in the ReactAudioComponent.jsx component.
     // 5. Add render code in ReactAudioComponent.jsx::render()
 
-    this.registerComponentType('audio-out', {
-      create: function() {
-        return new AudioOutComponent(app, this.createComponentId('audio-out'));
-      }
-    });
+    let componentTypes = {
+      'audio-out': AudioOutComponent,
+      'midi-2-frequency': Midi2FrequencyComponent,
+      'midi-in': MidInComponent,
+      'midi-keyboard': MidiKeyboardComponent,
+      'oscillator': OscillatorComponent
+    };
 
-    this.registerComponentType('midi-2-frequency', {
-      create: function() {
-        return new Midi2FrequencyComponent(app, this.createComponentId('midi-2-frequency'));
-      }
-    });
-
-    this.registerComponentType('midi-in', {
-      create: function() {
-        return new MidInComponent(app, this.createComponentId('midi-in'));
-      }
-    });
-
-    this.registerComponentType('midi-keyboard', {
-      create: function() {
-        return new MidiKeyboardComponent(app, this.createComponentId('midi-keyboard'));
-      }
-    });
-
-    this.registerComponentType('oscillator', {
-      create: function() {
-        return new OscillatorComponent(app, this.createComponentId('oscillator'));
-      }
-    });
+    for (let id in componentTypes) {
+      this.registerComponentType(id, {
+        create: function() {
+          return new componentTypes[id](app, this.createComponentId(id));
+        }
+      });
+    }
   }
 
   registerComponentType(componentName, componentData) {

@@ -42,7 +42,6 @@ export default class AudioComponent {
   //       So we need to call this method when removing/deleting audio components.
   destructor() {
     // Stop all playing notes and free the audio nodes.
-    console.log('component destruct ' + this.id);
     this.stop();
 
     // Unset existing midi event handler, if available.
@@ -443,6 +442,15 @@ export default class AudioComponent {
     this.options.push(new audioComponentOption(optionData, (value, option) => {
       changeCallback.apply(changeCallbackThis, [value, option]);
     }));
+  }
+
+  getOption(id) {
+    for (let i=0;i<this.options.length;i++) {
+      if (id == this.options[i].id) {
+        return this.options[i];
+      }
+    }
+    return false;
   }
 
   log(msg) {

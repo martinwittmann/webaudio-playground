@@ -1,7 +1,10 @@
 import React from 'react';
-import Select from './ui-components/Select.jsx';
-import Radios from './ui-components/Radios.jsx';
+
 import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
+import NumberInput from './ui-components/NumberInput.jsx';
+import Radios from './ui-components/Radios.jsx';
+import Select from './ui-components/Select.jsx';
+
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
   constructor(props) {
@@ -97,6 +100,14 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             );
 
           case 'NumberInput':
+            return (
+              <li key={option.id}>
+                <NumberInput
+                  defaultValue={this.state.optionValues[option.id]}
+                  onChange={this.onChange.bind(this)}
+                />
+              </li>
+            );
             break;
 
           case 'Keyboard':

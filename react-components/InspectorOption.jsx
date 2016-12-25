@@ -2,10 +2,11 @@ import React from 'react';
 import InspectorOptionDetails from './InspectorOptionDetails.jsx';
 
 // Import all UI components.
-import Select from './ui-components/Select.jsx';
-import Radios from './ui-components/Radios.jsx';
 import Checkbox from './ui-components/Checkbox.jsx';
 import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
+import NumberInput from './ui-components/NumberInput.jsx';
+import Radios from './ui-components/Radios.jsx';
+import Select from './ui-components/Select.jsx';
 
 export default class InspectorOption extends React.Component {
   constructor(props) {
@@ -88,19 +89,29 @@ export default class InspectorOption extends React.Component {
 
       case 'number':
         item = (
-          <input
-            type="number"
+          <NumberInput
+            defaultValue={this.props.option.value}
+            onChange={this.onChange.bind(this)}
             min={this.props.option.range[0]}
             max={this.props.option.range[1]}
-            step="0.01"
+            step={this.props.option.stepSize}
             onChange={this.onChange.bind(this)}
-            value={this.state.value}
           />
         );
         help = (
           <span className="input-help">[{this.props.option.range[0]}-{this.props.option.range[1]}]</span>
         );
         break;
+
+      case 'none':
+        // We allow setting options to type none if the only thing a user can do
+        // is to toggle the option detail settings.
+        item = false;
+        break;
+
+      default:
+        console.log('InspectorOption::render(): inknown option type ' + this.props.option.getType());
+        return false;
     }
 
     let cls = ['component-option'];
