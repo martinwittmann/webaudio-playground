@@ -9,7 +9,6 @@ export default class ComponentsAvailable extends React.Component {
           <ReactAudioComponent
             component={component}
             settings={this.props.settings}
-            inSidebar
           /></li>);
     });
     return (

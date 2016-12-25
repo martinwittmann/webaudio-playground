@@ -33,7 +33,7 @@ export default class OscillatorComponent extends AudioComponent {
     });
 
     // Set up available options:
-    this.options.push(new audioComponentOption({
+    this.addOption({
       id: 'waveform',
       label: 'Waveform',
       type: 'choice',
@@ -53,9 +53,9 @@ export default class OscillatorComponent extends AudioComponent {
         value: false,
         inputType: 'Select'
       },
-    }, this.onWaveformChanged, this));
+    }, this.onWaveformChanged, this);
 
-    this.options.push(new audioComponentOption({
+    this.addOption({
       id: 'volume-source',
       label: 'Volume source',
       type: 'choice',
@@ -81,9 +81,9 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToUserUi: {
         exposable: false
       }
-    }, this.onVelocitySourceChanged, this));
+    }, this.onVelocitySourceChanged, this);
 
-    this.options.push(new audioComponentOption({
+    this.addOption({
       id: 'fixed-volume',
       label: 'Volume',
       type: 'number',
@@ -104,7 +104,7 @@ export default class OscillatorComponent extends AudioComponent {
       conditions: {
         'volume-source': 'fixed'
       }
-    }, this.onFixedVolumeChanged, this));
+    }, this.onFixedVolumeChanged, this);
   }
 
   handleFrequencyIn(args) {

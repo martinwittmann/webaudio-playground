@@ -1,9 +1,8 @@
-export default class audioComponentOption {
-  constructor(data, changeCallback, callbackThis) {
+  export default class audioComponentOption {
+  constructor(data, changeCallback, changeCallbackThis) {
     this.onChangeCallbacks = [];
 
     this.id = data.id;
-    this.componentId = callbackThis.id;
     this.label = data.label;
     this.type = data.type;
     this.choices = data.choices;
@@ -15,18 +14,21 @@ export default class audioComponentOption {
     this.range = data.range;
 
     if ('function' ==  typeof changeCallback) {
-      this.registerChangeCallback(changeCallback, callbackThis);
+      this.registerChangeCallback(changeCallback, changeCallbackThis);
     }
+  }
+
+  destructor() {
+    console.log('option destruct ' + this.id);
+    this.onChangeCallbacks = [];
   }
 
   registerChangeCallback(callback, callbackThis) {
     if ('function' == typeof callback) {
-      if ('waveform' == this.id)
-      this.onChangeCallbacks.push({
+      return this.onChangeCallbacks.push({
         callback: callback,
         bindTo: callbackThis
       });
-      return this.onChangeCallbacks.length - 1;
     }
     else {
       console.log('registerChangeCallback called with invalid callback', callback);

@@ -337,7 +337,7 @@ class ColumnLayout extends React.Component {
 
       let containerRect = this.getContainerRect();
 
-      //component.inSidebar = false; // Mark the component to be shown on the canvas.
+      component.inSidebar = false; // Mark the component to be shown on the canvas.
 
       component.reactComponent.moveOnCanvas({
         x: droppedAt.x - containerRect.left - posInCompOnDragStart.x,

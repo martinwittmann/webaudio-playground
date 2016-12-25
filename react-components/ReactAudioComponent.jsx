@@ -8,10 +8,46 @@ export default class ReactAudioComponent extends React.Component {
   constructor(props) {
     super(props);
     props.component.reactComponent = this;
+    this.myId = Math.ceil(Math.random() * 10000);
+
+    //console.log('constructing ' + this.myId, props);
 
     if (props.component.initState) {
       this.state = props.component.initState();
     }
+  }
+
+/*
+  componentWillMount() {
+    if (!this.props.component.inSidebar) {
+      this.props.component.options.map(option => {
+        option.registerChangeCallback(this.componentOptionChanged, this);
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (!this.props.component.inSidebar) {
+      this.props.component.options.map(option => {
+        option.registerChangeCallback(this.componentOptionChanged, this);
+      });
+    }
+  }
+  */
+
+  /*
+  componentDidMount() {
+    if (this.props.container) {
+      this.props.container.childComponents.connectionLines.setState({
+        lines: this.props.container.connectionLines
+      });
+    }
+  }
+*/
+
+  componentOptionChanged(value, option) {
+    // Trigger updating the connection lines.
+    this.props.container.moveComponentConnectionLines(this);
   }
 
   handleChildEvent(type, ...args) {
@@ -132,14 +168,6 @@ export default class ReactAudioComponent extends React.Component {
     });
   }
 
-  componentDidMount() {
-    if (this.props.container) {
-      this.props.container.childComponents.connectionLines.setState({
-        lines: this.props.container.connectionLines
-      });
-    }
-  }
-
   render() {
     const { connectDragSource, isDragging } = this.props;
 
@@ -152,8 +180,6 @@ export default class ReactAudioComponent extends React.Component {
     if (this.props.container && this.props.container.state.selectedComponent == this) {
       cls.push('selected');
     }
-
-    console.log('render');
 
     return (
       <div

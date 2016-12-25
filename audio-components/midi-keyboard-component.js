@@ -14,7 +14,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
 
     this.veloctiy = 127;
 
-    this.options.push(new audioComponentOption({
+    this.addOption({
       id: 'keyboard',
       label: 'Keyboard',
       type: 'boolean',
@@ -33,7 +33,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
         value: false,
         inputType: 'Keyboard'
       }
-    }, this.onShowKeyboardChanged, this));
+    }, this.onShowKeyboardChanged, this);
   }
 
   createMidiMessage(type, note) {

@@ -40,8 +40,27 @@ export default class AudioComponent {
 
   // NOTE: This is *not* automatically called when the object is garbage collected.
   //       So we need to call this method when removing/deleting audio components.
-  destruct() {
+  destructor() {
+    // Stop all playing notes and free the audio nodes.
+    console.log('component destruct ' + this.id);
     this.stop();
+
+    // Unset existing midi event handler, if available.
+    if (this.state.midiIn) {
+      this.midiAccess.inputs.get(this.state.midiIn).onmidimessage = undefined;
+    }
+
+    this.inputs.map(input => {
+      input.removeAllConnections();
+    });
+
+    this.outputs.map(output => {
+      output.removeAllConnections();
+    });
+
+    this.options.map(option => {
+      option.destructor();
+    });
   }
 
   initState() {
@@ -418,6 +437,13 @@ export default class AudioComponent {
         ];
 
     }
+  }
+
+  addOption(optionData, changeCallback, changeCallbackThis) {
+    var hui = changeCallbackThis;
+    this.options.push(new audioComponentOption(optionData, (value, option) => {
+      changeCallback.apply(changeCallbackThis, [value, option]);
+    }));
   }
 
   log(msg) {
