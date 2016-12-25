@@ -42,7 +42,6 @@ export default class ReactAudioComponentIos extends React.Component {
   updateAllIoCoordinates() {
     this.props.ios.map(io => {
       if (io.domNode) {
-        console.log(io.id, io.coordinates, this.getIoClientRect(io.domNode), io.domNode);
         io.coordinates = this.getIoClientRect(io.domNode);
       }
       else {
