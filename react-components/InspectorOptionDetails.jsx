@@ -117,23 +117,28 @@ export default class InspectorOptionDetails extends React.Component {
         case 'keyboard':
           canvasUiSettings = (
             <div className="component-option-canvas-ui-settings">
-              <label className="component-option-canvas-ui-settings-label">Octaves</label>
-              <NumberInput
-                defaultValue={this.props.option.exposeToCanvasUi.settings.octaves}
-                min="1"
-                max="8"
-                onChange={value => {
-                  this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'octaves', value);
-                }}
-              />
-
-              <label className="component-option-canvas-ui-settings-label">StartNote</label>
-              <NoteNameInput
-                defaultValue={this.props.option.exposeToCanvasUi.settings.startNote}
-                onChange={value => {
-                  this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'startNote', value);
-                }}
-              />
+              <ul className="component-option-detail-settings">
+                <li key="octaves">
+                  <label className="component-option-canvas-ui-settings-label">Octaves</label>
+                  <NumberInput
+                    defaultValue={this.props.option.exposeToCanvasUi.settings.octaves}
+                    min="1"
+                    max="8"
+                    onChange={value => {
+                      this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'octaves', value);
+                    }}
+                  />
+                </li>
+                <li key="start-note">
+                  <label className="component-option-canvas-ui-settings-label">StartNote</label>
+                  <NoteNameInput
+                    defaultValue={this.props.option.exposeToCanvasUi.settings.startNote}
+                    onChange={value => {
+                      this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'startNote', value);
+                    }}
+                  />
+                </li>
+              </ul>
             </div>
           );
           break;

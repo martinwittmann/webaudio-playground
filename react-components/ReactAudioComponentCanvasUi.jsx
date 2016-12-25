@@ -112,7 +112,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
 
           case 'Keyboard':
             let keyboardOctaves = [];
-            let startNote = 60;
+            let startNote = option.exposeToCanvasUi.settings.startNote;
             for (let i=0;i<option.exposeToCanvasUi.settings.octaves;i++) {
               keyboardOctaves.push((
                 <KeyboardOctave
