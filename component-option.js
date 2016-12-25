@@ -81,12 +81,12 @@
     return this.type;
   }
 
-  updateSetting(setting, value) {
-    if ('undefined' == typeof this.settings[setting]) {
+  updateSetting(set, setting, value) {
+    if ('undefined' == typeof this[set].settings[setting]) {
       return false;
     }
 
-    this.settings[setting] = value;
+    this[set].settings[setting] = value;
     this.notifyChangeCallbacks();
   }
 

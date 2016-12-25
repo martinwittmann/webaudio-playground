@@ -25,15 +25,20 @@ export default class MidiKeyboardComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: true,
-        inputType: 'Keyboard'
+        inputType: 'Keyboard',
+        settings: {
+          octaves: 2,
+          startNote: 60
+        }
       },
       exposeToUserUi: {
         exposable: true,
         value: false,
-        inputType: 'Keyboard'
-      },
-      settings: {
-        octaves: 2
+        inputType: 'Keyboard',
+        settings: {
+          octaves: 2,
+          startNote: 60
+        }
       }
     });
   }

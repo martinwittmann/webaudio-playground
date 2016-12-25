@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from './ui-components/Select.jsx';
 import NumberInput from './ui-components/NumberInput.jsx';
+import NoteNameInput from './ui-components/NoteNameInput.jsx';
 
 export default class InspectorOptionDetails extends React.Component {
   constructor(props) {
@@ -85,8 +86,8 @@ export default class InspectorOptionDetails extends React.Component {
     });
   }
 
-  onOptionSettingChanged(newValue, option, settingName) {
-    option.updateSetting(settingName, newValue);
+  onOptionSettingChanged(option, set, setting, value) {
+    option.updateSetting(set, setting, value);
   }
 
   render() {
@@ -118,11 +119,19 @@ export default class InspectorOptionDetails extends React.Component {
             <div className="component-option-canvas-ui-settings">
               <label className="component-option-canvas-ui-settings-label">Octaves</label>
               <NumberInput
-                defaultValue={this.props.option.settings.octaves}
+                defaultValue={this.props.option.exposeToCanvasUi.settings.octaves}
                 min="1"
                 max="8"
                 onChange={value => {
-                  this.onOptionSettingChanged(value, this.props.option, 'octaves');
+                  this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'octaves', value);
+                }}
+              />
+
+              <label className="component-option-canvas-ui-settings-label">StartNote</label>
+              <NoteNameInput
+                defaultValue={this.props.option.exposeToCanvasUi.settings.startNote}
+                onChange={value => {
+                  this.onOptionSettingChanged(this.props.option, 'exposeToCanvasUi', 'startNote', value);
                 }}
               />
             </div>
