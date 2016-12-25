@@ -69,7 +69,7 @@ export default class ReactAudioComponentIos extends React.Component {
       io.reactComponent = this;
       let cls = ['io', io.ioType, io.dataType];
       ioType = io.ioType;
-      if (io.id == this.state.activeIO || io.id == io.isSnapped) {
+      if (io.id == this.state.activeIO || io.id == this.state.snappedTo) {
         cls.push('connecting');
       }
 

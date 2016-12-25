@@ -247,7 +247,6 @@ class ColumnLayout extends React.Component {
     // connectableIos is set in ReactAudioComponentInputs/Outputs.
     this.connectableIos.map(io => {
       let snapSize = this.props.settings.snapSize;
-      io.isSnapped = false;
       let xInSnapRange = Math.abs(io.coordinates.left - cRect.left - rawMouseX) < snapSize;
       let yInSnapRange = Math.abs(io.coordinates.top - cRect.top - rawMouseY) < snapSize;
 
@@ -255,9 +254,20 @@ class ColumnLayout extends React.Component {
         this.snappedToConnectingIo = io;
         // We can't call io.ioComponent.setState because that's not allowed 
         // in a render function in react and will throw an error.
-        io.isSnapped = true;
         connectingLine.x2 = io.coordinates.left - cRect.left + ioOffset;
         connectingLine.y2 = io.coordinates.top - cRect.top + ioOffset;
+
+        // Add/remove snappedTo only for affected reactcomponents.
+        if (io.reactComponent.state.snappedTo != io.id) {
+          io.reactComponent.setState({
+            snappedTo: io.id
+          });
+        }
+      }
+      else if (io.reactComponent.state.snappedTo == io.id) {
+        io.reactComponent.setState({
+          snappedTo: false
+        });
       }
     });
 
