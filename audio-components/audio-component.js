@@ -45,8 +45,8 @@ export default class AudioComponent {
     this.stop();
 
     // Unset existing midi event handler, if available.
-    if (this.state.midiIn) {
-      this.midiAccess.inputs.get(this.state.midiIn).onmidimessage = undefined;
+    if (this.midiIn) {
+      this.midiAccess.inputs.get(this.midiIn).onmidimessage = undefined;
     }
 
     this.inputs.map(input => {
@@ -119,77 +119,19 @@ export default class AudioComponent {
     }
   }
 
-  getMidiInputs() {
-    let result = [];
-    this.midiInputs.map(input => {
-      result.push({
-        name: input.name,
-        value: input.id
-      });
-    });
-    return result;
-  }
-
-  midiEvent(data) {
-    if (this.handleMidiEvent) {
-      this.handleMidiEvent(data);
-    }
-  }
-
-  initMidiAccess(callback) {
+  initMidiAccess(succesaCallback, failureCallback) {
     // Initialized with no inputs to prevent errors since requestMIDIAccess is
     // asynchronous.
     this.midiInputs = [];
 
     if ('undefined' != typeof navigator['requestMIDIAccess']) {
-      navigator.requestMIDIAccess().then(this.onMidiAvailable.bind(this), this.onNoMidi.bind(this));
+      navigator.requestMIDIAccess().then(succesaCallback, failureCallback);
     }
     else {
       this.onNoMidi('The navigator does not supply requestMIDIAccess().');
     }
   }
 
-  onMidiInChanged(id) {
-    this.stop(); // Stop everything that's currently playing.
-
-    if (this.state.midiIn) {
-      // Unset existing midi event handler.
-      this.midiAccess.inputs.get(this.state.midiIn).onmidimessage = undefined;
-    }
-
-
-    // Determine whether there is an input already.
-    // This must be done *before* we set the the midiIn because we need the
-    // current/old id to be able to find the input.
-    let outputIndex = this.getIoIndex('outputs', {id: 'midi-in-' + this.state.midiIn});
-
-    // Set the midi input.
-    this.state.midiIn = id;
-    let input = this.midiAccess.inputs.get(id);
-    if (input && 'undefined'!= input.onmidimessage) {
-      input.onmidimessage = this.onMidiMessage.bind(this);
-    }
-
-    // Add / update the component's input.
-    if (outputIndex > -1) {
-      // Update the input.
-      this.updateOutput(outputIndex, {
-        type: 'midi',
-      });
-    }
-    else {
-      this.registerOutput({
-        type: 'midi',
-        name: input.name
-      });
-    }
-
-    if (this.reactComponent) {
-      this.reactComponent.setState({
-        midiIn: id
-      });
-    }
-  }
 
   stop() {
     // Stop and destruct all audio nodes.
@@ -206,45 +148,6 @@ export default class AudioComponent {
     });
 
     this.audioNodes = {};
-  }
-
-  onMidiMessage(ev) {
-    let message = ev.data;
-    this.midiEvent(message);
-  }
-
-  onMidiAccessDone() {
-    if (this.reactComponent) {
-      this.reactComponent.setState({
-        midiInputs: this.getMidiInputs()
-      });
-    }
-  }
-
-  onMidiAvailable(midiAccess) {
-    this.midiAccess = midiAccess;
-    this.midiInputs = [];
-
-    for (let input of midiAccess.inputs) {
-      this.midiInputs.push({
-        id: input[1].id,
-        name: input[1].name,
-        manufacturer: input[1].manufacturer,
-      });
-    }
-
-    this.onMidiAccessDone();
-  }
-
-  onNoMidi(msg) {
-    this.log('No midi available: ' + msg);
-    if ('function' == this.onMidiAccessDone) {
-      this.onMidiAccessDone();
-    }
-  };
-
-  mapVeloctiyToGain(velocity) {
-    return velocity / (127 / this.maxGainPerNote)
   }
 
   getIoIndex(type, query) {

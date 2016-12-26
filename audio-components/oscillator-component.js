@@ -4,13 +4,10 @@ import audioComponentOption from '../component-option.js';
 export default class OscillatorComponent extends AudioComponent {
   constructor(app, id) {
     super(app, id, 'Oscillator');
-
     this.type = 'oscillator';
-    this.maxGainPerNote = 0.4;
-    this.audioNodes = {};
 
     // Initialize state for this component type.
-    //this.input = 'fixed';
+    this.audioNodes = {};
     this.active = false;
     this.frequency = 440;
     this.waveform = 'sine';
@@ -164,14 +161,6 @@ export default class OscillatorComponent extends AudioComponent {
     });
   }
 
-/*
-  onInputChanged(input) {
-    console.log('Sdfsd');
-    this.input = input;
-    this.stop();
-  }
-  */
-
   onFrequencyChanged(frequency) {
     this.frequency = frequency;
     if (this.active) {
@@ -249,7 +238,6 @@ export default class OscillatorComponent extends AudioComponent {
   }
 
   onVelocitySourceChanged(gainSource) {
-    console.log(gainSource);
     this.gainSource = gainSource;
     this.totalGain.gain.value = this.fixedTotalGain;
   }
