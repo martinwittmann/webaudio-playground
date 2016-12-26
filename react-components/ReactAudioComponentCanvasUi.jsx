@@ -104,6 +104,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             return (
               <li key={option.id}>
                 <NumberInput
+                  option={option}
                   defaultValue={this.state.optionValues[option.id]}
                   onChange={this.onChange.bind(this)}
                 />
@@ -138,6 +139,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             return (
               <li key={option.id}>
                 <Knob
+                  option={option}
                   defaultValue={this.state.optionValues[option.id]}
                   onChange={this.onChange.bind(this)}
                 />

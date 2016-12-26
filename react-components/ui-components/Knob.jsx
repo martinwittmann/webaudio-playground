@@ -29,18 +29,12 @@ export default class Knob extends React.Component {
     this.onWindowMouseUp = this.onWindowMouseUp.bind(this);
   }
 
-  onChange(ev) {
-    if ('function' == typeof this.props.onChange) {
-      this.props.onChange(ev.target.value, this.props.option);
-    }
-  }
-
   onClick(ev) {
     ev.stopPropagation();
   }
 
   getAngle() {
-    let value = Math.max(this.minValue, Math.min(this.state.value, this.maxValue));
+    let value = this.state.value;
     let valueRange = this.maxValue - this.minValue;
     let factor = this.rangeAngle / valueRange;
     return (value * factor - this.rangeAngle / 2) * 1;
@@ -48,8 +42,8 @@ export default class Knob extends React.Component {
 
   getKnobTransform() {
     let angle = this.getAngle();
-    let offsetX = this.knobSize / 2 + this.strokeWidth + this.padding.left;
-    let offsetY = this.knobSize / 2 + this.strokeWidth + this.padding.top;
+    let offsetX = (this.knobSize) / 2 + this.padding.left;
+    let offsetY = (this.knobSize) / 2 + this.padding.top;
     return 'rotate(' + angle + ' ' + offsetX + ' ' + offsetY + ')';
   }
 
@@ -107,17 +101,22 @@ export default class Knob extends React.Component {
 
   setValue(value) {
     value = Math.max(this.minValue, Math.min(value, this.maxValue));
+    value = parseFloat(value.toFixed(2));
 
     if (value != this.state.value) {
       this.setState({
         value
       });
+
+      if ('function' == typeof this.props.onChange) {
+        this.props.onChange(value, this.props.option);
+      }
     }
   }
 
   render() {
-    let centerX = (this.knobSize) / 2 + this.strokeWidth + this.padding.left;
-    let centerY = (this.knobSize) / 2 + this.strokeWidth + this.padding.top;
+    let centerX = (this.knobSize) / 2 + this.padding.left;
+    let centerY = (this.knobSize) / 2 + this.padding.top;
     let knobRadius = this.knobSize / 2;
 
     return (
@@ -150,7 +149,7 @@ export default class Knob extends React.Component {
             />
             <line
               x1={centerX}
-              y1={this.strokeWidth + this.padding.top}
+              y1={this.padding.top}
               x2={centerX}
               y2={centerY}
               stroke={this.buttonColor}
