@@ -57,7 +57,6 @@ export default class Knob extends React.Component {
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('mouseup', this.onWindowMouseUp);
     this.mousePosY = ev.pageY;
-    this.valueWasChanged = true;
 
     // Prevent moving the knob from dragging the component around.
     ev.preventDefault();
@@ -66,16 +65,34 @@ export default class Knob extends React.Component {
   onWindowMouseUp(ev) {
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('mouseup', this.onWindowMouseUp);
-    this.valueWasChanged = false;
+
+    // The mouse up event fires before any click events. So this handler is always
+    // fired before this.onKnobClick, disregarding whether or not the mouse up
+    // happened somewhere on the knob or anywhere outside.
+    // If we set this.valueWasChanged = false here and then the onKnobClick handler
+    // fires, it doesn't know that this was not a regular click event (without
+    // setting a knob value).
+    // To prevent this, we only reset this.valueWasChanged if the event fired on
+    // the window, which means the mouse button was releases outside the knob
+    // because in this case the onKnobClick handler will not be fired.
+    if (window === ev.currentTarget) {
+      this.valueWasChanged = false;
+    }
   }
 
   onKnobMouseUp(ev) {
-    console.log(ev.type, this.valueWasChanged);
+    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mouseup', this.onWindowMouseUp);
+
+    ev.stopPropagation();
+  }
+
+  onKnobClick(ev) {
     // Prevent selecting the component everytime the knob is moved.
     if (this.valueWasChanged) {
       this.valueWasChanged = false;
-      ev.stopPropagation();
       ev.preventDefault();
+      ev.stopPropagation();
     }
   }
 
@@ -84,6 +101,7 @@ export default class Knob extends React.Component {
     let newValue = this.state.value + rawValue * this.mouseScaleFactor;
 
     this.mousePosY = ev.pageY;
+    this.valueWasChanged = true;
     this.setValue(newValue);
   }
 
@@ -106,6 +124,7 @@ export default class Knob extends React.Component {
       <div
         className="input-knob"
         onMouseUp={this.onKnobMouseUp.bind(this)}
+        onClick={this.onKnobClick.bind(this)}
       >
         <input type="hidden" value={this.state.value} />
         <svg
