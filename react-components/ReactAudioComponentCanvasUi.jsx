@@ -4,6 +4,7 @@ import KeyboardOctave from './ui-components/KeyboardOctave.jsx';
 import NumberInput from './ui-components/NumberInput.jsx';
 import Radios from './ui-components/Radios.jsx';
 import Select from './ui-components/Select.jsx';
+import Knob from './ui-components/Knob.jsx';
 
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
@@ -68,7 +69,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
     let options = this.props.component.options;
     let optionsHtml;
 
-    if (options) {
+    if (options && !this.props.component.inSidebar) {
       optionsHtml = options.map(option => {
         if (!option.exposeToCanvasUi.value) {
           return false;
@@ -129,6 +130,17 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 className={'keyboard-content octaves-' + option.exposeToCanvasUi.settings.octaves}
               >
                 {keyboardOctaves}
+              </li>
+            );
+            break;
+
+          case 'Knob':
+            return (
+              <li key={option.id}>
+                <Knob
+                  defaultValue={this.state.optionValues[option.id]}
+                  onChange={this.onChange.bind(this)}
+                />
               </li>
             );
             break;

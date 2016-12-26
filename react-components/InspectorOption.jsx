@@ -94,7 +94,7 @@ export default class InspectorOption extends React.Component {
             onChange={this.onChange.bind(this)}
             min={this.props.option.range[0]}
             max={this.props.option.range[1]}
-            step={this.props.option.stepSize}
+            stepSize={this.props.option.stepSize}
             onChange={this.onChange.bind(this)}
           />
         );

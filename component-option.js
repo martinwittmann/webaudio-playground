@@ -12,6 +12,7 @@
     this.exposeToCanvasUi = data.exposeToCanvasUi;
     this.exposeToUserUi = data.exposeToUserUi;
     this.range = data.range;
+    this.stepSize = data.stepSize;
     this.settings = data.settings;
 
     if ('function' ==  typeof changeCallback) {

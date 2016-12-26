@@ -88,13 +88,15 @@ export default class OscillatorComponent extends AudioComponent {
       label: 'Volume',
       type: 'number',
       range: [0, 1],
-      value: .5,
+      stepSize: 0.01,
+      value: 0,
       exposeAsInput: {
         exposable: false
       },
       exposeToCanvasUi: {
         exposable: true,
-        value: false
+        value: true,
+        inputType: 'Knob',
       },
       exposeToUserUi: {
         exposable: true,

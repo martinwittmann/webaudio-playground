@@ -17,6 +17,7 @@ export default class NumberInput extends React.Component {
         type="number"
         min={this.props.min}
         max={this.props.max}
+        step={this.props.stepSize}
         value={this.props.defaultValue}
         onChange={this.onChange.bind(this)}
         onClick={this.onClick.bind(this)}
