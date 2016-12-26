@@ -14,7 +14,7 @@ export default class Knob extends React.Component {
     this.padding = {
       top: 10,
       right: 10,
-      bottom: 30,
+      bottom: 4,
       left: 10
     };
     this.fullWidth = this.padding.left + this.knobSize + this.padding.right;
@@ -125,7 +125,6 @@ export default class Knob extends React.Component {
         onMouseUp={this.onKnobMouseUp.bind(this)}
         onClick={this.onKnobClick.bind(this)}
       >
-        <input type="hidden" value={this.state.value} />
         <svg
           className="input-svg"
           width={this.fullWidth}
@@ -157,6 +156,9 @@ export default class Knob extends React.Component {
             />
           </g>
         </svg>
+        <label className="knob-label">
+          {this.props.option.label}
+        </label>
       </div>
     );
   }

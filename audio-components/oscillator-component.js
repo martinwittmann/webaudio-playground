@@ -10,13 +10,15 @@ export default class OscillatorComponent extends AudioComponent {
     this.audioNodes = {};
 
     // Initialize state for this component type.
-    this.input = 'fixed';
+    //this.input = 'fixed';
     this.active = false;
     this.frequency = 440;
     this.waveform = 'sine';
     this.gain = .2;
+    this.fixedTotalGain = .8;
+    this.gainSource = 'from-midi';
 
-    this.totalGain = this.createGainNode(0.8);
+    this.totalGain = this.createGainNode(this.fixedTotalGain);
     this.waveforms = ['sine', 'square', 'sawtooth', 'triangle']; // We leave the custom waveform out for now.
 
 
@@ -89,7 +91,7 @@ export default class OscillatorComponent extends AudioComponent {
       type: 'number',
       range: [0, 1],
       stepSize: 0.01,
-      value: 0,
+      value: this.fixedTotalGain,
       exposeAsInput: {
         exposable: false
       },
@@ -162,10 +164,13 @@ export default class OscillatorComponent extends AudioComponent {
     });
   }
 
+/*
   onInputChanged(input) {
+    console.log('Sdfsd');
     this.input = input;
     this.stop();
   }
+  */
 
   onFrequencyChanged(frequency) {
     this.frequency = frequency;
@@ -243,12 +248,17 @@ export default class OscillatorComponent extends AudioComponent {
     }, 100);
   }
 
-  onVelocitySourceChanged(velocitySource) {
-    // TODO: Implementation.
-
+  onVelocitySourceChanged(gainSource) {
+    console.log(gainSource);
+    this.gainSource = gainSource;
+    this.totalGain.gain.value = this.fixedTotalGain;
   }
 
-  onFixedVolumeChanged() {
-    // TODO: Implementation.
+  onFixedVolumeChanged(gain) {
+    this.fixedTotalGain = gain;
+
+    if ('fixed' == this.gainSource) {
+      this.totalGain.gain.value = gain;
+    }
   }
 }
