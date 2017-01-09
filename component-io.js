@@ -1,6 +1,7 @@
 export default class componentIO {
   constructor(data) {
     this.connections = [];
+    this.sendDataCallbacks = {};
 
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
@@ -14,7 +15,7 @@ export default class componentIO {
     switch (this.dataType) {
       case 'midi':
       case 'number':
-        this.sendDataCallback = toIo.receiveDataCallback;
+        this.sendDataCallbacks[toIo.id] = toIo.receiveDataCallback;
         break;
 
       case 'audio':
@@ -33,7 +34,7 @@ export default class componentIO {
     switch (this.dataType) {
       case 'midi':
       case 'number':
-        this.sendDataCallback = false;
+        delete this.sendDataCallbacks[toIo.id];
         break;
 
       case 'audio':

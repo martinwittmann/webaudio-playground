@@ -84,7 +84,7 @@ export default class OscillatorComponent extends AudioComponent {
 
     this.addOption({
       id: 'fixed-volume',
-      label: 'Volume',
+      label: 'Fixed Volume',
       type: 'number',
       range: [0, 1],
       stepSize: 0.01,
@@ -94,7 +94,7 @@ export default class OscillatorComponent extends AudioComponent {
       },
       exposeToCanvasUi: {
         exposable: true,
-        value: true,
+        value: false,
         inputType: 'Knob',
       },
       exposeToUserUi: {

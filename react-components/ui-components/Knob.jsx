@@ -7,7 +7,7 @@ export default class Knob extends React.Component {
       value : props.defaultValue
     };
 
-    this.knobSize = 40;
+    this.knobSize = 35;
     this.strokeWidth = this.knobSize / 15;
     this.buttonColor = '#aaaaaa';
     this.rangeAngle = 280; // The angle between the min and the max points of the knob.

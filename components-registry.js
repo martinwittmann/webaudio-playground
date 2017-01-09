@@ -2,6 +2,8 @@ import OscillatorComponent from './audio-components/oscillator-component.js';
 import MidInComponent from './audio-components/midi-in-component.js';
 import Midi2FrequencyComponent from './audio-components/midi-2-frequency-component.js';
 import MidiKeyboardComponent from './audio-components/midi-keyboard-component.js';
+import FilterComponent from './audio-components/filter-component.js';
+
 import AudioOutComponent from './audio-components/audio-out-component.js';
 
 export default class componentsRegistry {
@@ -31,7 +33,8 @@ export default class componentsRegistry {
       'midi-2-frequency': Midi2FrequencyComponent,
       'midi-in': MidInComponent,
       'midi-keyboard': MidiKeyboardComponent,
-      'oscillator': OscillatorComponent
+      'oscillator': OscillatorComponent,
+      'filter': FilterComponent
     };
 
     for (let id in componentTypes) {

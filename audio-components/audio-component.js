@@ -92,6 +92,15 @@ export default class AudioComponent {
     return osc;
   }
 
+  createFilterNode(type) {
+    let filter = this.audioContext.createBiquadFilter();
+    if (type) {
+      filter.type = type;
+    }
+    
+    return filter;
+  }
+
   isNoteOff(status, data2) {
     return ((status & 0xF0) == 0x80) || ((status & 0xF0) == 0x90 && data2 == 0);
   }
@@ -272,8 +281,11 @@ export default class AudioComponent {
       return false;
     }
 
-    if (output.sendDataCallback) {
-      output.sendDataCallback(args);
+    for (let ioId in output.sendDataCallbacks) {
+      let callback = output.sendDataCallbacks[ioId];
+      if ('function' == typeof callback) {
+        callback(args);
+      }
     }
   }
 

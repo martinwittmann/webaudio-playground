@@ -13,7 +13,7 @@ export default class InspectorOption extends React.Component {
     super(props);
 
     this.state = {
-      opened: true,
+      opened: false,
       value: props.option.getValue()
     };
   }
