@@ -45,12 +45,12 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: true,
-        inputType: 'Select'
+        inputUiComponentType: 'Select'
       },
       exposeToUserUi: {
         exposable: true,
         value: false,
-        inputType: 'Select'
+        inputUiComponentType: 'Select'
       },
     }, this.onWaveformChanged, this);
 
@@ -75,7 +75,7 @@ export default class OscillatorComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: false,
-        inputType: 'Select'
+        inputUiComponentType: 'Select'
       },
       exposeToUserUi: {
         exposable: false
@@ -89,13 +89,16 @@ export default class OscillatorComponent extends AudioComponent {
       range: [0, 1],
       stepSize: 0.01,
       value: this.fixedTotalGain,
+      conditions: {
+        'volume-source': 'from-midi'
+      },
       exposeAsInput: {
         exposable: false
       },
       exposeToCanvasUi: {
         exposable: true,
         value: false,
-        inputType: 'Knob',
+        inputUiComponentType: 'Knob',
       },
       exposeToUserUi: {
         exposable: true,

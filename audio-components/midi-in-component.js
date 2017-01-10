@@ -22,12 +22,12 @@ export default class MidiInComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: true,
-        inputType: 'Select'
+        inputIoComponentType: 'Select'
       },
       exposeToUserUi: {
         exposable: true,
         value: false,
-        inputType: 'Select'
+        inputIoComponentType: 'Select'
       },
     }, this.onMidiInChanged, this);
 

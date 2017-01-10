@@ -64,7 +64,7 @@
   }
 
   setCanvasUiInputType(newInputType) {
-    this.exposeToCanvasUi.inputType = newInputType;
+    this.exposeToCanvasUi.inputUiComponentType = newInputType;
     this.notifyChangeCallbacks();
   }
 

@@ -25,7 +25,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: true,
-        inputType: 'Keyboard',
+        inputUiComponentType: 'Keyboard',
         settings: {
           octaves: 2,
           startNote: 60
@@ -34,7 +34,7 @@ export default class MidiKeyboardComponent extends AudioComponent {
       exposeToUserUi: {
         exposable: true,
         value: false,
-        inputType: 'Keyboard',
+        inputUiComponentType: 'Keyboard',
         settings: {
           octaves: 2,
           startNote: 60

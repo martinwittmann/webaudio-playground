@@ -75,7 +75,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
           return false;
         }
 
-        switch (option.exposeToCanvasUi.inputType) {
+        switch (option.exposeToCanvasUi.inputUiComponentType) {
           case 'Select':
             return (
               <li key={option.id}>
@@ -149,6 +149,8 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
 
           case 'TextInput':
           default:
+            console.log(option.exposeToCanvasUi);
+            console.log('ReactAudioComponentCanvasUi::render(): Unkown input type: ' + option.exposeToCanvasUi.inputUiComponentType);
 
         }
       });

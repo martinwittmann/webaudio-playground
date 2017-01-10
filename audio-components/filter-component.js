@@ -53,8 +53,8 @@ export default class FilterComponent extends AudioComponent {
       },
       exposeToCanvasUi: {
         exposable: true,
-        value: false,
-        inputType: 'select'
+        value: true,
+        inputUiComponentType: 'Select'
       },
       exposeToUserUi: {
         exposable: false,
@@ -81,8 +81,7 @@ export default class FilterComponent extends AudioComponent {
       return false;
     }
     this.filterType = newFilterType;
-    console.log(this.filterType);
-    this.filterNode.type.value = newFilterType;
+    this.filterNode.type = newFilterType;
   }
 
   onCutoffFrequencyChanged(frequency) {

@@ -97,7 +97,7 @@ export default class AudioComponent {
     if (type) {
       filter.type = type;
     }
-    
+
     return filter;
   }
 
@@ -291,11 +291,11 @@ export default class AudioComponent {
 
   getOptionInputData(option) {
     let result = {
-      type: option.inputType,
+      type: option.inputUiComponentType,
       name: option.label
     };
 
-    if ('number' == option.inputType || 'string' == option.inputType) {
+    if ('number' == option.inputUiComponentType || 'string' == option.inputUiComponentType) {
       result.receiveDataCallback = option.onChange;
     }
 

@@ -31,7 +31,7 @@ export default class InspectorOptionDetails extends React.Component {
       exposeAsInput: {
         exposable: this.state.exposeAsInput.exposable,
         value: !!ev.target.checked,
-        inputType: this.state.exposeAsInput.inputType
+        inputUiComponentType: this.state.exposeAsInput.inputUiComponentType
       }
     });
 
@@ -46,12 +46,13 @@ export default class InspectorOptionDetails extends React.Component {
 
   showOnCanvasUiChanged(ev) {
     this.props.option.exposeToCanvasUi.value = ev.target.checked;
+    this.props.option.notifyChangeCallbacks();
 
     this.setState({
       exposeToCanvasUi: {
         exposable: this.state.exposeToCanvasUi.exposable,
         value: ev.target.checked,
-        inputType: this.state.exposeToCanvasUi.inputType
+        inputUiComponentType: this.state.exposeToCanvasUi.inputUiComponentType
       }
     });
 
@@ -65,7 +66,7 @@ export default class InspectorOptionDetails extends React.Component {
       exposeToUserUi: {
         exposable: this.state.exposeToUserUi.exposable,
         value: ev.target.checked,
-        inputType: this.state.exposeToUserUi.inputType
+        inputUiComponentType: this.state.exposeToUserUi.inputUiComponentType
       }
     });
   }
@@ -77,9 +78,9 @@ export default class InspectorOptionDetails extends React.Component {
 
   onCanvasUiInputTypeChanged(optionValue, option) {
     // The callback that gets called from component-option when something changes.
-    let newInputType = option.exposeToCanvasUi.inputType;
+    let newInputType = option.exposeToCanvasUi.inputUiComponentType;
     let exposeToCanvasUiSettings = this.state.exposeToCanvasUi;
-    exposeToCanvasUiSettings.inputType = newInputType;
+    exposeToCanvasUiSettings.inputUiComponentType = newInputType;
 
     this.setState({
       exposeToCanvasUi: exposeToCanvasUiSettings
@@ -101,7 +102,7 @@ export default class InspectorOptionDetails extends React.Component {
             <div className="component-option-canvas-ui-settings">
               <label className="component-option-canvas-ui-settings-label">as</label>
               <Select
-                value={this.state.exposeToCanvasUi.inputType}
+                value={this.state.exposeToCanvasUi.inputUiComponentType}
                 options={this.props.component.getPossibleUiComponentsForOption(this.props.option)}
                 onChange={this.onChangeCanvasUiInputType.bind(this)}
               />
