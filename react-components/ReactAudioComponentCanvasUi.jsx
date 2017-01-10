@@ -71,7 +71,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
 
     if (options && !this.props.component.inSidebar) {
       optionsHtml = options.map(option => {
-        if (!option.exposeToCanvasUi.value) {
+        if (!option.doShowOption()) {
           return false;
         }
 

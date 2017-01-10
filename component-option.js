@@ -1,19 +1,13 @@
   export default class audioComponentOption {
-  constructor(data, changeCallback, changeCallbackThis) {
+  constructor(data, allOptions, changeCallback, changeCallbackThis) {
     this.onChangeCallbacks = [];
+    this.allOptions = allOptions;
 
-    this.id = data.id;
-    this.label = data.label;
-    this.type = data.type;
-    this.choices = data.choices;
-    this.value = data.value;
-    this.onChange = data.onChange;
-    this.exposeAsInput = data.exposeAsInput;
-    this.exposeToCanvasUi = data.exposeToCanvasUi;
-    this.exposeToUserUi = data.exposeToUserUi;
-    this.range = data.range;
-    this.stepSize = data.stepSize;
-    this.settings = data.settings;
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        this[key] = data[key];
+      }
+    }
 
     if ('function' ==  typeof changeCallback) {
       this.registerChangeCallback(changeCallback, changeCallbackThis);
@@ -102,5 +96,35 @@
       console.log('audioComponentOption::getChoices: called with invalid type: ' + typeof this.choices + '.');
       return false;
     }
+  }
+
+  doShowOption() {
+    return this.exposeToCanvasUi.value && this.conditionsAreMet();
+  }
+
+  conditionsAreMet() {
+    for (let optionId in this.conditions) {
+      let value = this.conditions[optionId];
+      let option = this.getOption(optionId);
+      if (!option) {
+        console.log('conditionsAreMet(): Could not find option with id ' + optionId);
+        continue;
+      }
+
+      if ((Array.isArray(value) && -1 === value.indexOf(option.getValue())) || option.getValue() != value) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  getOption(id) {
+    for (let i=0;i<this.allOptions.length;i++) {
+      if (id == this.allOptions[i].id) {
+        return this.allOptions[i];
+      }
+    }
+    return false;
   }
 }

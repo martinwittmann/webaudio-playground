@@ -354,20 +354,8 @@ export default class AudioComponent {
   }
 
   addOption(optionData, changeCallback, changeCallbackThis) {
-    this.options.push(new audioComponentOption(optionData, (value, option) => {
-      if (changeCallback) {
-        changeCallback.apply(changeCallbackThis, [value, option]);
-      }
-    }));
-  }
-
-  getOption(id) {
-    for (let i=0;i<this.options.length;i++) {
-      if (id == this.options[i].id) {
-        return this.options[i];
-      }
-    }
-    return false;
+    let option = new audioComponentOption(optionData, this.options, changeCallback, changeCallbackThis);
+    this.options.push(option);
   }
 
   log(msg) {

@@ -6,9 +6,6 @@ export default class Inspector extends React.Component {
     super(props);
   }
 
-  handleEvent(type, ...args) {
-  }
-
   render() {
     let selectedComponent = this.props.selectedComponent;
     let options;
@@ -19,12 +16,15 @@ export default class Inspector extends React.Component {
     else {
       let component = selectedComponent.props.component;
       options = component.options.map(option => {
+        if (!option.conditionsAreMet()) {
+          return false;
+        }
+
         return (
           <li key={option.id}>
             <InspectorOption
               option={option}
               component={component}
-              emitEvent={this.handleEvent.bind(this)}
             />
           </li>
         );
