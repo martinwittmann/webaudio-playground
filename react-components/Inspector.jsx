@@ -4,18 +4,37 @@ import InspectorOption from './InspectorOption.jsx';
 export default class Inspector extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      selectedComponent: props.selectedComponent
+    };
+
+    if (props.selectedComponent) {
+      this.state.options = props.selectedComponent.props.component.options;
+    }
+  }
+
+  componentWillMount() {
+    if (this.state.options) {
+      this.state.options.map(option => {
+        option.registerConditionChangedCallback(this.optionConditionChanged, this);
+      });
+    }
+  }
+
+  optionConditionChanged() {
+    // Rerender all options if an option's conditions have changed.
+    this.forceUpdate();
   }
 
   render() {
-    let selectedComponent = this.props.selectedComponent;
     let options;
-
-    if (!selectedComponent) {
+    //if (!Array.isArray(this.state.options)) {
+    if (!this.state.selectedComponent) {
        options = 'Select a component to edit it\'s options.';
     }
     else {
-      let component = selectedComponent.props.component;
-      options = component.options.map(option => {
+      options = this.state.options.map(option => {
         if (!option.conditionsAreMet()) {
           return false;
         }
@@ -24,7 +43,7 @@ export default class Inspector extends React.Component {
           <li key={option.id}>
             <InspectorOption
               option={option}
-              component={component}
+              component={this.state.selectedComponent.props.component}
             />
           </li>
         );

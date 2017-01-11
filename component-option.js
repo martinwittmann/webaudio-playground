@@ -1,6 +1,7 @@
   export default class audioComponentOption {
   constructor(data, allOptions, changeCallback, changeCallbackThis) {
     this.onChangeCallbacks = [];
+    this.onConditionChangedCallbacks = [];
     this.allOptions = allOptions;
 
     for (let key in data) {
@@ -11,6 +12,15 @@
 
     if ('function' ==  typeof changeCallback) {
       this.registerChangeCallback(changeCallback, changeCallbackThis);
+    }
+
+    if ('undefined' == typeof this.conditions) {
+      this.conditions = {};
+    }
+
+    for (let optionId in this.conditions) {
+      let option = this.getOption(optionId);
+      option.registerChangeCallback(this.conditionChanged, this);
     }
   }
 
@@ -49,6 +59,39 @@
 
     if (index > -1) {
       this.onChangeCallbacks.splice(index, 1);
+    }
+  }
+
+  registerConditionChangedCallback(callback, callbackThis) {
+    if ('function' == typeof callback) {
+      return this.onConditionChangedCallbacks.push({
+        callback: callback,
+        bindTo: callbackThis
+      });
+    }
+    else {
+      console.log('registerConditionChangedCallback called with invalid callback', callback);
+      console.trace();
+    }
+
+    return false;
+  }
+
+  unregisterConditionChangedCallback(index) {
+    if ('function' == typeof index) {
+      var callback = index;
+      index = -1;
+
+      for (let i=0;i<this.onConditionChangedCallbacks.length;i++) {
+        if (this.onConditionChangedCallbacks[i].callback == callback) {
+          index = i;
+          break;
+        }
+      }
+    }
+
+    if (index > -1) {
+      this.onConditionChangedCallbacks.splice(index, 1);
     }
   }
 
@@ -117,6 +160,12 @@
     }
 
     return true;
+  }
+
+  conditionChanged() {
+    this.onConditionChangedCallbacks.map(callback => {
+      callback.callback.apply(callback.bindTo, [this.value, this]);
+    });
   }
 
   getOption(id) {
