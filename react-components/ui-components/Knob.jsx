@@ -40,7 +40,6 @@ export default class Knob extends React.Component {
     let value = this.state.value;
     let valueRange = this.maxValue - this.minValue;
     let factor = this.rangeAngle / valueRange;
-    console.log(value, valueRange, factor)
     return (value * factor - this.rangeAngle / 2) * 1;
   }
 

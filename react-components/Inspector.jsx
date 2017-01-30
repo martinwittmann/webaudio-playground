@@ -8,9 +8,11 @@ export default class Inspector extends React.Component {
     this.state = {
       selectedComponent: props.selectedComponent
     };
+    console.log('2: ' + props.selectedComponent.title);
+    //console.log(this.state.selectedComponent);
 
     if (props.selectedComponent) {
-      this.state.options = props.selectedComponent.props.component.options;
+      this.state.options = props.selectedComponent.options;
     }
   }
 
@@ -28,6 +30,7 @@ export default class Inspector extends React.Component {
   }
 
   render() {
+    //console.log(this.state.selectedComponent.title);
     let options;
     //if (!Array.isArray(this.state.options)) {
     if (!this.state.selectedComponent) {
@@ -43,7 +46,7 @@ export default class Inspector extends React.Component {
           <li key={option.id}>
             <InspectorOption
               option={option}
-              component={this.state.selectedComponent.props.component}
+              component={this.state.selectedComponent}
             />
           </li>
         );
@@ -52,6 +55,7 @@ export default class Inspector extends React.Component {
 
     return (
       <div className="inspector">
+        <h3>{this.state.selectedComponent.title}</h3>
         <ul className="component-options">
           {options}
         </ul>

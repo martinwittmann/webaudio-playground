@@ -8,7 +8,7 @@ export default class ReactAudioComponent extends React.Component {
   constructor(props) {
     super(props);
     props.component.reactComponent = this;
-    this.myId = Math.ceil(Math.random() * 10000);
+    //this.myId = Math.ceil(Math.random() * 10000);
     this.childComponents = {};
 
     if (props.component.initState) {

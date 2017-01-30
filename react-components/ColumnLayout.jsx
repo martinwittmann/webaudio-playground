@@ -396,6 +396,7 @@ class ColumnLayout extends React.Component {
         title: 'Inspector'
       }
     ];
+
     let tabLinks = tabLinkData.map(link => {
       let tabClass = ['tab', link.id];
       if (this.state.currentTab == link.id) {
@@ -407,7 +408,8 @@ class ColumnLayout extends React.Component {
           <a onClick={this.onTabButtonClick.bind(this)} data-tab={link.id}>{link.title}</a>
         </li>
       );
-    })
+    });
+
 
     switch(this.state.currentTab) {
       case 'add-components':
@@ -422,10 +424,15 @@ class ColumnLayout extends React.Component {
         tabContent = (
           <Inspector
             emitEvent={this.handleEvent.bind(this)}
-            selectedComponent={this.state.selectedComponent}
+            selectedComponent={this.state.selectedComponent.props.component}
           />
         );
         break;
+    }
+
+    if (this.state.selectedComponent) {
+      console.log('1--' + this.state.selectedComponent.props.component.title);
+      console.log(tabContent);
     }
 
     const { x, y, connectDropTarget, isOver } = this.props;
