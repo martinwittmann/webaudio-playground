@@ -97,7 +97,7 @@ class ColumnLayout extends React.Component {
 
   selectComponent(reactAudioComponent) {
     this.setState({
-      selectedComponent: reactAudioComponent,
+      selectedComponent: reactAudioComponent.props.component,
       currentTab: 'inspector'
     });
   }
@@ -423,16 +423,12 @@ class ColumnLayout extends React.Component {
       case 'inspector':
         tabContent = (
           <Inspector
+            key={this.state.selectedComponent.id}
             emitEvent={this.handleEvent.bind(this)}
-            selectedComponent={this.state.selectedComponent.props.component}
+            selectedComponent={this.state.selectedComponent}
           />
         );
         break;
-    }
-
-    if (this.state.selectedComponent) {
-      console.log('1--' + this.state.selectedComponent.props.component.title);
-      console.log(tabContent);
     }
 
     const { x, y, connectDropTarget, isOver } = this.props;

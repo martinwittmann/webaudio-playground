@@ -8,8 +8,6 @@ export default class Inspector extends React.Component {
     this.state = {
       selectedComponent: props.selectedComponent
     };
-    console.log('2: ' + props.selectedComponent.title);
-    //console.log(this.state.selectedComponent);
 
     if (props.selectedComponent) {
       this.state.options = props.selectedComponent.options;
