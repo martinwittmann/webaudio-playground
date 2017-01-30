@@ -45,7 +45,9 @@ export default class ReactAudioComponentIos extends React.Component {
         io.coordinates = this.getIoClientRect(io.domNode);
       }
       else {
-        console.log('updateAllIoCoordinates(): Could not find domNode for io ' + io.id);
+        // No need to throw an error here, since it's possible that no connection
+        // was made yet.
+        //console.log('updateAllIoCoordinates(): Could not find domNode for io ' + io.id);
       }
     });
   }

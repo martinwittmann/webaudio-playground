@@ -19,7 +19,8 @@ export default class componentIO {
         break;
 
       case 'audio':
-        this.audioNode.connect(toIo.destination);
+        let target = toIo.destination ? toIo.destination : toIo.audioNode;
+        this.audioNode.connect(target);
         break;
     }
 
@@ -39,6 +40,7 @@ export default class componentIO {
 
       case 'audio':
         // Disconnect the output node.
+        let target = toIo.destination ? toIo.destination : toIo.audioNode;
         this.audioNode.disconnect(toIo.destination);
         break;
     }

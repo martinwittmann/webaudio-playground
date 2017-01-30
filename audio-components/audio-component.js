@@ -183,26 +183,27 @@ export default class AudioComponent {
   }
 
   updateOutput(index, newOutput) {
-    newOutput.id = this.id + '--output-' + this.newOutput.length;
+    newOutput.id = this.id + '--output-' + this.outputs.length;
     return this.updateIO('outputs', index, newOutput);
   }
 
   updateInput(index, newInput) {
+    newOutput.id = this.id + '--input-' + this.inputs.length;
     return this.updateIO('inputs', index, newInput);
   }
 
-  updateIO(type, index, newIO) {
+  updateIO(type, index, newIoData) {
     if ('undefined' == typeof this[type] || 'undefined' == typeof this[type][index]) {
       this.log('updateIO: Trying to update non-existing ' + type + ' with index ' + index + '.');
       return false;
     }
 
-    if (!newIO) {
+    if (!newIoData) {
       this.log('updateIO: Trying to update output with invalid/empty newIO.');
       return false;
     }
 
-    return this[type][index] = newIO;
+    return this[type][index] = new componentIo(newIoData);
   }
 
   getInputs() {

@@ -22,12 +22,12 @@ export default class MidiInComponent extends AudioComponent {
       exposeToCanvasUi: {
         exposable: true,
         value: true,
-        inputIoComponentType: 'Select'
+        inputUiComponentType: 'Select'
       },
       exposeToUserUi: {
         exposable: true,
         value: false,
-        inputIoComponentType: 'Select'
+        inputUiComponentType: 'Select'
       },
     }, this.onMidiInChanged, this);
 
@@ -74,32 +74,26 @@ export default class MidiInComponent extends AudioComponent {
   onMidiInChanged(id) {
     this.stop(); // Stop everything that's currently playing.
 
-    if (this.midiIn) {
+    let hwMidiIn = this.midiAccess.inputs.get(this.midiIn);
+    if (hwMidiIn) {
       // Unset existing midi event handler.
-      this.midiAccess.inputs.get(this.midiIn).onmidimessage = undefined;
+      hwMidiIn.onmidimessage = undefined;
     }
-
-    // Determine whether there is an input already.
-    // This must be done *before* we set the the midiIn because we need the
-    // current/old id to be able to find the input.
-    let outputIndex = this.getIoIndex('outputs', {id: 'midi-in-' + this.midiIn});
 
     // Set the midi input.
     this.midiIn = id;
     let input = this.midiAccess.inputs.get(id);
-    if (input && 'undefined'!= input.onmidimessage) {
+
+    if (!input) {
+      return;
+    }
+
+    if ('undefined' != typeof input.onmidimessage) {
       input.onmidimessage = this.onMidiMessage.bind(this);
     }
 
-    // Add / update the component's input.
-    if (outputIndex > -1) {
-      // Update the input.
-      this.updateOutput(outputIndex, {
-        dataType: 'midi',
-      });
-    }
-    else {
-      this.registerOutput({
+    if (!this.selectedOutput) {
+      this.selectedOutput = this.registerOutput({
         dataType: 'midi',
         name: input.name
       });
