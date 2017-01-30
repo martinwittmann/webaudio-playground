@@ -22,7 +22,10 @@ export default class Knob extends React.Component {
 
     this.minValue = props.min || 0;
     this.maxValue = props.max || 1;
-    this.mouseScaleFactor = .005;
+    this.stepSize = props.stepSize || .01;
+    // We need to make the scaleFactor depend on the steptsize in order to make
+    // the scaling work reasonably for any given stepSize.
+    this.mouseScaleFactor = .7 * this.stepSize;
 
     // Bind all event handlers which will be added to window to this.
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -37,6 +40,7 @@ export default class Knob extends React.Component {
     let value = this.state.value;
     let valueRange = this.maxValue - this.minValue;
     let factor = this.rangeAngle / valueRange;
+    console.log(value, valueRange, factor)
     return (value * factor - this.rangeAngle / 2) * 1;
   }
 
@@ -92,11 +96,15 @@ export default class Knob extends React.Component {
 
   onMouseMove(ev) {
     let rawValue = (ev.pageY - this.mousePosY) * -1;
-    let newValue = this.state.value + rawValue * this.mouseScaleFactor;
+    let delta = rawValue * this.mouseScaleFactor;
+
+    // 'Round' the delta to stepSize.
+    delta /= this.stepSize;
+    delta = Math.round(delta) * this.stepSize;
 
     this.mousePosY = ev.pageY;
     this.valueWasChanged = true;
-    this.setValue(newValue);
+    this.setValue(this.state.value + delta);
   }
 
   setValue(value) {

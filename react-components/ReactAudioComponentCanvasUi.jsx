@@ -142,6 +142,9 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                   option={option}
                   defaultValue={this.state.optionValues[option.id]}
                   onChange={this.onChange.bind(this)}
+                  min={option.range[0]}
+                  max={option.range[1]}
+                  stepSize={option.stepSize}
                 />
               </li>
             );

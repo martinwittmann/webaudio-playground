@@ -61,6 +61,30 @@ export default class FilterComponent extends AudioComponent {
         value: false
       },
     }, this.onFilterTypeChanged, this);
+
+
+    this.addOption({
+      id: 'frequency',
+      label: 'Frequency',
+      type: 'number',
+      range: [20, 20000],
+      value: 1000,
+      stepSize: 1,
+      exposeAsInput: {
+        exposable: true,
+        value: false
+      },
+      exposeToCanvasUi: {
+        exposable: true,
+        value: true,
+        inputUiComponentType: 'Knob'
+      },
+      exposeToUserUi: {
+        exposable: true,
+        value: true,
+        inputUiComponentType: 'Knob'
+      },
+    }, this.onCutoffFrequencyChanged, this);
   }
 
   getFilterTypes() {
