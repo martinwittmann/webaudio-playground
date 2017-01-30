@@ -2,7 +2,6 @@ import React from 'react';
 
 export default class Knob extends React.Component {
   constructor(props) {
-    console.log('constr');
     super(props);
 
     this.knobSize = 35;
