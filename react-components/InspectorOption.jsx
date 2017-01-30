@@ -19,11 +19,11 @@ export default class InspectorOption extends React.Component {
   }
 
   componentWillMount() {
-    this.props.option.registerChangeCallback(this.onSelectChanged, this);
+    this.props.option.registerChangeCallback(this.updateInspectorValue, this);
   }
 
   componentWillUnmount() {
-    this.props.option.unregisterChangeCallback(this.onSelectChanged);
+    this.props.option.unregisterChangeCallback(this.updateInspectorValue);
   }
 
   onChange(newValue) {
@@ -33,16 +33,10 @@ export default class InspectorOption extends React.Component {
     this.props.option.setValue(newValue);
   }
 
-  onSelectChanged(newValue) {
+  updateInspectorValue(newValue) {
     // This is the callback which gets called from option.set().
     this.setState({
       value: newValue
-    });
-  }
-
-  onNumberChange(ev) {
-    this.setState({
-      value: ev.target.value
     });
   }
 
@@ -90,12 +84,11 @@ export default class InspectorOption extends React.Component {
       case 'number':
         item = (
           <NumberInput
-            defaultValue={this.props.option.value}
+            defaultValue={this.state.value}
             onChange={this.onChange.bind(this)}
             min={this.props.option.range[0]}
             max={this.props.option.range[1]}
             stepSize={this.props.option.stepSize}
-            onChange={this.onChange.bind(this)}
           />
         );
         help = (

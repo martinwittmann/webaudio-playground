@@ -70,6 +70,7 @@ export default class FilterComponent extends AudioComponent {
       range: [20, 20000],
       value: 1000,
       stepSize: 1,
+      logarithmic: true,
       exposeAsInput: {
         exposable: true,
         value: false

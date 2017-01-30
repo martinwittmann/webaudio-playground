@@ -4,6 +4,9 @@
     this.onConditionChangedCallbacks = [];
     this.allOptions = allOptions;
 
+    // Default options.
+    this.logarithmic = false;
+
     for (let key in data) {
       if (data.hasOwnProperty(key)) {
         this[key] = data[key];

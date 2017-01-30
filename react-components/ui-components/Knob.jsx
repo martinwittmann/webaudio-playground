@@ -2,10 +2,8 @@ import React from 'react';
 
 export default class Knob extends React.Component {
   constructor(props) {
+    console.log('constr');
     super(props);
-    this.state = {
-      value : props.defaultValue
-    };
 
     this.knobSize = 35;
     this.strokeWidth = this.knobSize / 15;
@@ -37,7 +35,9 @@ export default class Knob extends React.Component {
   }
 
   getAngle() {
-    let value = this.state.value;
+    // For some reason I don't understand yet, we can't use state here since
+    // it does not get a new value, if updated from the inspector.
+    let value = this.props.defaultValue;
     let valueRange = this.maxValue - this.minValue;
     let factor = this.rangeAngle / valueRange;
     return (value * factor - this.rangeAngle / 2) * 1;
@@ -97,24 +97,30 @@ export default class Knob extends React.Component {
     let rawValue = (ev.pageY - this.mousePosY) * -1;
     let delta = rawValue * this.mouseScaleFactor;
 
+    if (this.props.logarithmic) {
+      let logFactor = 0.004;
+      delta = this.props.defaultValue * logFactor * delta;
+    }
+
     // 'Round' the delta to stepSize.
     delta /= this.stepSize;
     delta = Math.round(delta) * this.stepSize;
 
     this.mousePosY = ev.pageY;
     this.valueWasChanged = true;
-    this.setValue(this.state.value + delta);
+    this.setValue(this.props.defaultValue + delta);
+  }
+
+  normalizeValue(value) {
+    value = parseFloat(value);
+    value = Math.max(this.minValue, Math.min(value, this.maxValue));
+    return parseFloat(value.toFixed(2));
   }
 
   setValue(value) {
-    value = Math.max(this.minValue, Math.min(value, this.maxValue));
-    value = parseFloat(value.toFixed(2));
+    value = this.normalizeValue(value);
 
-    if (value != this.state.value) {
-      this.setState({
-        value
-      });
-
+    if (value != this.props.defaultValue) {
       if ('function' == typeof this.props.onChange) {
         this.props.onChange(value, this.props.option);
       }

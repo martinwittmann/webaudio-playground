@@ -11,9 +11,10 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      optionValues: {}
-    };
+    this.state = {};
+    props.component.options.map(option => {
+      this.state[option.id] = option.getValue();
+    });
   }
 
   onChange(value, option) {
@@ -26,19 +27,16 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
   }
 
   optionChanged(newValue, option) {
-    let newOptionValues = this.state.optionValues;
-    newOptionValues[option.id] = newValue;
-
-    this.setState({
-      optionValues: newOptionValues
-    });
+    let state = {};
+    state[option.id] = newValue;
+    this.setState(state);
   }
 
   componentWillMount() {
     // Only register to the option changed callback if the component is shown in the canvas.
     if (!this.props.component.inSidebar) {
       this.props.component.options.map(option => {
-        this.state.optionValues[option.id] = option.getValue();
+        //this.state[option.id] = option.getValue();
         option.registerChangeCallback(this.optionChanged, this);
       });
     }
@@ -82,7 +80,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 <Select
                   option={option}
                   options={option.getChoices()}
-                  value={this.state.optionValues[option.id]}
+                  value={this.state[option.id]}
                   onChange={this.onChange.bind(this)}
                 />
               </li>
@@ -94,7 +92,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                 <Radios
                   option={option}
                   options={option.getChoices()}
-                  value={this.state.optionValues[option.id]}
+                  value={this.state[option.id]}
                   onChange={this.onChange.bind(this)}
                 />
               </li>
@@ -105,7 +103,7 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
               <li key={option.id}>
                 <NumberInput
                   option={option}
-                  defaultValue={this.state.optionValues[option.id]}
+                  defaultValue={this.state[option.id]}
                   onChange={this.onChange.bind(this)}
                 />
               </li>
@@ -139,12 +137,16 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             return (
               <li key={option.id}>
                 <Knob
+                  // This is necessary to make react aware of a changed value
+                  // when setting it via the inspector.
+                  //key={option.id + '-' + this.state[option.id]}
                   option={option}
-                  defaultValue={this.state.optionValues[option.id]}
+                  defaultValue={this.state[option.id]}
                   onChange={this.onChange.bind(this)}
                   min={option.range[0]}
                   max={option.range[1]}
                   stepSize={option.stepSize}
+                  logarithmic={option.logarithmic}
                 />
               </li>
             );
