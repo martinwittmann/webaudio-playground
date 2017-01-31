@@ -10,7 +10,7 @@ export default class SpectrogramComponent extends AudioComponent {
     this.audioNodes = {};
     this.analyserNode = this.audioContext.createAnalyser();
 
-    this.fftSize = 1024;
+    this.fftSize = 2048;
     //this.frequencyData = new Uint8Array(this.fftSize);
     //this.analyserNode.getByteFrequencyData(this.frequencyData);
     this.canvasPosX = 0;
@@ -110,7 +110,7 @@ export default class SpectrogramComponent extends AudioComponent {
 
   drawSpectrogram() {
     let now = Date.now();
-    if (now - this.lastDraw < 1000) {
+    if (now - this.lastDraw < 100) {
       requestAnimationFrame(this.drawSpectrogram.bind(this));
       return;
     }
@@ -131,7 +131,7 @@ export default class SpectrogramComponent extends AudioComponent {
         this.canvas2dContext.clearRect(this.canvasPosX, this.height - index - 1, 1, 1);
         return;
       }
-      let brightness = 255 - row; //Math.min(row, 255);
+      let brightness = Math.min(row, 255);
       let color = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
       this.canvas2dContext.fillStyle = color;
       this.canvas2dContext.fillRect(this.canvasPosX, this.height - index - 1, 1, 1);
