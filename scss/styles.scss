@@ -12,3 +12,17 @@ h1 {
   padding: 0;
   margin: 0;
 }
+
+.column-1 {
+  position: relative;
+}
+
+.footer-inspector {
+  position: absolute;
+  bottom: 0;
+
+  a {
+    text-decoration: none;
+    color: #068126;
+  }
+}

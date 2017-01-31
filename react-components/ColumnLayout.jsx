@@ -465,6 +465,9 @@ class ColumnLayout extends React.Component {
           <div className="tab-contents">
             {tabContent}
           </div>
+          <p className="footer-inspector">
+            by <a href="https://martinwittmann.at">Martin Wittmann</a>
+          </p>
         </li>
         <li className="column column-2">
           <div className="column-content">
