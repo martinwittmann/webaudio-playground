@@ -15,7 +15,7 @@ export default class Spectrogram extends React.Component {
         className={this.props.className}
         onClick={this.onClick.bind(this)}
         width="500"
-        height="300"
+        height="800"
         ref={(el) => {
           if (el) {
             this.props.option.setValue(el.getContext('2d'));

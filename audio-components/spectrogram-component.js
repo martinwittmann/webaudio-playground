@@ -10,11 +10,15 @@ export default class SpectrogramComponent extends AudioComponent {
     this.audioNodes = {};
     this.analyserNode = this.audioContext.createAnalyser();
 
-    this.fftSize = 2048;
-    this.frequencyData = new Uint8Array(this.fftSize);
+    this.fftSize = 1024;
+    //this.frequencyData = new Uint8Array(this.fftSize);
     //this.analyserNode.getByteFrequencyData(this.frequencyData);
     this.canvasPosX = 0;
     this.lastDraw = 0;
+    this.width = 500;
+    this.height = 800;
+
+    this.analyserNode.fftSize = this.fftSize
 
 
     this.registerInput({
@@ -86,6 +90,7 @@ export default class SpectrogramComponent extends AudioComponent {
     }
     
     this.fftSize = newFFTSize;
+    this.analyserNode.fftSize = this.fftSize;
   }
 
   onSpectrogramChanged(canvas2dContext, option) {
@@ -105,38 +110,32 @@ export default class SpectrogramComponent extends AudioComponent {
 
   drawSpectrogram() {
     let now = Date.now();
-    if (now - this.lastDraw < 50) {
+    if (now - this.lastDraw < 1000) {
       requestAnimationFrame(this.drawSpectrogram.bind(this));
       return;
     }
 
-    this.analyserNode.getByteFrequencyData(this.frequencyData);
-    this.canvas2dContext.fillStyle = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-    if (this.canvasPosX > 499) {
-      let xOffset = 499 - this.canvasPosX;
-      this.canvasPosX = 499;
-      let img = this.canvas2dContext.getImageData(0, 0, 500, 300);
-      this.canvas2dContext.clearRect(0, 0, 500, 300);
+    let frequencyData = new Uint8Array(this.analyserNode.frequencyBinCount);
+    this.analyserNode.getByteFrequencyData(frequencyData);
+
+    if (this.canvasPosX > this.width - 1) {
+      let xOffset = this.width - 1 - this.canvasPosX;
+      this.canvasPosX = this.width - 1;
+      let img = this.canvas2dContext.getImageData(0, 0, this.width, this.height);
+      this.canvas2dContext.clearRect(0, 0, this.width, this.height);
       this.canvas2dContext.putImageData(img, xOffset, 0);
     }
 
-    this.canvas2dContext.fillRect(this.canvasPosX, 0, 1, 300);
-    /*
-    this.frequencyData.map((row, index) => {
-      let brightness = Math.min(row, 255);
-      let color = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
-      if (this.canvasPosX > 500) {
-        let xOffset = 500 - this.canvasPosX;
-        this.canvasPosX = 500;
-        let current = this.canvas2dContext.getImageData(0, 0, 500, 300);
-        this.canvas2dContext.clearRect(0, 0, 500, 300);
-        this.canvas2dContext.putImageData(current, xOffset, 0);
-
+    frequencyData.map((row, index) => {
+      if (0 == row) {
+        this.canvas2dContext.clearRect(this.canvasPosX, this.height - index - 1, 1, 1);
+        return;
       }
+      let brightness = 255 - row; //Math.min(row, 255);
+      let color = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
       this.canvas2dContext.fillStyle = color;
-      this.canvas2dContext.fillRect(this.canvasPosX, index, 1, 1);
+      this.canvas2dContext.fillRect(this.canvasPosX, this.height - index - 1, 1, 1);
     });
-    */
 
     this.canvasPosX++;
     this.lastDraw = now;
