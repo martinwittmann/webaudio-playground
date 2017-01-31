@@ -5,6 +5,10 @@ export default class Spectrogram extends React.Component {
     ev.stopPropagation();
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
   render() {
     return (
       <canvas
@@ -12,6 +16,11 @@ export default class Spectrogram extends React.Component {
         onClick={this.onClick.bind(this)}
         width="500"
         height="300"
+        ref={(el) => {
+          if (el) {
+            this.props.option.setValue(el.getContext('2d'));
+          }
+        }}
       >
       </canvas>
     );
