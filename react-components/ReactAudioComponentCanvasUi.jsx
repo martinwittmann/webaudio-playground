@@ -5,6 +5,7 @@ import NumberInput from './ui-components/NumberInput.jsx';
 import Radios from './ui-components/Radios.jsx';
 import Select from './ui-components/Select.jsx';
 import Knob from './ui-components/Knob.jsx';
+import Spectrogram from './ui-components/Spectrogram.jsx';
 
 
 export default class ReactAudioComponentCanvasUi extends React.Component {
@@ -137,9 +138,6 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
             return (
               <li key={option.id}>
                 <Knob
-                  // This is necessary to make react aware of a changed value
-                  // when setting it via the inspector.
-                  //key={option.id + '-' + this.state[option.id]}
                   option={option}
                   defaultValue={this.state[option.id]}
                   onChange={this.onChange.bind(this)}
@@ -147,6 +145,19 @@ export default class ReactAudioComponentCanvasUi extends React.Component {
                   max={option.range[1]}
                   stepSize={option.stepSize}
                   logarithmic={option.logarithmic}
+                />
+              </li>
+            );
+            break;
+
+          case 'Spectrogram':
+            return (
+              <li key={option.id}>
+                <Spectrogram
+                  option={option}
+                  defaultValue={this.state[option.id]}
+                  onChange={this.onChange.bind(this)}
+                  className="spectrogram-canvasui"
                 />
               </li>
             );

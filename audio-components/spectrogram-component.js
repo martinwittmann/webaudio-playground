@@ -8,7 +8,7 @@ export default class SpectrogramComponent extends AudioComponent {
 
     // Initialize state for this component type.
     this.audioNodes = {};
-    this.analyserNode = this.createAnalyser();
+    this.analyserNode = this.audioContext.createAnalyser();
 
     this.fftSize = 2048;
 
@@ -21,7 +21,27 @@ export default class SpectrogramComponent extends AudioComponent {
 
     // Set up available options:
     this.addOption({
-      id: 'fft-size',
+      id: 'spectrogram',
+      label: 'Spectrogram',
+      type: 'none', // We don't render the spectrogram in the inspector.
+      value: 0,
+      exposeAsInput: {
+        exposable: false,
+        value: false
+      },
+      exposeToCanvasUi: {
+        exposable: true,
+        value: true,
+        inputUiComponentType: 'Spectrogram'
+      },
+      exposeToUserUi: {
+        exposable: false,
+        value: false
+      },
+    }, this.onSpectrogramChanged, this);
+
+    this.addOption({
+      id: 'fftsize',
       label: 'FFT Size',
       type: 'choice',
       choices: this.getFFTSizes.bind(this), // Could be an array or a function.
@@ -42,14 +62,29 @@ export default class SpectrogramComponent extends AudioComponent {
   }
 
   getFFTSizes() {
-    return [32, 64, 128, 265, 512, 1024, 2048, 4096, 8192, 16384, 32768];
+    let result = [];
+    for (let i=5;i<16;i++) {
+      result.push({
+        name: Math.pow(2, i),
+        value: Math.pow(2, i)
+      });
+    }
+
+    return result;
   }
 
   onFFTSizeChanged(newFFTSize) {
-    if (this.getFFTSizes.indexOf(newFFTSize) < 0) {
+    newFFTSize = parseInt(newFFTSize, 10);
+
+    if (this.getFFTSizes().map(item => { return item.value }).indexOf(newFFTSize) < 0) {
       this.log('onFFTSizeChanged(): Invalid size ' + newFFTSize + '.');
       return false;
     }
+    
     this.fftSize = newFFTSize;
+  }
+
+  onSpectrogramChanged(newValue, option) {
+    // Nothing to do here.
   }
 }

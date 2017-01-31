@@ -35,7 +35,7 @@ export default class componentsRegistry {
       'midi-in': MidInComponent,
       'midi-keyboard': MidiKeyboardComponent,
       'oscillator': OscillatorComponent,
-      'filter': FilterComponent
+      'filter': FilterComponent,
       'spectrogram': SpectrogramComponent
     };
 
